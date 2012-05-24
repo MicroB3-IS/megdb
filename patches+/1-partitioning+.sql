@@ -774,8 +774,6 @@ CREATE TRIGGER pooled_mg_dnas_delete
     FOR EACH ROW
     EXECUTE PROCEDURE delete_from_correct_pooled_mg_partition();
 
-VACUUM FULL ANALYZE core.dna_seqs; 
-
 commit;
 
 --begin;
