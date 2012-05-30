@@ -6,4 +6,4 @@ SCHEMA_LIST="-n core -n cv -n elayers -n mfdata -n mflayers -n mfmetadata -n mfr
 
 pg_dumpall --roles-only -f roles.sql -p ${SRC_DB_PORT}
 pg_dump -s -f baseline.sql ${SCHEMA_LIST} -p ${SRC_DB_PORT} ${SRC_DB_NAME}
-pg_dump -Fc --data-only -f dumpfile ${SCHEMA_LIST} -p ${SRC_DB_PORT} ${SRC_DB_NAME}
+
