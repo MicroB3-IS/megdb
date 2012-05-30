@@ -8,21 +8,21 @@
 ECHO PATH=%PATH%
 
 SET RELEASE=9
-SET VERSIONING=/opt/versioning
-SET POSTGIS=E:\dev\pg-91\share\contrib\postgis-1.5
+:: SET VERSIONING=/opt/versioning
+SET POSTGIS=C:\Program Files (x86)\PostgreSQL\9.1\share\contrib\postgis-1.5
 SET PORT=5432
 SET DATABASE=megdb-%RELEASE%
 SET PSQL_ARGS=%PSQL_ARGS% -v ON_ERROR_STOP=1 -U postgres 
 
 
-createdb -E UTF8 %DATABASE%
+createdb -U postgres -E UTF8 %DATABASE%
 
 PAUSE
 
 psql %PSQL_ARGS% -f patches/add-versioning.sql %DATABASE%
-psql %PSQL_ARGS% -f %POSTGIS%/postgis.sql %DATABASE%
-psql %PSQL_ARGS% -f %POSTGIS%/spatial_ref_sys.sql %DATABASE%
-psql %PSQL_ARGS% -f %POSTGIS%/postgis_comments.sql %DATABASE%
+psql %PSQL_ARGS% -f "%POSTGIS%/postgis.sql" %DATABASE%
+psql %PSQL_ARGS% -f "%POSTGIS%/spatial_ref_sys.sql" %DATABASE%
+psql %PSQL_ARGS% -f "%POSTGIS%/postgis_comments.sql" %DATABASE%
 psql %PSQL_ARGS% -f patches/hstore.sql %DATABASE%
 psql %PSQL_ARGS% -f patches/roles.sql %DATABASE%
 psql %PSQL_ARGS% -f patches/baseline.sql %DATABASE%
