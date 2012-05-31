@@ -5,7 +5,7 @@ SET constraint_exclusion TO on;
  * Part A: Separation of genomic and metagenomic dna sequences
  */
 begin;
-SELECT _v.register_patch( '1-partitioning', ARRAY['baseline'], NULL );
+SELECT _v.register_patch( '1-partitioning', NULL, NULL );
 
 --drop foreign keys to dna_seqs
 alter table genome_dnas drop constraint genome_dnas_did_fkey;

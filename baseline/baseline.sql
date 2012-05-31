@@ -1,5 +1,5 @@
 BEGIN;
-SELECT _v.register_patch( 'baseline', ARRAY['roles','hstore'], NULL );
+SELECT _v.register_patch( 'baseline', ARRAY['hstore'], NULL );
 
 --
 -- PostgreSQL database dump
