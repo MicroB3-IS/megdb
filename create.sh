@@ -11,7 +11,8 @@ DUMPFILE=megdb.dump
 
 echo Creating developer database ${DATABASE} 
 
-createdb -U postgres -E UTF8 ${DATABASE}
+psql -p ${PORT} -U postgres -c "DROP DATABASE ${DATABASE};"
+createdb -p ${PORT} -U postgres -E UTF8 ${DATABASE}
 
 echo Setting up baseline DDL
 
@@ -35,15 +36,15 @@ psql -p ${PORT} -f before_pg_restore_test_data.sql ${DATABASE}
 
 echo Now restoring data
 
-pg_restore -a -v -e -p ${PORT} -n cv -d ${DATABASE} ${DUMP_FILE} 
-pg_restore -a -v -e -p ${PORT} -n pfam_23 -d ${DATABASE} ${DUMP_FILE}
-pg_restore -a -v -e -p ${PORT} -n pfam_24 -d ${DATABASE} ${DUMP_FILE}
-pg_restore -a -v -e -p ${PORT} -n core -d ${DATABASE} ${DUMP_FILE}
-pg_restore -a -v -e -p ${PORT} -n partitions -d ${DATABASE} ${DUMP_FILE}
-pg_restore -a -v -e -p ${PORT} -n elayers -d ${DATABASE} ${DUMP_FILE}
-pg_restore -a -v -e -p ${PORT} -n web_r8 -d ${DATABASE} ${DUMP_FILE}
-pg_restore -a -v -e -p ${PORT} -n silva_r102_ssu -d ${DATABASE} ${DUMP_FILE}
-pg_restore -a -v -e -p ${PORT} -n silva_r102_lsu -d ${DATABASE} ${DUMP_FILE}
+pg_restore -a -v -e -p ${PORT} -n cv -d ${DATABASE} ${DUMPFILE} 
+pg_restore -a -v -e -p ${PORT} -n pfam_23 -d ${DATABASE} ${DUMPFILE}
+pg_restore -a -v -e -p ${PORT} -n pfam_24 -d ${DATABASE} ${DUMPFILE}
+pg_restore -a -v -e -p ${PORT} -n core -d ${DATABASE} ${DUMPFILE}
+pg_restore -a -v -e -p ${PORT} -n partitions -d ${DATABASE} ${DUMPFILE}
+pg_restore -a -v -e -p ${PORT} -n elayers -d ${DATABASE} ${DUMPFILE}
+pg_restore -a -v -e -p ${PORT} -n web_r8 -d ${DATABASE} ${DUMPFILE}
+pg_restore -a -v -e -p ${PORT} -n silva_r102_ssu -d ${DATABASE} ${DUMPFILE}
+pg_restore -a -v -e -p ${PORT} -n silva_r102_lsu -d ${DATABASE} ${DUMPFILE}
 
 
 echo recreating trigger
