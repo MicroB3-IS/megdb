@@ -6,6 +6,8 @@
 --set escape_string_warning = off;
 begin;
 
+SELECT _v.register_patch( '8-authdb', ARRAY['7-author_article_journal_web_views'], NULL );
+
 drop schema if exists auth cascade; 
 create schema auth;
 
