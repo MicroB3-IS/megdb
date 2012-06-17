@@ -131,8 +131,8 @@ create table has_roles(
 
 insert into auth.users(
             logname, first_name, initials, last_name, description, join_date, 
-            pass, diabled)
-    values ('megx', 'Megx.net', 'MN', '', 'No description', now(), 'megx', false);
+            pass, diabled, email)
+    values ('megx', 'Megx.net', 'MN', '', 'No description', now(), 'megx', false, 'info@megx.net');
 
 -- consumers
 insert into auth.consumers(
