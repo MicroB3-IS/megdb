@@ -24,6 +24,7 @@ create table users(
     join_date timestamp with time zone not null,
     pass text,
     diabled boolean not null,
+    email text not null,
     constraint pk_users primary key (logname)
 );
 
@@ -84,7 +85,7 @@ create table web_resource_permissions(
     http_method text not null,
     role text not null,
     constraint pk_web_resource_permissions 
-            primary key (url_path, http_method),
+            primary key (url_path, http_method, role),
     constraint fk_web_resource_permissions_roles
         foreign key (role) references roles(label) on update cascade
                                                    on delete cascade
@@ -143,17 +144,30 @@ insert into auth.consumers(
 insert into auth.roles(label, description)
 	values('admin','Administrator'),
 	      ('user', 'User');
-	      
+
+-- permissions
 insert into auth.permissions(label, description)
 	values('read','Read permisssion'),
 			('write', 'Write permission');
 			
+-- roles <-> users
 insert into has_roles(role, user_login)
 	values('admin','megx');
 	
+	
+-- roles <-> permissions
 insert into has_permissions(role, permission)
 	values ('admin', 'read'),
 			('admin', 'write'),
 			('user', 'read');
+
 			
+-- web resources
+
+insert into auth.web_resource_permissions(
+            url_path, http_method, role)
+    values ('/security/*', 'all', 'admin'), -- the security management
+    	('/apps*', 'all', 'user'),
+    	('/apps*', 'all', 'admin'); -- the apps manager
+
 commit;
