@@ -11,7 +11,7 @@ SELECT _v.register_patch( '8-authdb', ARRAY['7-author_article_journal_web_views'
 drop schema if exists auth cascade; 
 create schema auth;
 
-alter schema auth OWNER to postgres;
+alter schema auth OWNER to megdb_admin;
 set search_path = auth, pg_catalog;
 set default_tablespace = '';
 set default_with_oids = false;
