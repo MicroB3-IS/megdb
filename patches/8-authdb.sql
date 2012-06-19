@@ -16,6 +16,13 @@ set search_path = auth, pg_catalog;
 set default_tablespace = '';
 set default_with_oids = false;
 
+-- functions
+create or replace function auth.email_check(text) RETURNS boolean
+language sql	
+AS 
+	'select $1 ~* ''^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$'' ';
+
+-- tables
 drop table if exists users;
 create table users(
     logname text not null,
@@ -25,9 +32,11 @@ create table users(
     description text,
     join_date timestamp with time zone not null,
     pass text,
-    diabled boolean not null,
+    disabled boolean not null,
     email text not null,
-    constraint pk_users primary key (logname)
+    lastlogin timestamp with time zone,
+    constraint pk_users primary key (logname),
+    constraint valid_email_check check( auth.email_check(email) )
 );
 
 drop table if exists roles;
@@ -45,7 +54,7 @@ create table consumers(
     description text,
     oob boolean not null default false,
     trusted boolean not null default false,
-    expiration timestamp with time zone not null,
+    expiration timestamp with time zone not null default now() + interval '1 year',
     logname text not null,
     callback_url text,
     constraint pk_consumers primary key (key),
@@ -131,7 +140,7 @@ create table has_roles(
 
 insert into auth.users(
             logname, first_name, initials, last_name, description, join_date, 
-            pass, diabled, email)
+            pass, disabled, email)
     values ('megx', 'Megx.net', 'MN', '', 'No description', now(), 'megx', false, 'info@megx.net');
 
 -- consumers
