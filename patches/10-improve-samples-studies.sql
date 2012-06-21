@@ -1,4 +1,4 @@
-﻿
+
 BEGIN;
 
 SELECT _v.register_patch( '10-improve-samples-studies', ARRAY['9-improve-article-table'], NULL );

@@ -1,4 +1,4 @@
-﻿
+
 BEGIN;
 
 SELECT _v.register_patch( '9-improve-article-table', ARRAY['8-authdb','7-author_article_journal_web_views'], NULL );

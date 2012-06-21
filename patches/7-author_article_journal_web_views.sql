@@ -1,5 +1,5 @@
-﻿
-bEGIN;
+
+BEGIN;
 
 GRANT EXECUTE ON FUNCTION _v.register_patch(text, text[], text[]) TO GROUP megdb_admin;
 GRANT EXECUTE ON FUNCTION _v.register_patch(text, text[]) TO GROUP megdb_admin;
