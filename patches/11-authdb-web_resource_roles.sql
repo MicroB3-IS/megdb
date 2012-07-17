@@ -1,6 +1,6 @@
 begin;
 
-SELECT _v.register_patch( '10-authdb-web_resource_roles', ARRAY['9-improve-article-table'], NULL );
+SELECT _v.register_patch( '11-authdb-web_resource_roles', ARRAY['10-improve-samples-studies'], NULL );
 
 
 update auth.users
