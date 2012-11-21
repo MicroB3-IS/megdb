@@ -70,5 +70,77 @@ create table gen_config(
 	constraint pk_gen_config primary key (category, name)
 );
 
+-- Configuration data dump
+insert into gen_config
+	(category, name, value)
+values
+
+-- Sample Materials
+( 'sampleMaterials', 'not known',           'Not Known' ),
+( 'sampleMaterials', 'air',                 'Air'       ),
+( 'sampleMaterials', 'drainage water',      'Drainage Water'),
+( 'sampleMaterials', 'dust',                'Dust'),
+( 'sampleMaterials', 'fecal',               'Fecal'),
+( 'sampleMaterials', 'gas',                 'Gas' ),
+( 'sampleMaterials', 'geysir water',        'Geysir Water' ),
+( 'sampleMaterials', 'ground water',        'Groud Water' ),
+( 'sampleMaterials', 'lake sediment',       'Lake Sediment' ),
+( 'sampleMaterials', 'lake water',          'Lake Water' ),
+( 'sampleMaterials', 'meteorite',           'Meteorite' ),
+( 'sampleMaterials', 'mountain ice',        'Mountain Ice' ),
+( 'sampleMaterials', 'mud',                 'Mud' ),
+( 'sampleMaterials', 'ocean sediment',      'Ocean Sediment' ),
+( 'sampleMaterials', 'ocean water',         'Ocean Water' ),
+( 'sampleMaterials', 'organism',            'Organism'),
+( 'sampleMaterials', 'physical',            'Physical'),
+( 'sampleMaterials', 'river sediment',      'River Sediment'),
+( 'sampleMaterials', 'river water',         'River Water'),
+( 'sampleMaterials', 'rock',                'Rock'),
+( 'sampleMaterials', 'sea ice',             'Sea Ice'),
+( 'sampleMaterials', 'sediment pore water', 'Sediment Pore Water' ),
+( 'sampleMaterials', 'soil',                'Soil' ),
+( 'sampleMaterials', 'spittle',             'Spittle' ),
+( 'sampleMaterials', 'stone',               'Stone' ),
+( 'sampleMaterials', 'tissue',              'Tissue' ),
+( 'sampleMaterials', 'vent fluid',          'Vent Fluid' ),
+( 'sampleMaterials', 'whale bone',          'Whale Bone' ),
+
+-- enable export
+('categories', 'sampleMaterials','exported'),
+
+-- Projects
+('projects',  'microB3', 'Micro B3'),
+('projects',  'biovel',   'Biovel'),
+-- export
+('categories', 'projects','exported'),
+
+
+-- Weather conditions
+('weatherConditions', 'Clear night','Clear night'),
+('weatherConditions', 'Sunny day','Sunny day'),
+('weatherConditions', 'Partly cloudy','Partly cloudy'),
+('weatherConditions', 'Sunny intervals', 'Sunny intervals'),
+('weatherConditions', 'Dust', 'Dust'),
+('weatherConditions', 'Mist', 'Mist'),
+('weatherConditions', 'Fog', 'Fog'),
+('weatherConditions', 'Cloudy', 'Cloudy'),
+('weatherConditions', 'Overcast', 'Overcast'),
+('weatherConditions', 'Drizzle', 'Drizzle'),
+('weatherConditions', 'Light rain', 'Light rain'),
+('weatherConditions', 'Heavy rain', 'Heavy rain'),
+('weatherConditions', 'Sleet shower', 'Sleet shower'),
+('weatherConditions', 'Sleet', 'Sleet'),
+('weatherConditions', 'Hail shower', 'Hail shower'),
+('weatherConditions', 'Hail', 'Hail'),
+('weatherConditions', 'Light snow', 'Light snow'),
+('weatherConditions', 'Heavy snow', 'Heavy snow'),
+('weatherConditions', 'Thunder shower', 'Thunder shower'),
+('weatherConditions', 'Thunder', 'Thunder'),
+('weatherConditions', 'Tropical storm', 'Tropical storm'),
+('weatherConditions', 'Haze', 'Haze'),
+('weatherConditions', 'No data', 'No data'),
+-- export
+('categories','weatherConditions','exported');
+
 
 commit;
