@@ -41,6 +41,7 @@ create table samples(
 	salinity decimal default 0,
 	comment text,
 --	geom geometry(Point, 4326),
+	accuracy decimal default 0,
 	
 	constraint pk_samples primary key (id)
 );
