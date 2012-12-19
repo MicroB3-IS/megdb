@@ -1,5 +1,7 @@
 begin;
 
+SELECT _v.register_patch( '14-esa-demo', '{}', NULL );
+
 drop schema if exists esa cascade;
 create schema esa;
 

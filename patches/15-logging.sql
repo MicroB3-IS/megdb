@@ -1,5 +1,7 @@
 begin;
 
+SELECT _v.register_patch( '15-logging', '{}', NULL );
+
 drop schema if exists logging cascade;
 create schema logging;
 
