@@ -1696,7 +1696,7 @@ values
 ('biomeList', 'Temperate Desert Division (340)', 'Temperate Desert Division (340)'),
 ('biomeList', 'Temperate Desert Division - Mountain Provinces (M340)', 'Temperate Desert Division - Mountain Provinces (M340)'),
 ('biomeList', 'Temperate Steppe Division (330)', 'Temperate Steppe Division (330)'),
-('biomeList', ' Temperate Steppe Division - Mountain Provinces (M330)', ' Temperate Steppe Division - Mountain Provinces (M330)'),
+('biomeList', 'Temperate Steppe Division - Mountain Provinces (M330)', 'Temperate Steppe Division - Mountain Provinces (M330)'),
 ('biomeList', 'Tropical/Subtropical Desert Division (320)', 'Tropical/Subtropical Desert Division (320)'),
 ('biomeList', 'Tropical/Subtropical Steppe Division (310)', 'Tropical/Subtropical Steppe Division (310)'),
 ('biomeList', 'Tropical/Subtropical Steppe Division - Mountain Provinces (M310)', 'Tropical/Subtropical Steppe Division - Mountain Provinces (M310)'),
