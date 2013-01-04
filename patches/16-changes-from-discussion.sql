@@ -88,6 +88,20 @@ GRANT ALL ON TABLE web.blast_genomes TO ikostadi;
 GRANT SELECT ON TABLE web.blast_genomes TO selectors;
 GRANT SELECT ON TABLE web.blast_genomes TO megx_team;
 
+--legacy
+CREATE OR REPLACE VIEW ikostadi.marine_genomes AS 
+ SELECT g.entity_name, g.taxid, g.gpid, i.num_chromosomes, i.num_plasmids, 
+    a.accession, gs.status
+   FROM web_r7.genomes g
+   LEFT JOIN core.genome_studies gs ON gs.gpid::text = g.gpid
+   LEFT JOIN core.isolates i ON g.taxid = i.taxid::text
+   LEFT JOIN core.genomic_sequences d ON i.id = d.isolate_id
+   LEFT JOIN stage.ncbi_acc_gpid a ON g.gpid = a.gpid::text
+  WHERE g.hab_lite = 'marine habitat'::text;
+
+ALTER TABLE ikostadi.marine_genomes
+  OWNER TO ikostadi;
+
 DROP TABLE core.genome_dnas;
 
-COMMIT;
+commit;
