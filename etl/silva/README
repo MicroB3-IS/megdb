@@ -1,0 +1,15 @@
+Loading SILVA from a MySQL server into MegDb
+
+Files:
+-silva_etl.conf: configuration of MySQL and PostgreSQL connection parameters, and SILVA release number
+-silva_etl.pl: central script for ETL
+-build_extract_script.pl: rebuilds the silva_extract.sql script according to the current DDL on MySQL
+-*.sql: used by the script, do not execute manually
+
+Options:
+-c [config file] 	- specify config file other than silva_etl.conf
+-e					- skip extraction step
+-t					- skip extraction and transformation step
+
+Example:
+	./silva_etl.pl
