@@ -33,8 +33,10 @@ set search_path = silva, public;
 --get some speed-up
 CREATE INDEX pa_idx_21 ON %LSUSCHEMA%.sequenceentry USING BTREE (primaryaccession);
 CREATE INDEX pa_idx_22 ON %LSUSCHEMA%.sequence USING BTREE (primaryaccession);
+CREATE INDEX pa_idx_23 ON %LSUSCHEMA%.region USING BTREE (primaryaccession);
 CREATE INDEX pa_idx_11 ON %SSUSCHEMA%.sequenceentry USING BTREE (primaryaccession);
 CREATE INDEX pa_idx_12 ON %SSUSCHEMA%.sequence USING BTREE (primaryaccession);
+CREATE INDEX pa_idx_13 ON %SSUSCHEMA%.region USING BTREE (primaryaccession);
 
 -- legacy code reused
 CREATE OR REPLACE VIEW silva_regions_v AS 
@@ -250,11 +252,12 @@ UPDATE silva.samplingsites_mat SET locshortdesc = '' WHERE locshortdesc IS NULL;
 -----------------------------------------------------------------------------------------------------
 -- to obtain a uid for the samples
 CREATE SEQUENCE sample_id;
+SELECT setval('sample_id', max(sid)) FROM core.samples;
 
 CREATE OR REPLACE VIEW samples AS
   SELECT
     nextval('sample_id') AS sid,
-    NULL::numeric as max_uncertain,
+    'NaN'::numeric as max_uncertain,
     datum AS date_taken,
     dat_res AS date_res,
     'silva:' || currval('sample_id')::text AS label,
@@ -276,7 +279,7 @@ CREATE OR REPLACE VIEW samples AS
       ELSE hstore('depth',depth)
     END AS attr
   FROM silva_samples_v; 
-  
+
 -- materialization
 CREATE TABLE samples_mat (LIKE samples);
 INSERT INTO samples_mat SELECT * FROM samples;
@@ -289,7 +292,7 @@ UPDATE silva.samples_mat SET geom = ST_SetSRID(geom,4326);
 -----------------------------------------------------------------------------------------------------
 CREATE OR REPLACE VIEW sample_measures AS
   SELECT
-    sid,
+    sid::int,
     ''::text AS material,
     'depth'::text AS param,
     'm'::text AS unit,
@@ -299,7 +302,7 @@ CREATE OR REPLACE VIEW sample_measures AS
     date_res AS conducted_res,
     device,
     project,
-    own,
+    'megdb'::text As own,
     (attr -> 'depth')::numeric AS min,
     (attr -> 'depth')::numeric AS max,
     0::numeric AS std,
@@ -309,11 +312,11 @@ CREATE OR REPLACE VIEW sample_measures AS
   FROM silva.samples_mat
   WHERE (attr -> 'depth') IS NOT NULL;
   
-CREATE TABLE sample_measures_mat (LIKE sample_measures);
-INSERT INTO sample_measures_mat SELECT * FROM sample_measures;
+CREATE TABLE silva.sample_measures_mat (LIKE sample_measures);
+INSERT INTO silva.sample_measures_mat SELECT * FROM sample_measures;
 
 -----------------------------------------------------------------------------------------------------
--- Part D: core.ribosomal_sequences - only those with latlon != ''
+-- Part D: core.ribosomal_sequences
 -----------------------------------------------------------------------------------------------------
 
 -- pre staging table
@@ -321,52 +324,91 @@ CREATE TABLE silva.ribosomal_sequences_pre (
   primaryaccession text,
   sequence text,
   size int,
-  retrieved timestamp,
+  collectiondate timestamptz,
   samplename text,
   mol_type text,
-  geom geometry
+  geom geometry,
+  depth text
 );
 
 -- insert from LSU
 INSERT INTO silva.ribosomal_sequences_pre 
   SELECT 
-      seqent.primaryaccession,
-    seq.sequence,
-    seqent.sequenceLength,
-    seqent.dateimported::timestamp,
+    seqent.primaryaccession || '_' || region.start || '_' || region.stop,
+    CASE WHEN region.complement = 'yes'
+    THEN translate(substr(seq.sequence, region.start, region.stop - region.start), 'ACGT', 'TGCA')
+    ELSE substr(seq.sequence, region.start, region.stop - region.start)
+    END as sequence,
+    region.stop - region.start + 1,
+    (
+      SELECT parse_silva_coldate.datum FROM web_r8.parse_silva_coldate(collectiondate) parse_silva_coldate(datum, res)
+    ) AS collectiondate,
     '',
     'LSU rRNA',
-    ST_SetSRID(core.parse_latlon(seqent.latlong),4326)
+    ST_SetSRID(core.parse_latlon(seqent.latlong),4326),
+    CASE
+    WHEN seqent.depth = ''::text
+    THEN 'NA'::text
+    ELSE seqent.depth
+    END AS depth
   FROM (
-    SELECT * FROM %LSUSCHEMA%.sequenceentry WHERE latlong != ''
+    SELECT primaryaccession, latlong, collectiondate, depth FROM silva_r113_lsu_web.sequenceentry
   ) seqent
   INNER JOIN (
-    SELECT * FROM %LSUSCHEMA%.sequence
+    SELECT primaryaccession, sequence FROM silva_r113_lsu_web.sequence
   ) seq ON seq.primaryaccession = seqent.primaryaccession
+  INNER JOIN (
+    SELECT primaryaccession, start, stop, complement FROM silva_r113_lsu_web.region
+  ) region ON region.primaryaccession = seq.primaryaccession
   ;
-
+  
 -- insert from SSU
-INSERT INTO silva.ribosomal_sequences_pre 
-  SELECT 
-      seqent.primaryaccession,
-    seq.sequence,
-    seqent.sequenceLength,
-    seqent.dateimported::timestamp,
+  INSERT INTO silva.ribosomal_sequences_pre 
+  SELECT
+    seqent.primaryaccession || '_' || region.start || '_' || region.stop,
+    CASE WHEN region.complement = 'yes'
+    THEN translate(substr(seq.sequence, region.start, region.stop- region.start + 1), 'ACGT', 'TGCA')
+    ELSE substr(seq.sequence, region.start, region.stop - region.start + 1)
+    END as sequence,
+    region.stop - region.start + 1,
+    (
+      SELECT parse_silva_coldate.datum FROM web_r8.parse_silva_coldate(collectiondate) parse_silva_coldate(datum, res)
+    ) AS collectiondate,
     '',
     'SSU rRNA',
-    ST_SetSRID(core.parse_latlon(seqent.latlong),4326)
+    ST_SetSRID(core.parse_latlon(seqent.latlong),4326),
+    CASE
+    WHEN seqent.depth = ''::text
+    THEN 'NA'::text
+    ELSE seqent.depth
+    END AS depth
   FROM (
-    SELECT * FROM %SSUSCHEMA%.sequenceentry WHERE latlong != ''
+    SELECT primaryaccession, latlong, collectiondate, depth FROM silva_r113_ssu_web.sequenceentry
   ) seqent
   INNER JOIN (
-    SELECT * FROM %SSUSCHEMA%.sequence
+    SELECT primaryaccession, sequence FROM silva_r113_ssu_web.sequence
   ) seq ON seq.primaryaccession = seqent.primaryaccession
+  INNER JOIN (
+    SELECT primaryaccession, start, stop, complement FROM silva_r113_ssu_web.region
+    EXCEPT
+    SELECT primaryaccession, start, stop, complement FROM silva_r113_lsu_web.region
+  ) region ON region.primaryaccession = seq.primaryaccession
   ;
 
 -- update sample names
 CREATE INDEX location_idx_se ON silva.ribosomal_sequences_pre USING GIST (geom);
 CREATE INDEX location_idx_samp ON silva.samples_mat USING GIST (geom);
-UPDATE silva.ribosomal_sequences_pre SET samplename = label FROM silva.samples_mat WHERE ST_Equals(silva.samples_mat.geom, silva.ribosomal_sequences_pre.geom);
+UPDATE silva.ribosomal_sequences_pre SET samplename = samples_mat.label FROM silva.samples_mat 
+  WHERE ST_equals(ribosomal_sequences_pre.geom, samples_mat.geom)
+  AND ribosomal_sequences_pre.collectiondate = samples_mat.date_taken
+  AND 
+    (CASE WHEN (samples_mat.attr -> 'depth') IS NULL
+      THEN 'NA'::TEXT
+      ELSE (samples_mat.attr -> 'depth')::TEXT
+      END)
+    =
+     ribosomal_sequences_pre.depth::TEXT
+;
 
 -- actual staging view
 CREATE OR REPLACE VIEW silva.ribosomal_sequences AS
@@ -375,9 +417,9 @@ CREATE OR REPLACE VIEW silva.ribosomal_sequences AS
     size,
     0::numeric AS gc,
     'silva'::text AS data_source,
-    retrieved,
+    collectiondate as retrieved,
     0::int AS project,
-    ''::text AS own,
+    'megdb'::text AS own,
     primaryaccession AS did,
     'silva'::text AS did_auth,
     mol_type,
@@ -398,6 +440,57 @@ CREATE OR REPLACE VIEW silva.ribosomal_sequences AS
     
 -- materialization
 CREATE TABLE silva.ribosomal_sequences_mat (like silva.ribosomal_sequences);
-INSERT INTO silva.ribosomal_sequences_mat SELECT * FROM silva.ribosomal_sequences;  
+INSERT INTO silva.ribosomal_sequences_mat SELECT * FROM silva.ribosomal_sequences;
+
+-- data for web view
+
+DROP TABLE IF EXISTS web_r8.silva_samples CASCADE;
+CREATE TABLE web_r8.silva_samples (
+  LIKE silva.silva_samples_v
+);
+
+INSERT INTO web_r8.silva_samples SELECT * FROM silva.silva_samples_v;
+UPDATE web_r8.silva_samples SET geom = ST_SetSRID(geom,4326);
+
+ALTER TABLE web_r8.silva_samples ADD COLUMN sid INT;
+UPDATE web_r8.silva_samples
+  SET sid = samples_mat.sid
+  FROM silva.samples_mat
+  WHERE silva_samples.geom = samples_mat.geom
+  AND silva_samples.datum = samples_mat.date_taken
+  AND 
+    (CASE WHEN (samples_mat.attr -> 'depth') IS NULL
+      THEN -1::numeric
+      ELSE (samples_mat.attr -> 'depth')::numeric
+      END)
+    =
+    (CASE WHEN silva_samples.depth = 'NA'
+      THEN -1::numeric
+      ELSE silva_samples.depth::numeric
+      END);
+
+CREATE OR REPLACE VIEW web_r8.silva AS 
+ SELECT silva_samples.sid, silva_samples.geom, 
+        CASE
+            WHEN silva_samples.label = ''::text THEN 'unnamed'::text
+            ELSE silva_samples.label
+        END AS site_name, 
+    silva_samples.lat::text AS lat, silva_samples.lon::text AS lon, 
+    core.pp_geom(silva_samples.geom) AS latlon, 
+    core.pp_depth(silva_samples.sid) AS depth, 
+        CASE
+            WHEN silva_samples.datum::text = '-'::text THEN 'NA'::text
+            ELSE silva_samples.datum::text
+        END AS date_taken, 
+    silva_samples.hab_lite, silva_samples.hab_uri, 
+    silva_samples.sample_type AS study_type, 
+    'rRNA sample'::text AS entity_name, ''::text AS entity_url, 
+    ''::text AS entity_country, ''::text AS entity_iho, 
+    ''::text AS entity_region, ''::text AS entity_descr, 
+    core.pp_temperature(silva_samples.sid) AS temperature, 
+    core.pp_salinity(silva_samples.sid) AS salinity, 
+    core.pp_oxygen(silva_samples.sid) AS oxygen, 
+    core.pp_chlorophyll(silva_samples.sid) AS chlorophyll
+   FROM web_r8.silva_samples;
     
 
