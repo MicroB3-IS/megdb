@@ -4,7 +4,7 @@ set search_path = auth, pg_catalog;
 set default_tablespace = '';
 set default_with_oids = false;
 
-SELECT _v.register_patch( '18-user-account', ARRAY['12-security-patch'], NULL );
+SELECT _v.register_patch( '20-user-account', ARRAY['12-security-patch'], NULL );
 
 alter table auth.users add column external_id text;
 
