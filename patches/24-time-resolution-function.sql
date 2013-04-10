@@ -1,6 +1,6 @@
 begin;
 
-SELECT _v.register_patch( '24-time-resolution-function', ARRAY[''], NULL );
+SELECT _v.register_patch( '24-time-resolution-function', NULL, NULL );
 
 CREATE FUNCTION core.get_time_resolution(input TIMESTAMP) RETURNS TEXT AS $$
 DECLARE
