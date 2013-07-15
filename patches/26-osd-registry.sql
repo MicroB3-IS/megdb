@@ -1,6 +1,6 @@
 begin;
 
-SELECT _v.register_patch( '26-osd-registry', '{}', NULL );
+SELECT _v.register_patch( '26-osd-registry', ARRAY['8-authdb'], NULL );
 
 drop schema if exists osdregistry cascade;
 create schema osdregistry;
@@ -27,6 +27,11 @@ CREATE TABLE osdregistry.osd_participants
   coordinator_email text,
   country text,
   CONSTRAINT pk_osd_participants PRIMARY KEY (id)
-)
+);
+
+insert into auth.web_resource_permissions(
+            url_path, http_method, role)
+    values 
+    	('/osd/add*', 'all', 'admin'); -- must be admin to access the osd/add* URL as per design requirements for OSD registry
 
 commit;
