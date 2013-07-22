@@ -15,6 +15,7 @@ drop  table if exists osd_participants;
 CREATE TABLE osdregistry.osd_participants
 (
   id text NOT NULL,
+  osd_ID text,
   site_name text NOT NULL,
   site_lat double precision,
   site_long double precision,
