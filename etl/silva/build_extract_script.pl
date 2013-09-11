@@ -66,10 +66,10 @@ open(OUT,">$outputFile.tmp") or die "Cannot open output file!\n";
 #------------------------------------------------------------------------------------>
 # header
 #------------------------------------------------------------------------------------>
-my $head = "--This script was automatically created by build_extract_script.pl"; 
-$head = "CREATE EXTENSION mysql_fdw;\n";
-$head .= "CREATE SERVER silva_server FOREIGN DATA WRAPPER mysql_fdw OPTIONS (address '$conf{'mysqlhost'}', port '$conf{'mysqlport'}');\n";
-$head .= "CREATE USER MAPPING FOR PUBLIC SERVER $conf{'fdwserver'} OPTIONS (username '$conf{'mysqluser'}', password '$conf{'mysqlpw'}');\n";
+my $head = "--This script was automatically created by build_extract_script.pl";
+$head = "CREATE EXTENSION IF NOT EXISTS mysql_fdw;\n";
+$head .= "BEGIN; CREATE SERVER silva_server FOREIGN DATA WRAPPER mysql_fdw OPTIONS (address '$conf{'mysqlhost'}', port '$conf{'mysqlport'}'); COMMIT;\n";
+$head .= "BEGIN; CREATE USER MAPPING FOR PUBLIC SERVER $conf{'fdwserver'} OPTIONS (username '$conf{'mysqluser'}', password '$conf{'mysqlpw'}'); COMMIT;\n";
 print OUT $head;
 #------------------------------------------------------------------------------------>
 # Convert ddl
@@ -77,74 +77,74 @@ print OUT $head;
 foreach my $schema (@schemas) {
 	my $ddl;
 	my $cmd = "mysqldump --user=$conf{'mysqluser'} --host=$conf{'mysqlhost'} --port=$conf{'mysqlport'} --password=$conf{'mysqlpw'} --skip-triggers --no-data --no-create-db --skip-opt $schema";
-	
-	print "$cmd\n";	
-	
+
+	print "$cmd\n";
+
 	my $result = `$cmd`;
 	if ($? >> 8 != 0) {
 		print $result;
 		exit $? >> 8;
 	}
-	
+
 	print OUT "CREATE SCHEMA $schema;\n";
 	$ddl .= $result;
 	$ddl =~ s/TABLE\s+(\S+)/TABLE $schema\.$1/g;
 
-	# make DDL PostgreSQL compatible 
+	# make DDL PostgreSQL compatible
 	# delete comments
 	$ddl =~ s/--.*\n//g;
 	$ddl =~ s/\/\*.*\n//g;
 	$ddl =~ s/COMMENT\s*'.*?'//g;
-	
+
 	# remove MySQL quotes
 	$ddl =~ s/`//g;
-	
+
 	#remove all keys
 	$ddl =~ s/\s*PRIMARY.*\n//g;
 	$ddl =~ s/\s*KEY.*\n//g;
 	$ddl =~ s/UNIQUE//g;
 	$ddl =~ s/,\s*CONSTRAINT.+?\)/\)/g;
-	
+
 	#remove not nulls
 	$ddl =~ s/NOT\s+NULL//g;
-	
+
 	#remove defaults
 	$ddl =~ s/DEFAULT\s*'.*?'//g;
 	$ddl =~ s/DEFAULT\s*NULL//g;
 	$ddl =~ s/DEFAULT\s*CURRENT\_TIMESTAMP//g;
-	
+
 	#remove enums and sets
 	$ddl =~ s/enum\s*\(.+?\)/TEXT/g;
 	$ddl =~ s/set\s*\(.+?\)/TEXT/g;
-	
+
 	#clean-up number type
 	$ddl =~ s/tinyint/int/g;
 	$ddl =~ s/int\(\d+\)/INT/g;
 	$ddl =~ s/float\(.*?\)/FLOAT/g;
 	$ddl =~ s/unsigned//g;
-	
+
 	#all to text
 	$ddl =~ s/varchar\(\d+\)/TEXT/g;
 	$ddl =~ s/char\(\d+\)/TEXT/g;
 	$ddl =~ s/longtext/TEXT/g;
 	$ddl =~ s/mediumtext/TEXT/g;
-	
+
 	#remove FULLTEXT
 	$ddl =~ s/FULLTEXT//g;
-	
+
 	#remove char set
 	$ddl =~ s/CHARACTER\s+SET\s+\w+//g;
-	
+
 	#remove remaining commas
 	$ddl =~ s/,\s*\)/\)/g;
-	
+
 	print OUT $ddl;
-	
+
 	# create foreign tables
-	
+
 	$ddl =~ s/CREATE\s+TABLE/CREATE FOREIGN TABLE/g;
 	$ddl =~ s/\)\s*;/\) SERVER $conf{'fdwserver'} OPTIONS INSERTQUERYHERE;/g;
-	
+
 	print OUT $ddl;
 }
 close(OUT);
