@@ -1,6 +1,8 @@
 
 BEGIN;
 
+SELECT _v.register_patch('31-mg-traits' , NULL, NULL );
+
 CREATE schema mg_traits;
 
 SET search_path to mg_traits,core;
@@ -34,6 +36,9 @@ CREATE TABLE mg_traits_results (
 
 
 -- testing
+COMMIT;
+
+BEGIN;
 
 INSERT INTO  mg_traits_jobs VALUES ('anonymous', 'http://www.megx.net','test-sample', 'marine');
 
