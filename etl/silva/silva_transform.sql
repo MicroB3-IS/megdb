@@ -352,13 +352,13 @@ INSERT INTO silva.ribosomal_sequences_pre
     ELSE seqent.depth
     END AS depth
   FROM (
-    SELECT primaryaccession, latlong, collectiondate, depth FROM silva_r113_lsu_web.sequenceentry
+    SELECT primaryaccession, latlong, collectiondate, depth FROM %LSUSCHEMA%.sequenceentry
   ) seqent
   INNER JOIN (
-    SELECT primaryaccession, sequence FROM silva_r113_lsu_web.sequence
+    SELECT primaryaccession, sequence FROM %LSUSCHEMA%.sequence
   ) seq ON seq.primaryaccession = seqent.primaryaccession
   INNER JOIN (
-    SELECT primaryaccession, start, stop, complement FROM silva_r113_lsu_web.region
+    SELECT primaryaccession, start, stop, complement FROM %LSUSCHEMA%.region
   ) region ON region.primaryaccession = seq.primaryaccession
   ;
   
@@ -383,15 +383,15 @@ INSERT INTO silva.ribosomal_sequences_pre
     ELSE seqent.depth
     END AS depth
   FROM (
-    SELECT primaryaccession, latlong, collectiondate, depth FROM silva_r113_ssu_web.sequenceentry
+    SELECT primaryaccession, latlong, collectiondate, depth FROM %SSUSCHEMA%.sequenceentry
   ) seqent
   INNER JOIN (
-    SELECT primaryaccession, sequence FROM silva_r113_ssu_web.sequence
+    SELECT primaryaccession, sequence FROM %SSUSCHEMA%.sequence
   ) seq ON seq.primaryaccession = seqent.primaryaccession
   INNER JOIN (
-    SELECT primaryaccession, start, stop, complement FROM silva_r113_ssu_web.region
+    SELECT primaryaccession, start, stop, complement FROM %SSUSCHEMA%.region
     EXCEPT
-    SELECT primaryaccession, start, stop, complement FROM silva_r113_lsu_web.region
+    SELECT primaryaccession, start, stop, complement FROM %SSUSCHEMA%.region
   ) region ON region.primaryaccession = seq.primaryaccession
   ;
 
