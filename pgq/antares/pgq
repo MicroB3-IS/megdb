@@ -56,12 +56,6 @@ if [ -z $SMF_FMRI ]; then
      exit $SMF_EXIT_ERR
 fi
 
-if [ -z $PGDATA ]; then
-
-     echo "postgresql/data property not set"
-     exit $SMF_EXIT_ERR_CONFIG
-fi
-
 case "$1" in
 'start')
     $PYTHON $PGQADM -d $PGQDIR/$TICKER ticker
