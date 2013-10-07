@@ -22,10 +22,10 @@ class QsubConsumer(pgq.Consumer):
 
 		# the table that triggered the event decides which script to submit
 		# all SGE params are in the script
-		if ( ev.ev_extra1 == 'blast_run'):
+		if ( ev.ev_extra1 == 'core.blast_run'):
 			self.log.info ("Consuming event triggered by INSERT on 'blast_run' table")
 			p = "qsub ~/pgq/blastc.sh '%s'" % (ev.ev_data) 
-		elif (ev.ev_extra1 == 'mg_traits_jobs'):
+		elif (ev.ev_extra1 == 'mg_traits.mg_traits_jobs'):
 			self.log.info ("Consuming event triggered by INSERT on 'mg_traits_jobs' table")
 			p = "qsub ~/pgq/traits_calc.sh '%s'" % (ev.ev_data) # all SGE params are in the script
 		else:
