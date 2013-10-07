@@ -47,7 +47,7 @@ PGQADM="/opt/postgres/9.3.0/bin/pgqadm.py"
 export PYTHONPATH="$PYTHONPATH:/opt/postgres/9.3.0/lib/python2.6/site-packages/"
 
 # location of python
-PYTHON="/opt/python/2.6.8/bin/python"
+PYTHON="/opt/python/2.7.3/bin/python"
 
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/opt/postgres/9.3.0/lib
 

@@ -89,7 +89,7 @@ CDDL HEADER END
 
      <instance name='dev' enabled='true'>
           <method_context>
-               <method_credential user='postgres' group='postgres' />
+               <method_credential user='megxnet' group='postgres' />
           </method_context>
 
           <property_group name='pgq' type='application'>
@@ -102,7 +102,7 @@ CDDL HEADER END
 
      <instance name='int' enabled='true'>
           <method_context>
-               <method_credential user='postgres' group='postgres' />
+               <method_credential user='megxnet' group='postgres' />
           </method_context>
 
           <property_group name='pgq' type='application'>
@@ -115,7 +115,7 @@ CDDL HEADER END
 
      <instance name='prod' enabled='true'>
           <method_context>
-               <method_credential user='postgres' group='postgres' />
+               <method_credential user='megxnet' group='postgres' />
           </method_context>
 
           <property_group name='pgq' type='application'>
