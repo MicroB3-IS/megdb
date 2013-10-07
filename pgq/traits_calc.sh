@@ -1,4 +1,17 @@
 #!/usr/bin/bash
+### SGE CONFIGS ###
+#$ -o /vol/tmp/megx/
+#$ -l ga
+#$ -j y
+#$ -terse
+#$ -P megx.p
+#$ -R y
+#$ -m sa
+#$ -M mschneid@mpi-bremen.de,rkottman@mpi-bremen.de
+
+#set -x
+#sleep 30
+
 # variables $db_host, $db_port, $db_name are passed by qsub -v db_host=[host],db_port=[port],db_name=[name]
 #example from blast consumer;
 #echo $(psql -U sge -h $db_host -p $db_port -d $db_name -c "COPY(select seq from core.blast_run where sid='$sid' AND jid='$jid'::numeric) TO STDOUT") | eval blastall -p $prog -d /vol/biodb/megx/$db $evalue -m 7 > $outfile
