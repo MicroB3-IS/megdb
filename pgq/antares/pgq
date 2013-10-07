@@ -49,7 +49,8 @@ export PYTHONPATH="$PYTHONPATH:/opt/postgres/9.3.0/lib/python2.6/site-packages/"
 # location of python
 PYTHON="/opt/python/2.7.3/bin/python"
 
-export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/opt/postgres/9.3.0/lib
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/opt/postgres/9.3.0/lib:/opt/sge/6_2u5/lib
+export PATH=$PATH:/opt/sge/6_2u5/bin
 
 if [ -z $SMF_FMRI ]; then
      echo "SMF framework variables are not initialized."
