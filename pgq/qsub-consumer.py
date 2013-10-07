@@ -1,4 +1,4 @@
-import sys, os, pgq, skytools, subprocess, time
+import sys, os, pgq, skytools, subprocess, time, shlex
 
 class QsubConsumer(pgq.Consumer):
 	def __init__(self, args):
