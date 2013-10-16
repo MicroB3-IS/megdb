@@ -40,7 +40,7 @@ COMMIT;
 
 BEGIN;
 
-INSERT INTO  mg_traits_jobs VALUES ('anonymous', 'http://www.megx.net','test-sample', 'marine');
+INSERT INTO  mg_traits.mg_traits_jobs VALUES ('anonymous', 'http://www.megx.net','test-sample', 'marine');
 
 ROLLBACK;
 
