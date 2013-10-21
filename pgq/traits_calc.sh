@@ -1,4 +1,4 @@
-#!/usr/bin/bash
+#!/bin/bash
 ### SGE CONFIGS ###
 #$ -o /vol/tmp/megx/
 #$ -l ga
