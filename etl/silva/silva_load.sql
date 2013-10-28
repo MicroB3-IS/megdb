@@ -10,22 +10,20 @@ INSERT INTO core.samplingsites (label, locdesc, locshortdesc, max_uncertain, loc
   )
 ;
 
+DELETE FROM core.sample_measures WHERE study = 'silva';
+DELETE FROM core.samples WHERE study = 'silva';
+TRUNCATE core.ribosomal_sequences;
+
 INSERT INTO core.samples (sid, max_uncertain, date_taken, date_res, label, material, habitat, hab_lite, country, project, own, old_geom, study, pool, geom, device, biome, feature, attr)
-  SELECT * FROM silva.samples_mat WHERE NOT EXISTS (
-    SELECT 1 FROM core.samples WHERE study = silva.samples_mat.study AND label = silva.samples_mat.label
-  )
+  SELECT * FROM silva.samples_mat
 ;
 
 INSERT INTO core.ribosomal_sequences (sequence, size, gc, data_source, retrieved, project, own, did, did_auth, mol_type, acc_ver, isolate_id, gpid, center, status, seq_platform, seq_approach, seq_method, study, sample_name, isolate_name, estimated_error_rate, calculation_method)
-  SELECT sequence::dna_sequence, size, gc, data_source, retrieved, project, own, did, did_auth, mol_type, acc_ver, isolate_id, gpid, center, status, seq_platform, seq_approach, seq_method, study, sample_name, isolate_name, estimated_error_rate, calculation_method FROM silva.ribosomal_sequences_mat WHERE NOT EXISTS (
-    SELECT 1 FROM core.ribosomal_sequences WHERE did = silva.ribosomal_sequences_mat.did AND did_auth = silva.ribosomal_sequences_mat.did_auth
-  )
+  SELECT sequence::dna_sequence, size, gc, data_source, retrieved, project, own, did, did_auth, mol_type, acc_ver, isolate_id, gpid, center, status, seq_platform, seq_approach, seq_method, study, sample_name, isolate_name, estimated_error_rate, calculation_method FROM silva.ribosomal_sequences_mat 
 ;
 
 INSERT INTO core.sample_measures (sid, material, param, unit, vals, mcode, conducted, conducted_res, device, project, own, min, max, std, meas_tot, study, sample_name)
-  SELECT sid, material, param, unit, vals, mcode, conducted, conducted_res, device, project, own, min, max, std, meas_tot, study, sample_name FROM silva.sample_measures_mat WHERE NOT EXISTS (
-    SELECT 1 FROM core.sample_measures WHERE sample_name = silva.sample_measures_mat.sample_name
-  )
+  SELECT sid, material, param, unit, vals, mcode, conducted, conducted_res, device, project, own, min, max, std, meas_tot, study, sample_name FROM silva.sample_measures_mat
 ;
  
-ROLLBACK; 
+COMMIT;

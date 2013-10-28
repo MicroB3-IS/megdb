@@ -25,22 +25,32 @@
 --  -Sequences are grouped to samples by geometry, depth and date
 --  -Sampling sites are grouped by geometry
 --
+BEGIN;
+
+DROP INDEX IF EXISTS %LSUSCHEMA%.pa_idx_21;
+DROP INDEX IF EXISTS %LSUSCHEMA%.pa_idx_22;
+DROP INDEX IF EXISTS %LSUSCHEMA%.pa_idx_23;
+DROP INDEX IF EXISTS %SSUSCHEMA%.pa_idx_11;
+DROP INDEX IF EXISTS %SSUSCHEMA%.pa_idx_12;
+DROP INDEX IF EXISTS %SSUSCHEMA%.pa_idx_13;
+
+DROP SCHEMA IF EXISTS silva CASCADE;
 
 CREATE SCHEMA silva;
 
 set search_path = silva, public;
 
 --get some speed-up
-CREATE INDEX pa_idx_21 ON %LSUSCHEMA%.sequenceentry USING BTREE (primaryaccession);
-CREATE INDEX pa_idx_22 ON %LSUSCHEMA%.sequence USING BTREE (primaryaccession);
-CREATE INDEX pa_idx_23 ON %LSUSCHEMA%.region USING BTREE (primaryaccession);
-CREATE INDEX pa_idx_11 ON %SSUSCHEMA%.sequenceentry USING BTREE (primaryaccession);
-CREATE INDEX pa_idx_12 ON %SSUSCHEMA%.sequence USING BTREE (primaryaccession);
-CREATE INDEX pa_idx_13 ON %SSUSCHEMA%.region USING BTREE (primaryaccession);
+CREATE INDEX pa_idx_21 ON %LSUSCHEMA%.sequenceentry USING BTREE (seqent_id);
+CREATE INDEX pa_idx_22 ON %LSUSCHEMA%.sequence USING BTREE (seqent_id);
+CREATE INDEX pa_idx_23 ON %LSUSCHEMA%.region USING BTREE (seqent_id);
+CREATE INDEX pa_idx_11 ON %SSUSCHEMA%.sequenceentry USING BTREE (seqent_id);
+CREATE INDEX pa_idx_12 ON %SSUSCHEMA%.sequence USING BTREE (seqent_id);
+CREATE INDEX pa_idx_13 ON %SSUSCHEMA%.region USING BTREE (seqent_id);
 
 -- legacy code reused
 CREATE OR REPLACE VIEW silva_regions_v AS 
-  SELECT r.primaryaccession, r.start AS l, r.stop AS r, 
+  SELECT r.seqent_id, r.start AS l, r.stop AS r, 
       core.parse_latlon(s.latlong) AS geom, s.latlong, r.rna_type, 
       s.alternativename, s.biomaterial, s.clone, s.clonelib, 
       upper(s.collectiondate) AS collectiondate, s.collector, s.country, r.crc, 
@@ -52,7 +62,7 @@ CREATE OR REPLACE VIEW silva_regions_v AS
       s.sequencelength, s.sequenceversion, s.specifichost, s.specimenvoucher, 
       s.strain, s.strainid, s.subspecies, s.taxonomy
     FROM (
-      SELECT sequenceentry.primaryaccession, 
+      SELECT sequenceentry.seqent_id, 
       sequenceentry.accessions, sequenceentry.alternativename, 
       sequenceentry.biomaterial, sequenceentry.circular, 
       sequenceentry.clone, sequenceentry.clonelib, 
@@ -80,7 +90,7 @@ CREATE OR REPLACE VIEW silva_regions_v AS
       's'::character varying(1) AS rna_type
     FROM %SSUSCHEMA%.sequenceentry
     UNION 
-    SELECT sequenceentry.primaryaccession, 
+    SELECT sequenceentry.seqent_id, 
       sequenceentry.accessions, sequenceentry.alternativename, 
             sequenceentry.biomaterial, sequenceentry.circular, 
             sequenceentry.clone, sequenceentry.clonelib, 
@@ -127,7 +137,7 @@ CREATE OR REPLACE VIEW silva_regions_v AS
             pintailquality, crc,
             'l'::character varying(1) AS rna_type
     FROM %LSUSCHEMA%.region) r
-  USING (primaryaccession, rna_type)
+  USING (seqent_id, rna_type)
 ;
 
 -- legacy code reused
@@ -182,28 +192,30 @@ CREATE OR REPLACE VIEW silva_samples_v AS
            END AS habitat, 
            count(*) AS nseq
     FROM silva_regions_v
-    WHERE silva_regions_v.geom IS NOT NULL
+--    WHERE silva_regions_v.geom IS NOT NULL
     GROUP BY silva_regions_v.geom, silva_regions_v.depth, silva_regions_v.collectiondate
   ) f
   LEFT JOIN
   (
-    SELECT array_agg(silva_regions_v.primaryaccession) AS acclist, 
+    SELECT array_agg(silva_regions_v.seqent_id) AS acclist, 
            silva_regions_v.geom,
            silva_regions_v.depth, 
            silva_regions_v.collectiondate, 
            count(*) AS nseq
     FROM silva_regions_v
-    WHERE silva_regions_v.geom IS NOT NULL AND silva_regions_v.rna_type::text = 'l'::text
+    WHERE --silva_regions_v.geom IS NOT NULL AND 
+silva_regions_v.rna_type::text = 'l'::text
     GROUP BY silva_regions_v.geom, silva_regions_v.depth, silva_regions_v.collectiondate
   ) l ON f.geom = l.geom AND f.depth = l.depth AND f.collectiondate = l.collectiondate
   LEFT JOIN
   (
-    SELECT array_agg(silva_regions_v.primaryaccession) AS acclist, 
+    SELECT array_agg(silva_regions_v.seqent_id) AS acclist, 
            silva_regions_v.geom,
            silva_regions_v.depth, 
            silva_regions_v.collectiondate, count(*) AS nseq
     FROM silva_regions_v
-    WHERE silva_regions_v.geom IS NOT NULL AND silva_regions_v.rna_type::text = 's'::text
+    WHERE --silva_regions_v.geom IS NOT NULL AND 
+silva_regions_v.rna_type::text = 's'::text
     GROUP BY silva_regions_v.geom, silva_regions_v.depth, silva_regions_v.collectiondate
   ) s ON s.geom = f.geom AND s.depth = f.depth AND s.collectiondate = f.collectiondate;
 
@@ -232,7 +244,7 @@ CREATE OR REPLACE VIEW samplingsites AS
     max(datum) AS georef_time,
     ''::text AS georef_remark,
     geom
-  FROM silva_samples_v GROUP BY geom;
+  FROM silva_samples_v WHERE geom IS NOT NULL GROUP BY geom;
 --
 -- materialize samplingsites view
 --  
@@ -321,7 +333,7 @@ INSERT INTO silva.sample_measures_mat SELECT * FROM sample_measures;
 
 -- pre staging table
 CREATE TABLE silva.ribosomal_sequences_pre (
-  primaryaccession text,
+  seqent_id text,
   sequence text,
   size int,
   collectiondate timestamptz,
@@ -334,7 +346,7 @@ CREATE TABLE silva.ribosomal_sequences_pre (
 -- insert from LSU
 INSERT INTO silva.ribosomal_sequences_pre 
   SELECT 
-    seqent.primaryaccession || '_' || region.start || '_' || region.stop,
+    seqent.seqent_id || '_' || region.start || '_' || region.stop ||'_lsu',
     CASE WHEN region.complement = 'yes'
     THEN translate(substr(seq.sequence, region.start, region.stop - region.start), 'ACGT', 'TGCA')
     ELSE substr(seq.sequence, region.start, region.stop - region.start)
@@ -352,20 +364,20 @@ INSERT INTO silva.ribosomal_sequences_pre
     ELSE seqent.depth
     END AS depth
   FROM (
-    SELECT primaryaccession, latlong, collectiondate, depth FROM %LSUSCHEMA%.sequenceentry
+    SELECT seqent_id, latlong, collectiondate, depth FROM %LSUSCHEMA%.sequenceentry
   ) seqent
   INNER JOIN (
-    SELECT primaryaccession, sequence FROM %LSUSCHEMA%.sequence
-  ) seq ON seq.primaryaccession = seqent.primaryaccession
+    SELECT seqent_id, sequence FROM %LSUSCHEMA%.sequence
+  ) seq ON seq.seqent_id = seqent.seqent_id
   INNER JOIN (
-    SELECT primaryaccession, start, stop, complement FROM %LSUSCHEMA%.region
-  ) region ON region.primaryaccession = seq.primaryaccession
+    SELECT seqent_id, start, stop, complement FROM %LSUSCHEMA%.region
+  ) region ON region.seqent_id = seq.seqent_id
   ;
   
 -- insert from SSU
   INSERT INTO silva.ribosomal_sequences_pre 
   SELECT
-    seqent.primaryaccession || '_' || region.start || '_' || region.stop,
+    seqent.seqent_id || '_' || region.start || '_' || region.stop,
     CASE WHEN region.complement = 'yes'
     THEN translate(substr(seq.sequence, region.start, region.stop- region.start + 1), 'ACGT', 'TGCA')
     ELSE substr(seq.sequence, region.start, region.stop - region.start + 1)
@@ -383,16 +395,16 @@ INSERT INTO silva.ribosomal_sequences_pre
     ELSE seqent.depth
     END AS depth
   FROM (
-    SELECT primaryaccession, latlong, collectiondate, depth FROM %SSUSCHEMA%.sequenceentry
+    SELECT seqent_id, latlong, collectiondate, depth FROM %SSUSCHEMA%.sequenceentry
   ) seqent
   INNER JOIN (
-    SELECT primaryaccession, sequence FROM %SSUSCHEMA%.sequence
-  ) seq ON seq.primaryaccession = seqent.primaryaccession
+    SELECT seqent_id, sequence FROM %SSUSCHEMA%.sequence
+  ) seq ON seq.seqent_id = seqent.seqent_id
   INNER JOIN (
-    SELECT primaryaccession, start, stop, complement FROM %SSUSCHEMA%.region
+    SELECT seqent_id, start, stop, complement FROM %SSUSCHEMA%.region
     EXCEPT
-    SELECT primaryaccession, start, stop, complement FROM %SSUSCHEMA%.region
-  ) region ON region.primaryaccession = seq.primaryaccession
+    SELECT seqent_id, start, stop, complement FROM %LSUSCHEMA%.region
+  ) region ON region.seqent_id = seq.seqent_id
   ;
 
 -- update sample names
@@ -410,6 +422,8 @@ UPDATE silva.ribosomal_sequences_pre SET samplename = samples_mat.label FROM sil
      ribosomal_sequences_pre.depth::TEXT
 ;
 
+-- avoid duplicate ids
+
 -- actual staging view
 CREATE OR REPLACE VIEW silva.ribosomal_sequences AS
   SELECT 
@@ -420,7 +434,7 @@ CREATE OR REPLACE VIEW silva.ribosomal_sequences AS
     collectiondate as retrieved,
     0::int AS project,
     'megdb'::text AS own,
-    primaryaccession AS did,
+    seqent_id AS did,
     'silva'::text AS did_auth,
     mol_type,
     ''::text AS acc_ver,
@@ -494,3 +508,4 @@ CREATE OR REPLACE VIEW web_r8.silva AS
    FROM web_r8.silva_samples;
     
 
+COMMIT;
