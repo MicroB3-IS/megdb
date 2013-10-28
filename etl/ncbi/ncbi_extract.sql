@@ -5,6 +5,7 @@ CREATE SCHEMA ncbi;
 
 CREATE TABLE ncbi.genome_info (
   organism_name text,
+  taxid text,
   bio_project_accession text,
   bio_project_id text,
   main_group text,
