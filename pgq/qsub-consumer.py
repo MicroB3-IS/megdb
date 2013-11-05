@@ -10,24 +10,25 @@ class QsubConsumer(pgq.Consumer):
 		#	ev_data: column values urlencoded, to decode
 		#		d = skytools.db_urldecode(ev.ev_data)
 		#	ev_extra1: table name
-
-		# extract connection parameters from src_db, src_db is configured in the consumer .conf file
-        	connection_parameters = dict(token.split('=') for token in shlex.split(src_db.dsn))
+		this_dir = os.path.dirname(os.path.abspath(__file__))
+		general_config = dict(self.cf.cf.items(self.cf.main_section))
 
 		# pass connection parameters to submitted script
-		p = "qsub -v"
-		p += " db_host=%s" % (connection_parameters['host'])
-		p += ",db_port=%s" % (connection_parameters['port'])
-		p += ",db_name=%s" % (connection_parameters['dbname'])
+		p = "qsub %s -v firstvar=true" % (general_config['qsub_args'])
 
 		# the table that triggered the event decides which script to submit
 		# all SGE params are in the script
 		if ( ev.ev_extra1 == 'core.blast_run'):
 			self.log.info ("Consuming event triggered by INSERT on 'blast_run' table")
-			p+ = " ~/pgq/blastc.sh '%s'" % (ev.ev_data) 
+			for key, value in self.cf.cf.items('blast'):
+				p += ",%s=%s" % (key, value)
+			p += " %s/blastc.sh '%s'" % (this_dir, ev.ev_data)
+
 		elif (ev.ev_extra1 == 'mg_traits.mg_traits_jobs'):
 			self.log.info ("Consuming event triggered by INSERT on 'mg_traits_jobs' table")
-			p += " ~/pgq/traits_calc.sh '%s'" % (ev.ev_data) # all SGE params are in the script
+			for key, value in self.cf.cf.items('mg_traits'):
+				p += ",%s=%s" % (key, value)
+			p += " %s/traits_calc.sh '%s'" % (this_dir, ev.ev_data)
 		else:
 			self.log.info ("table '%s' is not supported by qsub consumer. Event will be ignored.\n" % (ev.ev_extra1))
 			p = "echo"
