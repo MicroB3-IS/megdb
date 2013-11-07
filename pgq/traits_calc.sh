@@ -116,36 +116,36 @@ if [ "$NUM_READS" -ne "$NUM_UNIQUE" ]; then
   exit 1
 fi
 
-###########################################################################################################
-# Cluster
-###########################################################################################################
-printf 'Clustering at 95%%...'
-CLUST95="03-clustered-sequences"
-CLUST95_LOG=$CLUST95".log"
-CLUST95_CLSTR=$CLUST95".clstr"
+# ###########################################################################################################
+# # Cluster
+# ###########################################################################################################
+# printf 'Clustering at 95%%...'
+# CLUST95="03-clustered-sequences"
+# CLUST95_LOG=$CLUST95".log"
+# CLUST95_CLSTR=$CLUST95".clstr"
 
-$cd_hit_est -i $UNIQUE -o $CLUST95 -c 0.95 -T 8 -M 50000 -d 0 > $CLUST95_LOG
-if [ "$?" -ne "0" ]; then
-  echo "failed"
-  echo "INSERT INTO mg_traits.mg_traits_results (sample_label, return_code, error_message) VALUES ('$SAMPLE_LABEL',1,'$MG_URL cannot be processed by cd-hit-est');" | psql -U $target_db_user -h $target_db_host -p $target_db_port -d $target_db_name
-  exit 1
-fi
-echo "OK"
+# $cd_hit_est -i $UNIQUE -o $CLUST95 -c 0.95 -T 8 -M 50000 -d 0 > $CLUST95_LOG
+# if [ "$?" -ne "0" ]; then
+#   echo "failed"
+#   echo "INSERT INTO mg_traits.mg_traits_results (sample_label, return_code, error_message) VALUES ('$SAMPLE_LABEL',1,'$MG_URL cannot be processed by cd-hit-est');" | psql -U $target_db_user -h $target_db_host -p $target_db_port -d $target_db_name
+#   exit 1
+# fi
+# echo "OK"
 
-NUM_CLUST95=$(grep -c '^>' $CLUST95_CLSTR)
+# NUM_CLUST95=$(grep -c '^>' $CLUST95_CLSTR)
 
-###########################################################################################################
-# Remove singletons
-###########################################################################################################
-printf "Removing singletons..."
+# ###########################################################################################################
+# # Remove singletons
+# ###########################################################################################################
+# printf "Removing singletons..."
 
-$cd_hit_mms $CLUST95 $CLUST95_CLSTR tmp_seqs 2
-if [ "$?" -ne "0" ]; then
-  echo "failed"
-  echo "INSERT INTO mg_traits.mg_traits_results (sample_label, return_code, error_message) VALUES ('$SAMPLE_LABEL',1,'$MG_URL cannot be processed by cd-hit');" | psql -U $target_db_user -h $target_db_host -p $target_db_port -d $target_db_name
-  exit 1
-fi
-echo "OK"
+# $cd_hit_mms $CLUST95 $CLUST95_CLSTR tmp_seqs 2
+# if [ "$?" -ne "0" ]; then
+#   echo "failed"
+#   echo "INSERT INTO mg_traits.mg_traits_results (sample_label, return_code, error_message) VALUES ('$SAMPLE_LABEL',1,'$MG_URL cannot be processed by cd-hit');" | psql -U $target_db_user -h $target_db_host -p $target_db_port -d $target_db_name
+#   exit 1
+# fi
+# echo "OK"
 
 ###########################################################################################################
 # Calculate sequence statistics
@@ -154,7 +154,7 @@ printf "Calculating sequence statistics..."
 INFOSEQ_TMPFILE="04-stats-tempfile"
 INFOSEQ_MGSTATS="04-mg_stats"
 
-infoseq $CLUST95 -only -pgc -length -noheading -auto > $INFOSEQ_TMPFILE
+infoseq $RAW_FASTA -only -pgc -length -noheading -auto > $INFOSEQ_TMPFILE
 if [ "$?" -ne "0" ]; then
   echo "failed"
   echo "INSERT INTO mg_traits.mg_traits_results (sample_label, return_code, error_message) VALUES ('$SAMPLE_LABEL',1,'Cannot calculate sequence statistics. Please contact adminitrator.');" | psql -U $target_db_user -h $target_db_host -p $target_db_port -d $target_db_name
@@ -192,7 +192,7 @@ NSEQ=$[($NUM_READS/8)+1]
 
 #Split original in as many files as cores
 printf "Splitting file ($NSEQ seqs file)..."
-awk -vO=$NSEQ 'BEGIN {n_seq=0;} /^>/ {if(n_seq%O==0){file=sprintf("05-part-%d.fa",n_seq);} print >> file; n_seq++; next;} { print >> file; }' < $CLUST95
+awk -vO=$NSEQ 'BEGIN {n_seq=0;} /^>/ {if(n_seq%O==0){file=sprintf("05-part-%d.fa",n_seq);} print >> file; n_seq++; next;} { print >> file; }' < $RAW_FASTA
 echo "OK"
 
 printf "Gene calling..."
@@ -273,8 +273,8 @@ write(ab, file = "$ABRATIO_FILE")
 RSCRIPT
 
 ABRATIO=$(cat $ABRATIO_FILE)
-compseq --auto -stdout -word 1 $CLUST95 |awk '{if (NF == 5 && $0 ~ /^A|T|C|G/ && $0 !~ /[:alphanum:]/ ){print $1,$2,$3}}' > $NUC_FREQS
-compseq --auto -stdout -word 2 $CLUST95 |awk '{if (NF == 5 && $0 ~ /^A|T|C|G/ && $0 !~ /[:alphanum:]/ ){print $1,$2,$3}}' > $DINUC_FREQS
+compseq --auto -stdout -word 1 $RAW_FASTA |awk '{if (NF == 5 && $0 ~ /^A|T|C|G/ && $0 !~ /[:alphanum:]/ ){print $1,$2,$3}}' > $NUC_FREQS
+compseq --auto -stdout -word 2 $RAW_FASTA |awk '{if (NF == 5 && $0 ~ /^A|T|C|G/ && $0 !~ /[:alphanum:]/ ){print $1,$2,$3}}' > $DINUC_FREQS
 
 $r_interpreter --vanilla --slave <<RSCRIPT
 nuc<-read.table(file = "$NUC_FREQS", header = F, stringsAsFactors = F, sep = ' ')
