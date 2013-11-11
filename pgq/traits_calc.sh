@@ -12,6 +12,7 @@ echo "UPro: $upro"
 echo "GNU Parallel: $gnuparallel"
 echo "R: $r_interpreter"
 echo "PFAM acc: $pfam_accessions"
+echo "TF file: $tffile"
 
 ###########################################################################################################
 # Parse parameters
@@ -219,6 +220,7 @@ PFAMFILE="06-pfam"
 PFAMDB="06-pfamdb"
 FUNCTIONALTABLE="06-pfam-functional-table"
 CODONCUSP="06-codon.cusp"
+TFPERC="06-tfperc"
 $upro < $GENENT | awk '{FS=",";printf("PF%05d\n", $4)}' > $PFAMFILE
 if [ "$?" -ne "0" ]; then
   echo "failed"
@@ -229,11 +231,15 @@ fi
 $r_interpreter --vanilla --slave <<RSCRIPT
 t<-read.table(file = '$PFAMFILE', header = F, stringsAsFactors=F)
 p<-read.table(file = '$pfam_accessions', header = F, stringsAsFactors=F)
+tf<-read.table(file = '$TFFILE', header = F, stringsAsFactors=F)
 t.t<-as.data.frame(table(t))
 colnames(p)<-'t'
 t.m<-merge(t.t, p, all = T, by= "t")
 t.m[is.na(t.m)]<-0
+tf.m<-merge(t.t, tf, all = F, by= "t")
+perc.tf<-(sum(tf.m[,2])/sum(t.m[,2]))*100
 write.table(t.m, file = '$FUNCTIONALTABLE', sep = "\t", row.names = F, quote = F, col.names = F)
+write.table(perc.tf, file = '$TFPERC', sep = "\t", row.names = F, quote = F, col.names = F)
 RSCRIPT
 if [ "$?" -ne "0" ]; then
   echo "failed"
@@ -241,7 +247,7 @@ if [ "$?" -ne "0" ]; then
   exit 1
 fi
 
-awk -v f=$SAMPLE_LABEL 'BEGIN{ORS="";print "f\t{"}{ if (NR == 1) {print "{"$1","$2"}"}else{print ",{"$1","$2"}"}}END{print "}"}' $FUNCTIONALTABLE > $PFAMDB
+awk -vO=$SAMPLE_LABEL 'BEGIN{ORS="";print "O\t{"}{ if (NR == 1) {print "{"$1","$2"}"}else{print ",{"$1","$2"}"}}END{print "}"}' $FUNCTIONALTABLE > $PFAMDB
 
 cusp --auto -stdout $GENENT |awk '{if ($0 !~ "*" && $0 !~ /[:alphanum:]/ && $0 !~ /^$/){ print $1,$2,$5}}' > $CODONCUSP
 if [ "$?" -ne "0" ]; then
@@ -275,6 +281,7 @@ RSCRIPT
 ABRATIO=$(cat $ABRATIO_FILE)
 compseq --auto -stdout -word 1 $RAW_FASTA |awk '{if (NF == 5 && $0 ~ /^A|T|C|G/ && $0 !~ /[:alphanum:]/ ){print $1,$2,$3}}' > $NUC_FREQS
 compseq --auto -stdout -word 2 $RAW_FASTA |awk '{if (NF == 5 && $0 ~ /^A|T|C|G/ && $0 !~ /[:alphanum:]/ ){print $1,$2,$3}}' > $DINUC_FREQS
+PERCTF=$(cat $TFPERC)
 
 $r_interpreter --vanilla --slave <<RSCRIPT
 nuc<-read.table(file = "$NUC_FREQS", header = F, stringsAsFactors = F, sep = ' ')
@@ -316,11 +323,11 @@ RSCRIPT
 
 printf "$SAMPLE_LABEL\t" | cat - $AA_TABLE | psql -U $target_db_user -h $target_db_host -p $target_db_port -d $target_db_name -c "\COPY mg_traits.mg_traits_aa FROM STDIN"
 
-cat $PFAMFILE | tr '\n' ',' | sed -e "s/^/$SAMPLE_LABEL\t\\{/" -e "s/,$/\\}/" | psql -U $target_db_user -h $target_db_host -p $target_db_port -d $target_db_name -c "\COPY mg_traits.mg_traits_pfam FROM STDIN"
+cat $PFAMDB | tr '\n' ',' | sed -e "s/^/$SAMPLE_LABEL\t\\{/" -e "s/,$/\\}/" | psql -U $target_db_user -h $target_db_host -p $target_db_port -d $target_db_name -c "\COPY mg_traits.mg_traits_pfam FROM STDIN"
 
 printf "$SAMPLE_LABEL\t" | cat - $ODDS_TABLE | psql -U $target_db_user -h $target_db_host -p $target_db_port -d $target_db_name -c "\COPY mg_traits.mg_traits_dinuc FROM STDIN"
 
-echo "INSERT INTO mg_traits.mg_traits_results (sample_label, gc_content, gc_variance, num_genes, total_mb, num_reads, ab_ratio) VALUES ('$SAMPLE_LABEL',$GC,$VARGC, $NUM_GENES, $NUM_BASES, $NUM_READS, $ABRATIO);" | psql -U $target_db_user -h $target_db_host -p $target_db_port -d $target_db_name
+echo "INSERT INTO mg_traits.mg_traits_results (sample_label, gc_content, gc_variance, num_genes, total_mb, num_reads, ab_ratio, perc_tf) VALUES ('$SAMPLE_LABEL',$GC,$VARGC, $NUM_GENES, $NUM_BASES, $NUM_READS, $ABRATIO, $PERCTF);" | psql -U $target_db_user -h $target_db_host -p $target_db_port -d $target_db_name
 
 cd ..
 rm -rf "job-$JOB_ID"
