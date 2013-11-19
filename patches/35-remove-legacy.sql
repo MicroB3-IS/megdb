@@ -1,0 +1,53 @@
+BEGIN;
+
+SELECT _v.register_patch('35-remove-legacy', ARRAY['31-mg-traits'], NULL );
+
+DELETE FROM core.annotation;
+DELETE FROM core.annotator;
+DELETE FROM core.authorlists;
+DELETE FROM core.authors;
+DELETE FROM core.articles;
+DELETE FROM core.journals;
+DELETE FROM core.aux_audit;
+DELETE FROM core.aux_cv;
+DELETE FROM core.aux_project;
+DELETE FROM core.aux_row_time;
+DELETE FROM core.dna_id_maps;
+DELETE FROM core.dna_sets;
+DELETE FROM core.tool_dna_runs;
+DELETE FROM core.dna_set_mdata;
+DELETE FROM core.mg_studies;
+DELETE FROM core.multiregion_members;
+DELETE FROM core.multiregions;
+DELETE FROM core.seq_regions;
+DELETE FROM core.observation;
+DELETE FROM core.organisms;
+DELETE FROM core.sequenceentries;
+DELETE FROM core.tags;
+
+DROP TABLE core.annotation;
+DROP TABLE core.annotator;
+DROP TABLE core.authorlists;
+DROP TABLE core.authors;
+DROP TABLE core.articles;
+DROP TABLE core.journals;
+DROP TABLE core.aux_audit;
+DROP TABLE core.aux_cv;
+DROP TABLE core.aux_project;
+DROP TABLE core.aux_row_time;
+DROP TABLE core.dna_id_maps;
+DROP TABLE core.dna_sets;
+DROP TABLE core.tool_dna_runs;
+DROP TABLE core.dna_set_mdata;
+DROP TABLE core.mg_studies;
+DROP TABLE core.multiregion_members;
+DROP TABLE core.multiregions;
+DROP TABLE core.seq_regions;
+DROP TABLE core.observation;
+DROP TABLE core.organisms;
+DROP TABLE core.sequenceentries;
+DROP VIEW web_r8.tags;
+DROP TABLE core.tags;
+DROP TABLE core.logins;
+
+COMMIT;
