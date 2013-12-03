@@ -21,4 +21,6 @@ ALTER TABLE mg_traits.mg_traits_pfam
 ALTER TABLE mg_traits.mg_traits_pfam
   ADD COLUMN pfam INT[] NOT NULL;
 
+ALTER TABLE mg_traits.mg_traits_jobs ADD COLUMN total_run_time DECIMAL DEFAULT 0;
+
 COMMIT;                          
