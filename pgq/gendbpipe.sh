@@ -380,7 +380,7 @@ done
 ###########################################################################################################
 # GenDB - Import results to database
 ###########################################################################################################
-ALL_CONTIGS=`mysql -s -s -h mg-mysql -u megxnet --password=pyYPrJWtinrD ${GENDB_PID}_G22 -e "select name from Sequence;"`
+ALL_CONTIGS=`mysql -s -s -h mg-mysql -u megxnet --password=$gendbpw ${GENDB_PID}_G22 -e "select name from Sequence;"`
 printf "All contigs:\n$ALL_CONTIGS"
 echo
 IFS=`echo -e '\n'`
