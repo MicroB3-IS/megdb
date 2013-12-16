@@ -23,7 +23,11 @@ class QsubConsumer(pgq.Consumer):
 			for key, value in self.cf.cf.items('blast'):
 				p += ",%s=%s" % (key, value)
 			p += " %s/blastc.sh '%s'" % (this_dir, ev.ev_data)
-
+		elif (ev.ev_extra1 == 'gendbpipe.gendbpipe_jobs'):
+			self.log.info ("Consuming event triggered by INSERT on 'gendbpipe' table")
+			for key, value in self.cf.cf.items('gendbpipe'):
+				p += ",%s=%s" % (key, value)
+			p += " %s/gendbpipe.sh '%s'" % (this_dir, ev.ev_data)
 		elif (ev.ev_extra1 == 'mg_traits.mg_traits_jobs'):
 			self.log.info ("Consuming event triggered by INSERT on 'mg_traits_jobs' table")
 			for key, value in self.cf.cf.items('mg_traits'):

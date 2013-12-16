@@ -114,60 +114,61 @@ fi
 ###########################################################################################################
 
 if [ ! -d $temp_dir ]; then
-	ERROR_MESSAGE="temp directory '$temp_dir' does not exist"
+	ERROR_MESSAGE="temp directory $temp_dir does not exist"
 elif [ ! -w $temp_dir ]; then
-	ERROR_MESSAGE="no permission to write to temp directory '$temp_dir'"
+	ERROR_MESSAGE="no permission to write to temp directory $temp_dir"
 elif [ ! -d $RUNNING_JOBS_DIR ]; then
-	ERROR_MESSAGE="running jobs directory '$RUNNING_JOBS_DIR_calc_dir' does not exist"
+	ERROR_MESSAGE="running jobs directory $RUNNING_JOBS_DIR does not exist"
 elif [ ! -w $RUNNING_JOBS_DIR ]; then
-	ERROR_MESSAGE="no permission to write to running jobs directory '$RUNNING_JOBS_DIR_calc_dir'"
+	ERROR_MESSAGE="no permission to write to running jobs directory $RUNNING_JOBS_DIR"
 elif [ ! -d $FAILED_JOBS_DIR ]; then
-	ERROR_MESSAGE="failed jobs directory '$FAILED_JOBS_DIR' does not exist"
+	ERROR_MESSAGE="failed jobs directory $FAILED_JOBS_DIR does not exist"
 elif [ ! -w $FAILED_JOBS_DIR ] ; then
-	ERROR_MESSAGE="no permission to write to failed jobs directory '$FAILED_JOBS_DIR'"
+	ERROR_MESSAGE="no permission to write to failed jobs directory $FAILED_JOBS_DIR"
 elif [ ! -d $traits_calc_dir ]; then
-	ERROR_MESSAGE="traits_calc directory '$traits_calc_dir' does not exist"
+	ERROR_MESSAGE="traits_calc directory $traits_calc_dir does not exist"
 elif [ ! -r $traits_calc_dir ]; then
-	ERROR_MESSAGE="no permission to read from traits_calc directory '$traits_calc_dir'"
+	ERROR_MESSAGE="no permission to read from traits_calc directory $traits_calc_dir"
 elif [ ! -d $job_out_dir ]; then
-	ERROR_MESSAGE="job out directory '$job_out_dir' does not exists"
+	ERROR_MESSAGE="job out directory $job_out_dir does not exists"
 elif [ ! -w $job_out_dir ]; then
-	ERROR_MESSAGE="no permission to write to job out directory '$job_out_dir'"
+	ERROR_MESSAGE="no permission to write to job out directory $job_out_dir"
 elif [ ! -f $cd_hit_dup ]; then
-	ERROR_MESSAGE="cannot find CD-HIT-DUP at '$cd_hit_dup'"
+	ERROR_MESSAGE="cannot find CD-HIT-DUP at $cd_hit_dup"
 elif [ ! -f $cd_hit_est ]; then
-	ERROR_MESSAGE="cannot find CD-HIT-EST at '$cd_hit_est'"
+	ERROR_MESSAGE="cannot find CD-HIT-EST at $cd_hit_est"
 elif [ ! -f $cd_hit_mms ]; then
-	ERROR_MESSAGE="cannot find CD-HIT-MMS at '$cd_hit_mms'"
+	ERROR_MESSAGE="cannot find CD-HIT-MMS at $cd_hit_mms"
 elif [ ! -f $upro ]; then
-	ERROR_MESSAGE="cannot find UPro '$upro'"
+	ERROR_MESSAGE="cannot find UPro $upro"
 elif [ ! -f $gnuparallel ]; then
-	ERROR_MESSAGE="cannot find GNU Parallel at '$gnuparallel'"
+	ERROR_MESSAGE="cannot find GNU Parallel at $gnuparallel"
 elif [ ! -f $r_interpreter ]; then
-	ERROR_MESSAGE="cannot find R at '$r_interpreter'"
+	ERROR_MESSAGE="cannot find R at $r_interpreter"
 elif [ ! -f $PFAM_ACCESSIONS ]; then
-	ERROR_MESSAGE="cannot find PFAM accessions at '$PFAM_ACCESSIONS'"
+	ERROR_MESSAGE="cannot find PFAM accessions at $PFAM_ACCESSIONS"
 elif [ ! -f $TFFILE ]; then
-	ERROR_MESSAGE="cannot find TF file at '$TFFILE'"
+	ERROR_MESSAGE="cannot find TF file at $TFFILE"
 elif [ ! -x $cd_hit_dup ]; then
-	ERROR_MESSAGE="no permission to execute CD-HIT-DUP '$cd_hit_dup'"
+	ERROR_MESSAGE="no permission to execute CD-HIT-DUP $cd_hit_dup"
 elif [ ! -x $cd_hit_est ]; then
-	ERROR_MESSAGE="no permission to execute CD-HIT-EST '$cd_hit_est'"
+	ERROR_MESSAGE="no permission to execute CD-HIT-EST $cd_hit_est"
 elif [ ! -x $cd_hit_mms ]; then
-	ERROR_MESSAGE="no permission to execute CD-HIT-MMS  '$cd_hit_mms'"
+	ERROR_MESSAGE="no permission to execute CD-HIT-MMS  $cd_hit_mms"
 elif [ ! -x $upro ]; then
-	ERROR_MESSAGE="no permission to execute UPro '$upro'"
+	ERROR_MESSAGE="no permission to execute UPro $upro"
 elif [ ! -x $gnuparallel ]; then
-	ERROR_MESSAGE="no permission to execute GNU Parallel '$gnuparallel'"
+	ERROR_MESSAGE="no permission to execute GNU Parallel $gnuparallel"
 elif [ ! -x $r_interpreter ]; then
-	ERROR_MESSAGE="no permission to find R '$r_interpreter'"
+	ERROR_MESSAGE="no permission to find R $r_interpreter"
 elif [ ! -r $PFAM_ACCESSIONS ]; then
-	ERROR_MESSAGE="no permission to read PFAM accessions from '$PFAM_ACCESSIONS'"
+	ERROR_MESSAGE="no permission to read PFAM accessions from $PFAM_ACCESSIONS"
 elif [ ! -r $TFFILE ]; then
-	ERROR_MESSAGE="no permission to read TF file from '$TFFILE'"
+	ERROR_MESSAGE="no permission to read TF file from $TFFILE"
 fi
 
 if [ -n "$ERROR_MESSAGE" ]; then
+	echo $ERROR_MESSAGE
 	echo "UPDATE mg_traits.mg_traits_jobs SET return_code = 2, error_message = '$ERROR_MESSAGE' WHERE sample_label = '$SAMPLE_LABEL';" | psql -U $target_db_user -h $target_db_host -p $target_db_port -d $target_db_name
 	mail -s "traits_calc:$JOB_ID failed" "$tc_admin_mail" <<EOF
 $ERROR_MESSAGE
