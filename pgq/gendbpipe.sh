@@ -335,7 +335,7 @@ echo "OK"
 # GenDB - Submit jobs
 ###########################################################################################################
 printf "Submitting jobs..."
-echo $gendbpw | $GENDB_SUBMIT_JOB -p $GENDB_PID -t 'Pfam' #-F -rsf
+echo $gendbpw | $GENDB_SUBMIT_JOB -p $GENDB_PID -F -rsf
 if [ "$?" -ne "0" ]; then
   echo "failed"
   echo "UPDATE gendbpipe.gendbpipe_jobs SET return_code = 2, error_message = 'Could not submit GenDB project. Please contact adminitrator.' WHERE sample_label = '$SAMPLE_LABEL';" | psql -U $target_db_user -h $target_db_host -p $target_db_port -d $target_db_name
@@ -434,4 +434,4 @@ RUN_TIME=`echo $END_TIME-$START_TIME | bc -l`
 echo "UPDATE gendbpipe.gendbpipe_jobs SET time_finished = now(), total_run_time = $RUN_TIME, return_code = 0 WHERE sample_label = '$SAMPLE_LABEL';" | psql -U $target_db_user -h $target_db_host -p $target_db_port -d $target_db_name
 
 cd ..
-#rm -rf "job-$THIS_JOB_ID"
+rm -rf "job-$THIS_JOB_ID"
