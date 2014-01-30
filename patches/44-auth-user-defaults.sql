@@ -60,7 +60,7 @@ ALTER TABLE auth.users
    ALTER COLUMN provider SET DEFAULT '';
 ALTER TABLE auth.users
    ALTER COLUMN provider SET NOT NULL;
-
+-- not null
 UPDATE auth.users
    SET  external_id = ''
  WHERE external_id is null;
