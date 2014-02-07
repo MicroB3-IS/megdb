@@ -22,7 +22,10 @@ select id, sample_label, time_submitted, time_finished, return_code, error_messa
 select * from mg_traits_results where id = ?;
 
 -- // get on /mg{id}:{sample_name}/function-table
-select * from mg_traits_pfam where id = ?;
+select sample_label, pfam , id  from mg_traits_pfam where id = ?;
+
+-- variant with additional column for array as string
+select sample_label, pfam as pfam_array, array_to_string(pfam, ',') as  pfam_string, id  from mg_traits_pfam where id = ?;
 
 -- // get on /mg{id}:{sample_name}/amino-acid-content
 select * from mg_traits.aa where id = ?;
