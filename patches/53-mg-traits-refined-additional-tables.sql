@@ -11,7 +11,7 @@ CREATE DOMAIN codon_relative
 CREATE TABLE mg_traits.mg_traits_codon (
 id integer NOT NULL,
 sample_label text NOT NULL,
-
+gca codon_relative not null default ('NaN'::numeric)::codon_relative
 GCC codon_relative NOT NULL DEFAULT 'NaN'::codon_relative,
 GCG codon_relative NOT NULL DEFAULT 'NaN'::codon_relative,
 GCT codon_relative NOT NULL DEFAULT 'NaN'::codon_relative,
