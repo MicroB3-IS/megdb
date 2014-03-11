@@ -20,16 +20,18 @@ CREATE SEQUENCE unknown_blast.blast_hits_id_seq
   MAXVALUE 9223372036854775807
   START 357646
   CACHE 1;
-ALTER TABLE unknown_blast.blast_hits_id_seq OWNER TO rkottman;
-GRANT ALL ON TABLE unknown_blast.blast_hits_id_seq TO rkottman;
-GRANT USAGE ON TABLE unknown_blast.blast_hits_id_seq TO megxuser;
+ALTER TABLE unknown_blast.blast_hits_id_seq OWNER TO megdb_admin;
+GRANT ALL ON TABLE unknown_blast.blast_hits_id_seq TO megdb_admin;
+GRANT SELECT ON TABLE unknown_blast.blast_hits_id_seq TO selectors;
+GRANT SELECT ON TABLE unknown_blast.blast_hits_id_seq TO megxuser;
+GRANT SELECT, INSERT ON TABLE unknown_blast.blast_hits_id_seq TO sge;
 
 --create type for job time protocol
 CREATE TYPE unknown_blast.time_log_entry AS
    (job_id text,
     "comment" text,
     run_time numeric);
-ALTER TYPE unknown_blast.time_log_entry OWNER TO rkottman;
+ALTER TYPE unknown_blast.time_log_entry OWNER TO megdb_admin;
 
 --create table for unknown blast db
 CREATE TABLE unknown_blast.unknown_blast_db
@@ -42,7 +44,8 @@ pfam_release decimal(4,2) NOT NULL
 ALTER TABLE unknown_blast.unknown_blast_db OWNER TO megdb_admin;
 GRANT ALL ON TABLE unknown_blast.unknown_blast_db TO megdb_admin;
 GRANT SELECT ON TABLE unknown_blast.unknown_blast_db TO selectors;
-GRANT ALL ON TABLE unknown_blast.unknown_blast_db TO sge;
+GRANT SELECT ON TABLE unknown_blast.unknown_blast_db TO megxuser;
+GRANT SELECT, INSERT ON TABLE unknown_blast.unknown_blast_db TO sge;
 
 --create table for blast jobs
 CREATE TABLE unknown_blast.unknown_blast_jobs
@@ -117,7 +120,8 @@ WITH (
 ALTER TABLE unknown_blast.blast_jobs OWNER TO megdb_admin;
 GRANT ALL ON TABLE unknown_blast.blast_jobs TO megdb_admin;
 GRANT SELECT ON TABLE unknown_blast.blast_jobs TO selectors;
-GRANT ALL ON TABLE unknown_blast.blast_jobs TO sge;
+GRANT SELECT ON TABLE unknown_blast.blast_jobs TO megxuser;
+GRANT SELECT, INSERT ON TABLE unknown_blast.blast_jobs TO sge;
 
 -- Trigger: unknown_blast_jobs_i_to_queue on unknown_blast.unknown_blast_jobs
 
@@ -161,13 +165,11 @@ CREATE TABLE unknown_blast.blast_hits
 WITH (
   OIDS=FALSE
 );
-ALTER TABLE unknown_blast.blast_hits OWNER TO rkottman;
-GRANT ALL ON TABLE unknown_blast.blast_hits TO rkottman;
+ALTER TABLE unknown_blast.blast_hits OWNER TO megdb_admin;
+GRANT ALL ON TABLE unknown_blast.blast_hits TO megdb_admin;
 GRANT SELECT ON TABLE unknown_blast.blast_hits TO selectors;
-GRANT ALL ON TABLE unknown_blast.blast_hits TO core_admin;
-GRANT INSERT ON TABLE unknown_blast.blast_hits TO megxuser;
-GRANT ALL ON TABLE unknown_blast.blast_hits TO afernand;
-GRANT ALL ON TABLE unknown_blast.blast_hits TO sge;
+GRANT SELECT ON TABLE unknown_blast.blast_hits TO megxuser;
+GRANT SELECT, INSERT ON TABLE unknown_blast.blast_hits TO sge;
 
 --create table for PFAM proteomes organisms
 
@@ -182,14 +184,11 @@ CONSTRAINT pfam_proteomes_organism_pkey PRIMARY KEY (organism_id, pfam_release)
 WITH (
   OIDS=FALSE
 );
-ALTER TABLE unknown_blast.pfam_proteomes_organism OWNER TO rkottman;
-GRANT ALL ON TABLE unknown_blast.pfam_proteomes_organism TO rkottman;
+ALTER TABLE unknown_blast.pfam_proteomes_organism OWNER TO megdb_admin;
+GRANT ALL ON TABLE unknown_blast.pfam_proteomes_organism TO megdb_admin;
 GRANT SELECT ON TABLE unknown_blast.pfam_proteomes_organism TO selectors;
-GRANT ALL ON TABLE unknown_blast.pfam_proteomes_organism TO core_admin;
-GRANT INSERT ON TABLE unknown_blast.pfam_proteomes_organism TO megxuser;
-GRANT ALL ON TABLE unknown_blast.pfam_proteomes_organism TO afernand;
-GRANT ALL ON TABLE unknown_blast.pfam_proteomes_organism TO sge;
-
+GRANT SELECT ON TABLE unknown_blast.pfam_proteomes_organism TO megxuser;
+GRANT SELECT, INSERT ON TABLE unknown_blast.pfam_proteomes_organism TO sge;
 --create table for PFAM proteomes
 CREATE TABLE unknown_blast.pfam_proteomes
 (
@@ -205,13 +204,11 @@ CONSTRAINT pfam_proteomes_pkey PRIMARY KEY (organism_id, seq_id, pfam_release)
 WITH (
   OIDS=FALSE
 );
-ALTER TABLE unknown_blast.pfam_proteomes OWNER TO rkottman;
-GRANT ALL ON TABLE unknown_blast.pfam_proteomes TO rkottman;
+ALTER TABLE unknown_blast.pfam_proteomes OWNER TO megdb_admin;
+GRANT ALL ON TABLE unknown_blast.pfam_proteomes TO megdb_admin;
 GRANT SELECT ON TABLE unknown_blast.pfam_proteomes TO selectors;
-GRANT ALL ON TABLE unknown_blast.pfam_proteomes TO core_admin;
-GRANT INSERT ON TABLE unknown_blast.pfam_proteomes TO megxuser;
-GRANT ALL ON TABLE unknown_blast.pfam_proteomes TO afernand;
-GRANT ALL ON TABLE unknown_blast.pfam_proteomes TO sge;
+GRANT SELECT ON TABLE unknown_blast.pfam_proteomes TO megxuser;
+GRANT SELECT, INSERT ON TABLE unknown_blast.pfam_proteomes TO sge;
 
 --create table for proteomic unknown subnetworks
 
@@ -226,13 +223,11 @@ CONSTRAINT pfam_proteomes_subnetwork_pkey PRIMARY KEY (organism_id, pfam_release
 WITH (
   OIDS=FALSE
 );
-ALTER TABLE unknown_blast.pfam_proteomes_subnetwork OWNER TO rkottman;
-GRANT ALL ON TABLE unknown_blast.pfam_proteomes_subnetwork TO rkottman;
+ALTER TABLE unknown_blast.pfam_proteomes_subnetwork OWNER TO megdb_admin;
+GRANT ALL ON TABLE unknown_blast.pfam_proteomes_subnetwork TO megdb_admin;
 GRANT SELECT ON TABLE unknown_blast.pfam_proteomes_subnetwork TO selectors;
-GRANT ALL ON TABLE unknown_blast.pfam_proteomes_subnetwork TO core_admin;
-GRANT INSERT ON TABLE unknown_blast.pfam_proteomes_subnetwork TO megxuser;
-GRANT ALL ON TABLE unknown_blast.pfam_proteomes_subnetwork TO afernand;
-GRANT ALL ON TABLE unknown_blast.pfam_proteomes_subnetwork TO sge;
+GRANT SELECT ON TABLE unknown_blast.pfam_proteomes_subnetwork TO megxuser;
+GRANT SELECT, INSERT ON TABLE unknown_blast.pfam_proteomes_subnetwork TO sge;
 
 
 rollback;
