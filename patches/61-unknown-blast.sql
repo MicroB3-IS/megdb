@@ -1,7 +1,7 @@
 Begin;
 
-SELECT _v.register_patch('60-unknown-blast',
-                          array['59-logging-perms'] );
+SELECT _v.register_patch('61-unknown-blast',
+                          array['60-mg-traits-pk-pca-table'] );
 
 --schema creation
 CREATE SCHEMA megx_blast
@@ -144,9 +144,9 @@ CREATE TABLE megx_blast.blast_hits (
   hsp_q_string text NOT NULL DEFAULT ''::text,
   hsp_h_string text NOT NULL DEFAULT ''::text,
   hsp_homology_string text NOT NULL DEFAULT ''::text,
-  graphml_file text NOT NULL DEFAULT ''::text,
+  graphml_file xml NOT NULL DEFAULT '<e/>'::xml,
   hit_neighborhood text[] NOT NULL DEFAULT '{}'::text[],
-  kegg_url text NOT NULL DEFAULT ''::text,
+  kegg_url_args text[] NOT NULL DEFAULT '{}'::text[],
   PRIMARY KEY (jid, hit)
 );
 
@@ -196,7 +196,7 @@ GRANT SELECT, INSERT ON TABLE megx_blast.pfam_proteomes TO sge;
 CREATE TABLE megx_blast.pfam_proteomes_subnetwork (
   organism_id integer NOT NULL,
   nodes text[] NOT NULL DEFAULT '{}'::text[],
-  graphml_file text NOT NULL DEFAULT ''::text, -- TODO isn't it xml? we can use xml datat ype then
+  graphml_file xml NOT NULL DEFAULT '<e/>'::xml, -- TODO isn't it xml? we can use xml datat ype then
   kegg_kos text[] NOT NULL DEFAULT '{}'::text[],
   pfam_release decimal(4,2) NOT NULL,
   PRIMARY KEY (organism_id, pfam_release)
