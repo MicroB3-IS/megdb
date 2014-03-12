@@ -1,7 +1,7 @@
 Begin;
 
 SELECT _v.register_patch('61-unknown-blast',
-                          array['60-mg-traits-pk-pca-table'] );
+                          array['61-core-biodb-table'] );
 
 --schema creation
 CREATE SCHEMA megx_blast
@@ -23,21 +23,7 @@ CREATE TYPE megx_blast.time_log_entry AS
     run_time numeric);
 ALTER TYPE megx_blast.time_log_entry OWNER TO megdb_admin;
 
--- TODO please add comment to what exactly is db_version
-
-CREATE TABLE megx_blast.blast_db (
-  db_version text NOT NULL,
-  pfam_release decimal(4,2) NOT NULL --TODO consider creating a domain for this
-);
-
-ALTER TABLE megx_blast.blast_db OWNER TO megdb_admin;
-GRANT ALL ON TABLE megx_blast.blast_db TO megdb_admin;
-GRANT SELECT ON TABLE megx_blast.blast_db TO selectors;
-GRANT SELECT ON TABLE megx_blast.blast_db TO megxuser;
-GRANT SELECT, INSERT ON TABLE megx_blast.blast_db TO sge;
-
 --create table for blast jobs
-
 CREATE TABLE megx_blast.blast_jobs (
   id numeric(16,15) DEFAULT (random())::numeric(16,15),
   label text NOT NULL DEFAULT '',
@@ -46,7 +32,8 @@ CREATE TABLE megx_blast.blast_jobs (
   tool_label text NOT NULL DEFAULT ''::text,
   tool_ver text NOT NULL DEFAULT ''::text,
   program_name text NOT NULL DEFAULT ''::text,
-  db text NOT NULL DEFAULT ''::text,
+  biodb_label text NOT NULL DEFAULT ''::text,
+  biodb_version text NOT NULL DEFAULT ''::text,
   seq text NOT NULL DEFAULT ''::text,
   evalue numeric NOT NULL DEFAULT 0.00001,
   gap_open smallint,
@@ -79,7 +66,6 @@ CREATE TABLE megx_blast.blast_jobs (
   result xml NOT NULL DEFAULT '<e/>'::xml,
   result_raw xml NOT NULL DEFAULT '<e/>'::xml,
   filter "char" DEFAULT ''::"char",
-  stdout text, --TODO what's this ?
   time_submitted timestamp with time zone NOT NULL DEFAULT now(),
   time_finished timestamp with time zone,
   make_public interval NOT NULL DEFAULT '00:00:00'::interval,
@@ -92,20 +78,16 @@ CREATE TABLE megx_blast.blast_jobs (
   total_run_time numeric DEFAULT (0)::numeric,
   time_protocol megx_blast.time_log_entry[] NOT NULL DEFAULT ARRAY[ROW(''::text, ''::text, (1)::numeric)::megx_blast.time_log_entry],
   
-  CONSTRAINT blast_run_label_fkey FOREIGN KEY (tool_label, tool_ver)
+  FOREIGN KEY (tool_label, tool_ver)
       REFERENCES core.tool_versions (label, ver)
       ON UPDATE NO ACTION ON DELETE NO ACTION,
-  CONSTRAINT megx_blast_jobs_customer_fkey FOREIGN KEY (customer)
+  FOREIGN KEY (customer)
       REFERENCES auth.users (logname)
       ON UPDATE NO ACTION ON DELETE NO ACTION,
-  CONSTRAINT blast_run_filter_check CHECK (filter = ANY (ARRAY['t'::"char", 'f'::"char", ''::"char"])),
-  CONSTRAINT megx_blast_jobs_job_id_check CHECK (job_id > 0),
-
--- TODO does this still hold true?
-  CONSTRAINT valid_program_name CHECK (program_name = 'blastp'::text OR program_name = 'blastn'::text),
-  CONSTRAINT valid_seq CHECK (seq ~* '[^j,o]+'::text)
+  CHECK (filter = ANY (ARRAY['t'::"char", 'f'::"char", ''::"char"])),
+  CHECK (job_id > 0),
+  CHECK program_name IN ['blastp', 'blastn', 'blastx', 'tblastn', 'tblastx']
 );
-
 ALTER TABLE megx_blast.blast_jobs OWNER TO megdb_admin;
 GRANT ALL ON TABLE megx_blast.blast_jobs TO megdb_admin;
 GRANT SELECT ON TABLE megx_blast.blast_jobs TO selectors;
@@ -113,12 +95,11 @@ GRANT SELECT ON TABLE megx_blast.blast_jobs TO megxuser;
 GRANT SELECT, INSERT ON TABLE megx_blast.blast_jobs TO sge;
 
 -- Trigger: megx_blast_jobs_i_to_queue on megx_blast.megx_blast_jobs
-
 CREATE TRIGGER megx_blast_jobs_i_to_queue
   AFTER INSERT
   ON megx_blast.blast_jobs
   FOR EACH ROW
-  EXECUTE PROCEDURE pgq.logutriga('qsubq'); --TODO is this correct queue
+  EXECUTE PROCEDURE pgq.logutriga('qsubq');
 
 --create table for blast hits
 CREATE TABLE megx_blast.blast_hits (
@@ -155,59 +136,7 @@ GRANT ALL ON TABLE megx_blast.blast_hits TO megdb_admin;
 GRANT SELECT ON TABLE megx_blast.blast_hits TO selectors;
 GRANT SELECT ON TABLE megx_blast.blast_hits TO megxuser;
 GRANT SELECT, INSERT ON TABLE megx_blast.blast_hits TO sge;
-
---create table for PFAM proteomes organisms
--- TODO is this a direct import of PFAM ?
-
-CREATE TABLE megx_blast.pfam_proteomes_organism (
-  organism_id integer, -- what's the organims id
-  organim_name text NOT NULL DEFAULT ''::text,
-  organism_domain text NOT NULL DEFAULT ''::text,
-  pfam_release decimal(4,2) NOT NULL,
-  PRIMARY KEY (organism_id, pfam_release)
-);
-
-ALTER TABLE megx_blast.pfam_proteomes_organism OWNER TO megdb_admin;
-GRANT ALL ON TABLE megx_blast.pfam_proteomes_organism TO megdb_admin;
-GRANT SELECT ON TABLE megx_blast.pfam_proteomes_organism TO selectors;
-GRANT SELECT ON TABLE megx_blast.pfam_proteomes_organism TO megxuser;
-GRANT SELECT, INSERT ON TABLE megx_blast.pfam_proteomes_organism TO sge;
-
---create table for PFAM proteomes
-CREATE TABLE megx_blast.pfam_proteomes (
-  organism_id integer NOT NULL,
-  seq_id text NOT NULL DEFAULT ''::text, --TODO which seq_ id ?
-  pfam_acc text NOT NULL DEFAULT ''::text,
-  pfam_name text NOT NULL DEFAULT ''::text,
-  pfam_type text NOT NULL DEFAULT ''::text,
-  pfam_clan text NOT NULL DEFAULT ''::text,
-  pfam_release decimal(4,2) NOT NULL,
-  PRIMARY KEY (organism_id, seq_id, pfam_release)
-);
-
-ALTER TABLE megx_blast.pfam_proteomes OWNER TO megdb_admin;
-GRANT ALL ON TABLE megx_blast.pfam_proteomes TO megdb_admin;
-GRANT SELECT ON TABLE megx_blast.pfam_proteomes TO selectors;
-GRANT SELECT ON TABLE megx_blast.pfam_proteomes TO megxuser;
-GRANT SELECT, INSERT ON TABLE megx_blast.pfam_proteomes TO sge;
-
---create table for proteomic unknown subnetworks
-
-CREATE TABLE megx_blast.pfam_proteomes_subnetwork (
-  organism_id integer NOT NULL,
-  nodes text[] NOT NULL DEFAULT '{}'::text[],
-  graphml_file xml NOT NULL DEFAULT '<e/>'::xml, -- TODO isn't it xml? we can use xml datat ype then
-  kegg_kos text[] NOT NULL DEFAULT '{}'::text[],
-  pfam_release decimal(4,2) NOT NULL,
-  PRIMARY KEY (organism_id, pfam_release)
-);
-
-ALTER TABLE megx_blast.pfam_proteomes_subnetwork OWNER TO megdb_admin;
-GRANT ALL ON TABLE megx_blast.pfam_proteomes_subnetwork TO megdb_admin;
-GRANT SELECT ON TABLE megx_blast.pfam_proteomes_subnetwork TO selectors;
-GRANT SELECT ON TABLE megx_blast.pfam_proteomes_subnetwork TO megxuser;
-GRANT SELECT, INSERT ON TABLE megx_blast.pfam_proteomes_subnetwork TO sge;
-
+COMMENT ON TABLE megx_blast.blast_hits IS ''; 
 
 rollback;
 --commit;
