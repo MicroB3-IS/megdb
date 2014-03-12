@@ -125,7 +125,8 @@ CREATE TABLE megx_blast.blast_hits (
   hsp_q_string text NOT NULL DEFAULT ''::text,
   hsp_h_string text NOT NULL DEFAULT ''::text,
   hsp_homology_string text NOT NULL DEFAULT ''::text,
-  graphml_file xml NOT NULL DEFAULT '<e/>'::xml,
+  subnet_graphml xml NOT NULL DEFAULT '<e/>'::xml,
+  subnet_json json NOT NULLx,
   hit_neighborhood hstore NOT NULL,
   kegg_url_args text[] NOT NULL DEFAULT '{}'::text[],
   PRIMARY KEY (jid, hit)
