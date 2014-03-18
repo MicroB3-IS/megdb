@@ -86,7 +86,7 @@ CREATE TABLE megx_blast.blast_jobs (
       ON UPDATE NO ACTION ON DELETE NO ACTION,
   CHECK (filter = ANY (ARRAY['t'::"char", 'f'::"char", ''::"char"])),
   CHECK (job_id > 0),
-  CHECK program_name IN ['blastp', 'blastn', 'blastx', 'tblastn', 'tblastx']
+  CHECK program_name IN ('blastp', 'blastn', 'blastx', 'tblastn', 'tblastx')
 );
 ALTER TABLE megx_blast.blast_jobs OWNER TO megdb_admin;
 GRANT ALL ON TABLE megx_blast.blast_jobs TO megdb_admin;
