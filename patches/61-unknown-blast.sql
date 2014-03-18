@@ -25,7 +25,7 @@ ALTER TYPE megx_blast.time_log_entry OWNER TO megdb_admin;
 
 --create table for blast jobs
 CREATE TABLE megx_blast.blast_jobs (
-  id numeric(16,15) DEFAULT (random())::numeric(16,15),
+  id BIGSERIAL PRIMARY KEY,
   label text NOT NULL DEFAULT '',
   customer text NOT NULL,
   num_neighbors smallint NOT NULL DEFAULT 1,
@@ -103,9 +103,9 @@ CREATE TRIGGER megx_blast_jobs_i_to_queue
 
 --create table for blast hits
 CREATE TABLE megx_blast.blast_hits (
-  jid numeric NOT NULL,
-  db text NOT NULL,
+  jid BIGINT NOT NULL REFERENCES megx_blast.blast_jobs(id),
   hit smallint NOT NULL DEFAULT (-1),
+  db text NOT NULL,
   hit_id text NOT NULL,
   hit_def text NOT NULL,
   hit_acc text NOT NULL,
@@ -137,7 +137,8 @@ GRANT ALL ON TABLE megx_blast.blast_hits TO megdb_admin;
 GRANT SELECT ON TABLE megx_blast.blast_hits TO selectors;
 GRANT SELECT ON TABLE megx_blast.blast_hits TO megxuser;
 GRANT SELECT, INSERT ON TABLE megx_blast.blast_hits TO sge;
-COMMENT ON TABLE megx_blast.blast_hits IS ''; 
+COMMENT ON TABLE megx_blast.blast_hits IS 'All BLAST results of a BLAST job'; 
+COMMENT ON COLUMN megx_blast.blast_hits.hit IS 'the id of the BLAST hit';
 
-rollback;
---commit;
+
+commit;
