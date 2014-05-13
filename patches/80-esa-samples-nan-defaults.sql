@@ -30,6 +30,15 @@ update esa.samples set material = '' where  material is null;
 update esa.samples set boat_manufacturer = '' where boat_manufacturer is null;
 update esa.samples set boat_model = '' where boat_model is null;
 
+update esa.samples set barcode = '' where barcode is null;
+update esa.samples set project_id  = '' where  project_id is null;
+update esa.samples set user_name  = '' where  user_name is null;
+update esa.samples set ship_name  = '' where  ship_name is null;
+update esa.samples set nationality  = '' where  nationality is null;
+update esa.samples set biome  = '' where  biome is null;
+update esa.samples set feature  = '' where feature is null;
+
+
 ALTER TABLE esa.samples
    ALTER COLUMN elevation SET DEFAULT 'nan',
    ALTER COLUMN sampling_depth SET DEFAULT 'nan',
