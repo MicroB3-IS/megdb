@@ -4,6 +4,23 @@ SELECT _v.register_patch('80-esa-samples-nan-defaults.sql',
                           array['79-megx-blast-id-fk-fix'] );
 
 
+update esa.samples set elevation = 'nan' where elevation is null;
+update esa.samples set sampling_depth = 'nan' where sampling_depth is null;
+update esa.samples set water_depth = 'nan' where water_depth is null;
+update esa.samples set air_temperature = 'nan' where air_temperature is null;
+update esa.samples set water_temperature = 'nan' where water_temperature is null; 
+update esa.samples set wind_speed = 'nan' where wind_speed is null;
+update esa.samples set salinity = 'nan' where salinity is null; 
+update esa.samples set accuracy = 'nan' where accuracy is null; 
+update esa.samples set phosphate  = 'nan' where phosphate is null;
+update esa.samples set nitrate  = 'nan' where nitrate is null;
+update esa.samples set nitrite  = 'nan' where nitrite  is null;
+update esa.samples set ph  = 'nan' where ph  is null;
+update esa.samples set boat_length  = 'nan' where boat_length  is null;
+update esa.samples set secchi_depth  = 'nan' where secchi_depth  is null;
+
+
+
 ALTER TABLE esa.samples
    ALTER COLUMN elevation SET DEFAULT 'nan',
    ALTER COLUMN sampling_depth SET DEFAULT 'nan',
