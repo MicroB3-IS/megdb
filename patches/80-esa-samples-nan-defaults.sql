@@ -19,7 +19,16 @@ update esa.samples set ph  = 'nan' where ph  is null;
 update esa.samples set boat_length  = 'nan' where boat_length  is null;
 update esa.samples set secchi_depth  = 'nan' where secchi_depth  is null;
 
-
+-- now all text columns
+update esa.samples set collection  = '' where collection  is null;
+update esa.samples set permit   = '' where permit   is null;
+update esa.samples set weather_condition  = '' where  weather_condition  is null;
+update esa.samples set conductivity = '' where  conductivity is null;
+update esa.samples set comment = '' where comment is null;
+update esa.samples set homeport = '' where homeport is null;
+update esa.samples set material = '' where  material is null;
+update esa.samples set boat_manufacturer = '' where boat_manufacturer is null;
+update esa.samples set boat_model = '' where boat_model is null;
 
 ALTER TABLE esa.samples
    ALTER COLUMN elevation SET DEFAULT 'nan',
