@@ -6,6 +6,7 @@ SELECT _v.register_patch('00083-osd-registry-test-table',
 
 set search_path to osdregistry;
 
+SET ROLE megdb_admin;
 
 CREATE TABLE test_samples (
 
