@@ -25,7 +25,7 @@ CREATE OR REPLACE function integrate_sample_submission(sub json) RETURNS void AS
    RAISE NOTICE 'version=%', version;
 
    IF version is null OR version LIKE '0.9' THEN
-       INSERT INTO test_samples (raw_json) VALUES (sub); 
+       INSERT INTO osdregistry.test_samples (raw_json) VALUES (sub); 
    END IF;
 
   END;
