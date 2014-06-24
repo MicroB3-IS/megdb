@@ -60,6 +60,13 @@ BEGIN;
 SELECT _v.register_patch('${PATCH_NAME}',
                           array['${latest_dep}'] );
 
+-- section of creation best as user role megdb_admin
+SET ROLE megdb_admin;
+
+
+-- for some test queries as user megxuser
+-- SET ROLE megxuser
+
 
 rollback;
 
@@ -86,19 +93,26 @@ EOF
 function main() {
   local patch_name
   local latest_patch_file
-
+## todo make patch name a cmd line input
   check || exit "not all required stuff here"
   
-  latest_patch_file=$(ls -1tr ${PATCH_DIR_NAME}/*.sql | tail -n1)
+  ## this ls is mision critical
+  latest_patch_file=$(ls -1cr ${PATCH_DIR_NAME}/*.sql | tail -n1)
 
   latest_patch_name=$(basename "${latest_patch_file}" '.sql')
 
   echo "Latest patch=${latest_patch_file}"
+  latest_patch_name=${latest_patch_name%-patch}
+  echo "Latest patch name=${latest_patch_name}"
+
   
   patch_name=$(make_patch_name ${latest_patch_name})
 
   create_rollback_file ${patch_name}
   create_patch_file ${patch_name} ${latest_patch_name}
+
+  echo "Succesfuly created patch file: ${patch_name}"
+  return 0
 }
 
 main "$@"
