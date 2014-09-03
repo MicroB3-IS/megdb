@@ -1,0 +1,140 @@
+{
+    "version": "6",
+    "contact": {
+        "first_name": "Michail",
+        "last_name": "Yakimov",
+        "institute": "Institute for Coastal Marine Environments, CNR, Messina, Italy",
+        "email": "michail.yakimov@iamc.cnr.it"
+    },
+    "investigators": [
+        {
+            "first_name": "Gina",
+            "last_name": "La Spada",
+            "institute": "Institute for Coastal Marine Environments, CNR, Messina, Italy",
+            "email": "gina.laspada@iamc.cnr.it"
+        }
+    ],
+    "sampling_site": {
+        "site_id": "OSD42",
+        "campaign": "OSD-June-2014",
+        "objective": "Samples from a meromictic lake",
+        "platform": "boat_papÃ Giovanni",
+        "device": "Niskin bottle",
+        "method": "n",
+        "site_name": "Faro Lake",
+        "start_coordinates": {
+            "latitude": "38.26861",
+            "longitude": "15.63708"
+        },
+        "stop_coordinates": {
+            "latitude": "38.26861",
+            "longitude": "15.63708"
+        },
+        "marine_region": "Faro Lake, Messina Mediterranean sea"
+    },
+    "sample": {
+        "label": "Faro lake",
+        "protocol_label": "NPL022",
+        "date": "2014-06-21",
+        "start_time": "11:00:00",
+        "end_time": "12:00:00",
+        "depth": 3,
+        "description": "Water ",
+        "filters": [
+            {
+                "filtration_time": 20,
+                "quantity": 1000,
+                "container": "eppendorf",
+                "content": "DNA",
+                "size-fraction_lower-threshold": 0.22,
+                "treatment_chemicals": "none",
+                "treatment_storage": "-80Â°C"
+            },
+            {
+                "filtration_time": 15,
+                "quantity": 700,
+                "container": "eppendorf",
+                "content": "DNA",
+                "size-fraction_lower-threshold": 0.22,
+                "treatment_chemicals": "none",
+                "treatment_storage": "-80Â°C"
+            }
+        ]
+    },
+    "environment": {
+        "water_temperature": 20,
+        "salinity": 36.8,
+        "biome": "Meromictic lakes are unusual hydrological formations where bodies of water follow a seasonal cycle of stratifi- cation but do not mix completely.",
+        "feature": "meromictic lake that communicates with the Mediterranean Sea through channels",
+        "material": "lake",
+        "phosphate": {
+            "choice": "not determined"
+        },
+        "ph": {
+            "choice": "not determined"
+        },
+        "nitrate": {
+            "nitrate-choice": "not determined"
+        },
+        "carbon_organic_particulate_poc": {
+            "carbon_organic_particulate_poc-choice": "not determined"
+        },
+        "nitrite": {
+            "nitrite-choice": "not determined"
+        },
+        "carbon_organic_dissolved_doc": {
+            "carbon_organic_dissolved_doc-choice": "not determined"
+        },
+        "nano_microplankton": {
+            "nano_microplankton-choice": "not determined"
+        },
+        "downward_par": {
+            "downward_par-choice": "not determined"
+        },
+        "conductivity": {
+            "conductivity-choice": "not determined"
+        },
+        "primary_production_isotope_uptake": {
+            "primary_production_isotope_uptake-choice": "not determined"
+        },
+        "primary_production_oxygen": {
+            "primary_production_oxygen-choice": "not determined"
+        },
+        "dissolved_oxygen_concentration": {
+            "dissolved_oxygen_concentration-choice": "not determined"
+        },
+        "nitrogen_organic_particulate_pon": {
+            "nitrogen_organic_particulate_pon-choice": "not determined"
+        },
+        "meso_macroplankton": {
+            "meso_macroplankton-choice": "not determined"
+        },
+        "bacterial_production_isotope_uptake": {
+            "bacterial_production_isotope_uptake-choice": "not determined"
+        },
+        "nitrogen_organic_dissolved_don": {
+            "nitrogen_organic_dissolved_don-choice": "not determined"
+        },
+        "ammonium": {
+            "ammonium-choice": "not determined"
+        },
+        "silicate": {
+            "silicate-choice": "not determined"
+        },
+        "bacterial_production_respiration": {
+            "bacterial_production_respiration-choice": "not determined"
+        },
+        "turbidity": {
+            "turbidity-choice": "not determined"
+        },
+        "fluorescence": {
+            "choice": "not determined"
+        },
+        "pigment_concentration": {
+            "choice": "not determined"
+        },
+        "picoplankton_flow_cytometry": {
+            "choice": "not determined"
+        }
+    }
+}
