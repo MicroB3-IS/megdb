@@ -14,5 +14,16 @@ select submitted, -- date submitted
        raw_json #>> '{sampling_site, site_id}' as osd_id,
        raw_json #>> '{sample, label}' as sample_label,
        raw_json #>> '{sampling_site}',
-       raw_json #>> '{comment}' -- was there addtional comment
-  from osdregistry.osd_raw_samples order by submitted desc;
+       raw_json #>> '{comment}', -- was there addtional comment
+       raw_json
+  from osdregistry.osd_raw_samples order by osd_id,submitted  desc;
+
+  -- make overview of env data
+
+WITH env_data AS (
+   select
+   
+        raw_json ->> '{environment}' as env --from which institute 
+   from osdregistry.osd_raw_samples order by submitted  desc
+)
+Select * from env_data;
