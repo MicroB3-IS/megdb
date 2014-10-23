@@ -1,6 +1,6 @@
 ﻿BEGIN;
 
-SELECT _v.register_patch('89-new-mibig-schema.sql','{}',NULL);
+SELECT _v.register_patch('00090-new-mibig-schema.sql','{}',NULL);
 
 CREATE SCHEMA mibig AUTHORIZATION megdb_admin;
 
@@ -23,8 +23,8 @@ CREATE TABLE mibig.submissions
 );
 
 ALTER TABLE mibig.submissions
-  OWNER TO postgres;
-GRANT ALL ON TABLE mibig.submissions TO postgres;
+  OWNER TO megdb_admin;
+GRANT ALL ON TABLE mibig.submissions TO megdb_admin;
 GRANT SELECT ON TABLE mibig.submissions TO megxuser;  
 
 commit;
