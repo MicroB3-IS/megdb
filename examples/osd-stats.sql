@@ -180,7 +180,7 @@
         raw_json -> 'comment' as remarks 
          
    from osdregistry.osd_raw_samples 
-   WHERE raw_json ->> 'version' = '4' order by submitted  desc
+   WHERE (raw_json ->> 'version' = '6' OR raw_json ->> 'version' = '5') order by osd_id  desc
 ;
 
 --)
