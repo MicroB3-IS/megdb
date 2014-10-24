@@ -6,8 +6,9 @@ SELECT _v.register_patch('00091-mibig-megxuser-privs',
 -- section of creation best as user role megdb_admin
 SET ROLE megdb_admin;
 
-REVOKE ALL ON TABLE mibig.submissions FROM megxuser;
+--REVOKE ALL ON TABLE mibig.submissions FROM megxuser;
 GRANT SELECT, INSERT ON TABLE mibig.submissions TO megxuser;
+GRANT USAGE ON TABLE mibig.submissions_id_seq TO megxuser;
 
 -- for some test queries as user megxuser
 -- SET ROLE megxuser
