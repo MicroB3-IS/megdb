@@ -96,8 +96,8 @@ function main() {
 ## todo make patch name a cmd line input
   check || exit "not all required stuff here"
   
-  ## this ls is mision critical
-  latest_patch_file=$(ls -1cr ${PATCH_DIR_NAME}/*.sql | tail -n1)
+  ## this ls is mision critical (use version sort with -v whch is numerical sort)
+  latest_patch_file=$(ls -1v ${PATCH_DIR_NAME}/*.sql | tail -n1)
 
   latest_patch_name=$(basename "${latest_patch_file}" '.sql')
 
@@ -111,7 +111,7 @@ function main() {
   create_rollback_file ${patch_name}
   create_patch_file ${patch_name} ${latest_patch_name}
 
-  echo "Succesfuly created patch file: ${patch_name}"
+  echo "Succesfuly created patch file: ${patch_name}.sql"
   return 0
 }
 
