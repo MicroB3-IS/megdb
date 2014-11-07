@@ -65,7 +65,7 @@ SET ROLE megdb_admin;
 
 
 -- for some test queries as user megxuser
--- SET ROLE megxuser
+-- SET ROLE megxuser;
 
 
 rollback;
