@@ -1,7 +1,7 @@
 
 BEGIN;
-SELECT _v.register_patch('00095-mibig-gene-npkrs-tables',
-                          array['00094-unq-boundary-countru-name'] );
+SELECT _v.register_patch('00098-mibig-gene-npkrs-tables',
+                          array['00097-mg-traits-test-friendly-cnstrnt-patch'] );
 
 -- section of creation best as user role megdb_admin
 SET ROLE megdb_admin;
