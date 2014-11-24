@@ -193,13 +193,17 @@ CREATE VIEW submission_overview AS
 
 -- todo correct handling of version 5
 
--- select start_lat, stop_lat, start_lon, stop_lon from submission_overview where version = 6;
+-- select osd_id, start_lat, stop_lat, start_lon, stop_lon from submission_overview where version = 6;
+
 
 
 CREATE TABLE institutes (
   label text PRIMARY KEY,
   country_verb text NOT NULL DEFAULT '',
-  country text REFERENCES elayers.boundaries (terr_name),
+  country text,
+  country_iso_cd text,
+  --FOREIGN KEY (country, country_iso_cd) 
+   --REFERENCES elayers.boundaries (terr_name, iso3_code),  
   homepage text check (homepage like 'http://%'),
   max_uncertain numeric NOT NULL DEFAULT 'nan'::numeric
 );
@@ -219,7 +223,7 @@ INSERT
   INTO institutes (label, geom,country_verb) 
 SELECT DISTINCT ON (institution)
        institution,  
-       institution_geom,
+       ST_geomFromText( 'POINT(' || institution_long || ' ' || institution_lat || ')', 4326),
        country  
   FROM osd_participants;
 
@@ -245,9 +249,12 @@ CREATE TABLE works_for (
   PRIMARY KEY (email,institute)
 );
 
-/*
-SELECT osd_id, institute
-  FROM submission_overview;
+--/*
+SELECT DISTINCT (institute) osd_id, institute
+  FROM submission_overview o
+ WHERE NOT EXISTS (SELECT institute 
+                     FROM institutes i 
+                    WHERE i.label = o.institute);
 --*/
 
 INSERT 

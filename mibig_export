@@ -1,0 +1,10 @@
+#!/bin/bash
+
+# uses psql alias
+
+psql -h localhost -p 5491 -d megdb_r8 -U rkottman -c "COPY (select id,submitted,v,raw::text from mibig.submissions where id > 8) TO STDOUT WITH DELIMITER '	'" > mibig.csv
+
+cat mibig.csv | cut  -f 4 | jq -M . > mibig_pretty.json
+
+tar cvzf mibig_$(date --rfc-3339=date).tar.gz mibig.csv mibig_pretty.json
+
