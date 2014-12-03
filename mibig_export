@@ -2,9 +2,30 @@
 
 # uses psql alias
 
-psql -h localhost -p 5491 -d megdb_r8 -U rkottman -c "COPY (select id,submitted,v,raw::text from mibig.submissions where id > 8) TO STDOUT WITH DELIMITER '	'" > mibig.csv
+PSQL_CONNECTION="psql -h localhost -p 5491 -d megdb_r8 -U rkottman"
 
-cat mibig.csv | cut  -f 4 | jq -M . > mibig_pretty.json
+MIBIG_FILE_NAME='mibig'
+MIBIG_GENE_FILE_NAME='mibig_genes'
+MIBIG_NRPS_FILE_NAME='mibig_nrps'
 
-tar cvzf mibig_$(date --rfc-3339=date).tar.gz mibig.csv mibig_pretty.json
+echo "copy mibig"
+${PSQL_CONNECTION} -c "COPY (select id,submitted,v,raw::text from mibig.submissions where id > 8) TO STDOUT WITH DELIMITER '	'" > ${MIBIG_FILE_NAME}.csv
+
+echo "copy mibig genes"
+${PSQL_CONNECTION} -c "COPY (select id,bgc_id,submitted,v,raw::text from mibig.gene_submissions) TO STDOUT WITH DELIMITER '	'" > ${MIBIG_GENE_FILE_NAME}.csv
+
+echo "copy mibig nrps"
+${PSQL_CONNECTION} -c "COPY (select id,bgc_id, submitted,v,raw::text from mibig.nrps_submissions) TO STDOUT WITH DELIMITER '	'" > ${MIBIG_NRPS_FILE_NAME}.csv
+
+echo "json mibig"
+cat ${MIBIG_FILE_NAME}.csv | cut  -f 4 | jq -M . > ${MIBIG_FILE_NAME}_pretty.json
+
+echo "json mibig genes"
+cat ${MIBIG_GENE_FILE_NAME}.csv | cut  -f 5 | jq -M . > ${MIBIG_GENE_FILE_NAME}_pretty.json
+
+echo "json mibig nrps"
+cat ${MIBIG_NRPS_FILE_NAME}.csv | cut  -f 5 | jq -M . > ${MIBIG_NRPS_FILE_NAME}_pretty.json
+
+echo "creating tar"
+tar cvzf mibig_$(date --rfc-3339=date).tar.gz mibig*.csv *_pretty.json
 
