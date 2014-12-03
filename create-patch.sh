@@ -91,6 +91,8 @@ EOF
 }
 
 function main() {
+ 
+  svn update ${PATCH_DIR_NAME} || exit "Could not update patch dir from svn"
   local patch_name
   local latest_patch_file
 ## todo make patch name a cmd line input
