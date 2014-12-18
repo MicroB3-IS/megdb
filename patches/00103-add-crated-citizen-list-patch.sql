@@ -29,6 +29,6 @@ create view esa.citizen_observations as
 GRANT select on TABLE esa.curated_citizen_observations to megx_team;
 
 
-rollback;
+commit;
 
 
