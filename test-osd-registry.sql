@@ -5,6 +5,14 @@ BEGIN;
 
 set search_path TO osdregistry,public;
 
+SET ROLE megdb_admin;
+
+-- patch 1: fix-default-privs-osdregistry
+
+ALTER DEFAULT PRIVILEGES IN SCHEMA osdregistry REVOKE SELECT ON TABLES FROM PUBLIC;
+ALTER DEFAULT PRIVILEGES IN SCHEMA osdregistry REVOKE ALL ON FUNCTIONS FROM PUBLIC;
+
+
 -- delete old tests data
 DELETE FROM osdregistry.osd_raw_samples 
  WHERE id in (6,41,57,64,98,99,100,185);
@@ -249,6 +257,8 @@ CREATE TABLE osdregistry.curation_submissions AS
 id,
 submitted,
 osd_id,
+''::text AS curation_remark,
+''::text AS curator,
 site_name,
 version,
 marine_region,
@@ -315,14 +325,14 @@ CREATE TABLE osdregistry.curation_submission_audits (
 
 
 
-CREATE OR REPLACE FUNCTION osdregistry.curation_submissions_trg()
+CREATE OR REPLACE FUNCTION osdregistry.curation_site_geom_trg()
   RETURNS trigger AS
 $BODY$
 BEGIN
-  IF NEW.label <> OLD.label THEN
-    INSERT INTO curation_audits(remark)
-         VALUES(NEW.remark);
-   END IF;
+
+UPDATE osdregistry.samples AS s
+   SET (start_lat,start_lon,stop_lat,stop_lon) 
+     = (NEW.start_lat,NEW.start_lon,NEW.stop_lat,NEW.stop_lon) WHERE osd_id = NEW.osd_id;
  
 RETURN NEW;
 END;
@@ -331,10 +341,10 @@ LANGUAGE plpgsql
 ;
 
 CREATE TRIGGER curation_submissions_updates
-  BEFORE UPDATE
+  BEFORE UPDATE OF start_lat,start_lon,stop_lat,stop_lon
   ON osdregistry.curation_submissions
   FOR EACH ROW
-  EXECUTE PROCEDURE osdregistry.curation_submissions_trg();
+  EXECUTE PROCEDURE osdregistry.curation_site_geom_trg();
 
 
 \copy (SELECT * FROM osdregistry.curation_submissions) TO '/home/renzo/src/megdb/osd_submissions_2014-12-22.csv' CSV HEADER
@@ -362,7 +372,7 @@ INSERT INTO campaigns
             ('OSD-Jun-2016'),('OSD-Dec-2017');
 
 
-
+-- todo add lat,lon and automatic update trigger
 CREATE TABLE institutes (
   id text PRIMARY KEY, -- uniquness is defined as trimemd loweercase
 		  -- version of the name in utf-8
@@ -458,8 +468,9 @@ CREATE TABLE sites (
   region_verb text NOT NULL DEFAULT '',
   geog geography(POINT,4326),
   max_uncertain numeric NOT NULL DEFAULT 'nan'::numeric
-  -- accuracy
 );
+
+
 
 SELECT AddGeometryColumn(
   'sites',
@@ -473,6 +484,32 @@ COMMENT ON TABLE sites IS 'The registered OSD sites';
 COMMENT ON COLUMN sites.id IS 'the OSD id number missing the OSD prefix';
 COMMENT ON COLUMN sites.label IS 'Curated name of OSD site (mainly for display)';
 
+
+CREATE OR REPLACE FUNCTION osdregistry.curation_site_geom_trg(
+-- geometry_col_name text
+-- geography_col_name text
+)
+  RETURNS trigger AS
+$BODY$
+
+declare
+
+begin
+   NEW.geog := NEW.geom::geography;
+
+RETURN NEW;
+END;
+$BODY$
+LANGUAGE plpgsql
+;
+
+CREATE TRIGGER geom_geog_sync_trg
+  BEFORE INSERT OR UPDATE OF geom
+  ON osdregistry.sites
+  FOR EACH ROW
+  EXECUTE PROCEDURE osdregistry.curation_site_geom_trg();
+ 
+
 -- first inserting data from osd-registry g-doc
 INSERT 
   INTO sites 
@@ -481,7 +518,7 @@ SELECT substring(osd_id from 4)::integer,
        trim(os.site_name),
        os.site_geom
   FROM web_r8.osd_samplingsites os
---  RETURNING * 
+  --RETURNING st_x(geom), st_asText(geog)
 ; 
 
 
@@ -505,11 +542,11 @@ SELECT trim(lower(institution)), substring(id from 4)::integer, 'OSD-Jun-2014', 
 ; 
 
 
-
+-- todo add date
 CREATE TABLE osdregistry.samples (
   id SERIAL UNIQUE,
   osd_id integer NOT NULL REFERENCES sites(id),
-  label text,  -- totdo maybe hanbokk def of label
+  label text,  -- todo maybe hanbokk def of label
   label_verb text NOT NULL DEFAULT '',
   start_lat numeric DEFAULT 'nan', 
   start_lon numeric DEFAULT 'nan', 
@@ -553,15 +590,60 @@ SELECT AddGeometryColumn(
   'POINT',
   2
 );
+COMMENT ON TABLE samples IS 'Collected environmental samples';
 
 
 CREATE UNIQUE INDEX 
     ON osdregistry.samples (start_lat,start_lon,water_depth,local_start,protocol) 
- WHERE start_lat <> 'nan';
+ WHERE start_lat <> 'nan' AND start_lon <> 'nan' ;
 
---\d osdregistry.samples
 
-COMMENT ON TABLE samples IS 'Collected environmental samples';
+CREATE OR REPLACE FUNCTION osdregistry.curation_samples_geom_trg()
+  RETURNS trigger AS
+$BODY$
+
+declare
+
+begin
+   IF (NEW.start_lat <> 'nan' AND NEW.start_lon <> 'nan') THEN
+      NEW.start_geom 
+         := st_geometryFromText(
+               'POINT(' || NEW.start_lon || ' ' || NEW.start_lat ||')',
+               4326 
+            );
+       RAISE NOTICE 'start geom=%', st_asText(NEW.start_geom);
+      NEW.start_geog := NEW.start_geom::geography;
+   END IF;
+ 
+   IF ((NEW.stop_lat <> 'nan' AND NEW.stop_lon <> 'nan')) THEN
+      NEW.stop_geom 
+         := st_geometryFromText(
+               'POINT(' || NEW.stop_lon || ' ' || NEW.stop_lat ||')',
+                4326
+            );
+       RAISE NOTICE 'stop geom=%', st_asText(NEW.stop_geom);
+      NEW.stop_geog := NEW.stop_geom::geography;
+   END IF;
+   RETURN NEW;
+END;
+$BODY$
+LANGUAGE plpgsql;
+
+CREATE TRIGGER start_geom_geog_sync_trg
+  BEFORE INSERT OR UPDATE OF start_lat,start_lon
+  ON osdregistry.samples
+  FOR EACH ROW
+  WHEN (NEW.start_lat <> 'nan' AND NEW.start_lon <> 'nan')
+  EXECUTE PROCEDURE osdregistry.curation_samples_geom_trg();
+ 
+
+CREATE TRIGGER stop_geom_geog_sync_trg
+  BEFORE INSERT OR UPDATE OF stop_lat, stop_lon
+  ON osdregistry.samples
+  FOR EACH ROW
+  WHEN (NEW.stop_lat <> 'nan' AND NEW.stop_lon <> 'nan')
+  EXECUTE PROCEDURE osdregistry.curation_samples_geom_trg();
+
 
 -- select * from osdregistry.curation_submissions where sample_label ilike '%SaoMiguel%';
 
@@ -571,7 +653,6 @@ COMMENT ON TABLE samples IS 'Collected environmental samples';
 \echo copy submission overview finished
 --*/
 
-select * from osdregistry.curation_submissions where osd_id = '666';
 
 INSERT 
   INTO osdregistry.samples (
@@ -603,6 +684,24 @@ SELECT osd_id,
 
   FROM osdregistry.curation_submissions; 
 
+UPDATE osdregistry.samples 
+   SET (start_lat,start_lon,stop_lat,stop_lon,water_depth) 
+     = (start_lat_verb::numeric,start_lon_verb::numeric,stop_lat_verb::numeric,stop_lon_verb::numeric, water_depth)
+ WHERE start_lat_verb NOT IN ('41.1416','33.32306','43.63871944444445')
+       --AND start_lon_verb NOT IN ('24.99')
+       AND local_start != '07:15:00'
+       AND start_lat_verb ~ E'(^(-|\\+)?\\d+\.?\\d+$)'
+       AND start_lon_verb ~ E'(^(-|\\+)?\\d+\.?\\d+$)'
+       AND stop_lat_verb ~ E'(^(-|\\+)?\\d+\.?\\d+$)'
+       AND stop_lon_verb ~ E'(^(-|\\+)?\\d+\.?\\d+$)'
+       AND start_lat_verb::numeric BETWEEN -90 AND 90
+       AND 
+       start_lon_verb::numeric BETWEEN -180 AND 180
+       AND 
+       stop_lat_verb::numeric BETWEEN -90 AND 90
+       AND 
+       stop_lon_verb::numeric BETWEEN -180 AND 180
+;  
 
 
 CREATE TABLE owned_by (
