@@ -1,23 +1,69 @@
-﻿
+﻿\pset null NULL
+\x auto
+
 BEGIN;
 
-set search_path to osdregistry,public;
+set search_path TO osdregistry,public;
 
-CREATE VIEW submission_overview AS
+-- delete old tests data
+DELETE FROM osdregistry.osd_raw_samples 
+ WHERE id in (41,64,98,99,100,185);
+
+
+
+CREATE OR REPLACE FUNCTION osdregistry.cleantrimtab(text) RETURNS text AS $$
+   SELECT translate( trim( $1 ), E'\t', ' '  );
+$$ LANGUAGE SQL; 
+
+
+DROP VIEW IF EXISTS  osdregistry.submission_overview;
+
+CREATE OR REPLACE VIEW  osdregistry.submission_overview AS
    select
-        raw_json #>> '{sampling_site, site_id}' as osd_id,
-        raw_json #>> '{sampling_site, site_name}' as site_name,
+        id::integer,
+        submitted,
+        substring (raw_json #>> '{sampling_site, site_id}' from E'(?i)[OSD ]{3,4}(\\d{1,3})')::integer as osd_id,
+        cleantrimtab( raw_json #>> '{sampling_site, site_name}' ) AS site_name,
         version,
         raw_json #>> '{sampling_site, marine_region}' as marine_region,
-        raw_json #>> '{sampling_site, start_coordinates,latitude}' as start_lat,
-        raw_json #>> '{sampling_site, start_coordinates,longitude}' as start_lon,
-        raw_json #>> '{sampling_site, stop_coordinates,latitude}' as stop_lat,
-        raw_json #>> '{sampling_site, stop_coordinates,longitude}' as stop_lon,
-        raw_json #>> '{sample, depth}' as sample_depth,
+        CASE WHEN
+          version  = 6
+        THEN
+          raw_json #>> '{sampling_site, start_coordinates,latitude}'
+        ELSE
+          raw_json #>> '{sampling_site,latitude}'
+        END AS start_lat,
+        CASE WHEN
+          version  = 6
+        THEN
+          raw_json #>> '{sampling_site, start_coordinates,longitude}'
+        ELSE
+          raw_json #>> '{sampling_site, longitude}'
+        END as start_lon,
+        -- now stop coordinates
+        CASE WHEN
+          version  = 6
+        THEN
+          raw_json #>> '{sampling_site, stop_coordinates,latitude}'
+        ELSE
+          raw_json #>> '{sampling_site,latitude}'
+        END AS stop_lat,
+        CASE WHEN
+          version  = 6
+        THEN
+          raw_json #>> '{sampling_site, stop_coordinates,longitude}'
+        ELSE
+          raw_json #>> '{sampling_site, longitude}'
+        END as stop_lon,
+        raw_json #>> '{sample,start_time}' as sample_start_time,
+        raw_json #>> '{sample,end_time}' as sample_end_time,
+        cleantrimtab( raw_json #>> '{sample,label}' ) as sample_label,
+        trim( raw_json #>> '{sample,protocol_label}' ) as sample_protocol,
+        COALESCE ( raw_json #>> '{sample, depth}', 'nan' ) as sample_depth,
         raw_json #>> '{sample, date}' as sample_date,
-        raw_json #>> '{contact, first_name}' as first_name,
-        raw_json #>> '{contact, last_name}' as last_name,
-        raw_json #>> '{contact, institute}' as institute,
+        trim( raw_json #>> '{contact, first_name}' ) as first_name,
+        trim( raw_json #>> '{contact, last_name}' ) as last_name,
+        trim( raw_json #>> '{contact, institute}' ) as institute,
         raw_json #>> '{contact, email}' as email,
         raw_json -> 'environment' ->> 'water_temperature' as water_temperature,
         raw_json -> 'environment' ->> 'salinity' as salinity,
@@ -183,30 +229,122 @@ CREATE VIEW submission_overview AS
           raw_json #>> '{environment, picoplankton_flow_cytometry, choice}'
         END as picoplankton_flow_cytometry,
         
-        COALESCE ( (raw_json -> 'environment' ->> 'other_parameters'), 'not determinded') as other_params,
+        COALESCE ( (raw_json -> 'environment' ->> 'other_parameters'), 'not determined') as other_params,
 
-        raw_json -> 'comment' as remarks 
+        raw_json -> 'comment' as remarks,
+        raw_json #>> '{sample,filters}' as filters,
+        raw_json
          
    from osdregistry.osd_raw_samples 
    WHERE (raw_json ->> 'version' = '6' OR raw_json ->> 'version' = '5') order by osd_id  desc
 ;
 
+-- end osdregistry.submission_overview
+
+
+\set idlist '46,48,49,50,51,52,65,70,89,106,107,223,224,225,226,227'
+
+CREATE OR REPLACE VIEW osdregistry.cleaned_submissions AS
+   SELECT 
+id,
+submitted,
+osd_id,
+site_name,
+version,
+marine_region,
+start_lat,
+start_lon,
+stop_lat,
+stop_lon,
+sample_start_time::time,
+sample_end_time::time,
+sample_label,
+sample_protocol,
+sample_depth,
+sample_date::date,
+first_name,
+last_name,
+institute,
+email,
+COALESCE (water_temperature, 'nan') as water_temperature,
+salinity::numeric,
+ph,
+phospahte,
+nitrate,
+carbon_organic_particulate,
+nitrite,
+carbon_organic_dissolved_doc,
+nano_microplankton,
+downward_par,
+conductivity,
+primary_production_isotope_uptake,
+primary_production_oxygen,
+dissolved_oxygen_concentration,
+nitrogen_organic_particulate_pon,
+meso_macroplankton,
+bacterial_production_isotope_uptake,
+nitrogen_organic_dissolved_don,
+ammonium,
+silicate,
+bacterial_production_respiration,
+turbidity,
+fluorescence,
+pigment_concentration,
+picoplankton_flow_cytometry,
+other_params,
+remarks,
+filters
+
+FROM osdregistry.submission_overview 
+   WHERE 
+     -- temporarliy filter duplicates keeping highest id
+     -- these are OSD 9,17, 21, 22, 30,49,52,55,62, 63,71, 72,74,117,120,152,155,156, 157
+     id not in (7,19,27,58,60,61,62,63,67,68,69,72,73,74,75,95,101,111,113,118,126,137,138,159,161,162,165,187,201,202,203,208,210,216);
+
+
+\copy (SELECT * FROM osdregistry.cleaned_submissions) TO '/home/renzo/src/megdb/osd_submissions_2014-12-22.csv' CSV HEADER
+
+
+-- select institute from cleaned_submissions;
+
 -- todo correct handling of version 5
 
--- select osd_id, start_lat, stop_lat, start_lon, stop_lon from submission_overview where version = 6;
+-- select osd_id, start_lat, stop_lat, start_lon, stop_lon from
+-- cleaned_submissions where version = 6;
+
+
+-- TODO maybe add time range here
+-- TODO add check regex
+CREATE TABLE campaigns (
+  label text PRIMARY KEY 
+);
+  
+INSERT INTO campaigns 
+     VALUES ('OSD-Jun-2012'),('OSD-Dec-2012'),
+            ('OSD-Jun-2013'),('OSD-Dec-2013'),
+            ('OSD-Jun-2014'),('OSD-Dec-2014'),
+            ('OSD-Jun-2015'),('OSD-Dec-2015'), 
+            ('OSD-Jun-2016'),('OSD-Dec-2017');
 
 
 
 CREATE TABLE institutes (
-  label text PRIMARY KEY,
+  id text PRIMARY KEY, -- uniquness is defined as trimemd loweercase
+		  -- version of the name in utf-8
+  label text NOT NULL, -- the label for display
   country_verb text NOT NULL DEFAULT '',
   country text,
   country_iso_cd text,
-  --FOREIGN KEY (country, country_iso_cd) 
-   --REFERENCES elayers.boundaries (terr_name, iso3_code),  
+  FOREIGN KEY (country, country_iso_cd) 
+     REFERENCES elayers.boundaries (terr_name, iso3_code),  
   homepage text check (homepage like 'http://%'),
   max_uncertain numeric NOT NULL DEFAULT 'nan'::numeric
 );
+
+COMMENT ON TABLE institutes IS 'Past and future registered institutes participating in OSD';
+COMMENT ON COLUMN institutes.id IS 'lower case version of label to circumvent entries which just differ in case';
+COMMENT ON COLUMN institutes.label IS 'Name of Institute (best for display)';
+
 
 SELECT AddGeometryColumn(
   'institutes',
@@ -216,16 +354,19 @@ SELECT AddGeometryColumn(
   2
 );
 
--- todo add institute geo-refrence table
+CREATE UNIQUE INDEX lower_unq_institution_id ON osdregistry.institutes (lower(label));
+
+-- todo add institute geo-reference table
 
 
 INSERT 
-  INTO institutes (label, geom,country_verb) 
-SELECT DISTINCT ON (institution)
+  INTO institutes (id, label, geom) 
+SELECT DISTINCT ON ( trim(lower(institution)) )
+       trim(lower(institution)) as l,
        institution,  
-       ST_geomFromText( 'POINT(' || institution_long || ' ' || institution_lat || ')', 4326),
-       country  
-  FROM osd_participants;
+       ST_geomFromText( 'POINT(' || institution_long || ' ' || institution_lat || ')', 4326)
+
+  FROM web_r8.osd_participants;
 
 
 CREATE TABLE participants (
@@ -238,74 +379,262 @@ INSERT
   INTO participants (email, first_name, last_name) 
 SELECT DISTINCT ON (email)
        email, first_name, last_name
-  FROM submission_overview;
+  FROM cleaned_submissions;
+
+\echo inserting more institutes
+
+INSERT 
+  INTO institutes (id, label) 
+SELECT DISTINCT ON ( trim(lower(institute)) ) 
+           trim(lower(o.institute)) as l, o.institute
+    FROM cleaned_submissions o
+   WHERE NOT EXISTS (SELECT institute 
+                       FROM institutes i 
+                      WHERE trim(lower(i.label)) = trim(lower(o.institute)));
 
 
-
-
-CREATE TABLE works_for (
+CREATE TABLE affiliated (
   email text REFERENCES participants(email),
-  institute text REFERENCES institutes(label),
+  institute text REFERENCES institutes(id),
   PRIMARY KEY (email,institute)
 );
 
---/*
-SELECT DISTINCT (institute) osd_id, institute
-  FROM submission_overview o
- WHERE NOT EXISTS (SELECT institute 
-                     FROM institutes i 
-                    WHERE i.label = o.institute);
---*/
 
 INSERT 
-  INTO works_for (email, institute) 
+  INTO affiliated (email, institute) 
 SELECT DISTINCT ON (email)
-       email, institute
-  FROM submission_overview;
+       email, trim(lower(institute))
+  FROM cleaned_submissions;
+
+/*
+"sampling_site": {
+
+   "campaign": "OSD2014",
+   "objective": "Water sampling for Prokaryotes.",
+   "platform": "Research Vessel Alkyon",
+   "device": "Niskin bottles",
+   "method": "Rosette Sampler",
+   "site_name": "M3ACrete",
+   "start_coordinates": {
+      "latitude": "+35.661",
+      "longitude": "+24.99"
+    },
+   "stop_coordinates": {
+      "latitude": "+35.661",
+      "longitude": "+24.99"
+    },
+   "marine_region": "Sea of Crete, MRGID:3339, GIZ:00008919"
+},
+
+
+*/
 
 
 CREATE TABLE sites (
-  id integer , 
+  id integer check (id > 0) PRIMARY KEY, 
   label text NOT NULL DEFAULT '',
-  label_verb text NOT NULL
-  -- geom
+  label_verb text NOT NULL,
+  region text NOT NULL DEFAULT '',
+  region_verb text NOT NULL DEFAULT ''
+
   -- accuracy
 );
 
--- not sure about this one, basically about wether OSD1014 or other...
-CREATE TABLE campaigns (
-  label text PRIMARY KEY 
+SELECT AddGeometryColumn(
+  'sites',
+  'geom',
+   4326,
+  'POINT',
+  2
 );
 
-INSERT INTO campaigns 
-     VALUES ('OSD-Jun-2012'),('OSD-Dec-2012'),
-            ('OSD-Jun-2013'),('OSD-Dec-2013'),
-            ('OSD-Jun-2014'),('OSD-Dec-2014'),
-            ('OSD-Jun-2015'), ('OSD-Dec-2015'), 
-            ('OSD-Jun-2016'), ('OSD-Dec-2017');
+COMMENT ON TABLE sites IS 'The registered OSD sites';
+COMMENT ON COLUMN sites.id IS 'the OSD id number missing the OSD prefix';
+COMMENT ON COLUMN sites.label IS 'Curated name of OSD site (mainly for display)';
+
+-- first inserting data from osd-registry g-doc
+INSERT 
+  INTO sites 
+       (id, label_verb, geom)
+SELECT substring(osd_id from 4)::integer,
+       trim(os.site_name),
+       os.site_geom
+  FROM web_r8.osd_samplingsites os
+--  RETURNING * 
+; 
 
 
-CREATE TABLE samples (
+CREATE TABLE site_registration (
+  institute text REFERENCES institutes(id),
+  site_id integer REFERENCES sites(id),
+  campaign text REFERENCES campaigns (label),
+  -- TODO check name
+  registration_date timestamp with time zone NOT NULL DEFAULT now()
+);
+
+COMMENT ON TABLE site_registration IS 'Which institute registers a site for OSD campaign at a certain time';
+
+INSERT 
+  INTO site_registration 
+       (institute, site_id, campaign, registration_date)
+SELECT trim(lower(institution)), substring(id from 4)::integer, 'OSD-Jun-2014', 'infinity' 
+  FROM web_r8.osd_participants
+--  RETURNING * 
+; 
+
+
+
+CREATE TABLE osdregistry.samples (
   id SERIAL UNIQUE,
-  label text PRIMARY KEY,  -- totdo maybe hanbokk def of label
-  
-  --geom
+  label text,  -- totdo maybe hanbokk def of label
+  label_verb text NOT NULL DEFAULT '',
+  start_lat numeric NOT NULL DEFAULT 'nan', 
+  start_lon numeric NOT NULL  DEFAULT 'nan', 
+  stop_lat numeric  NOT NULL DEFAULT 'nan', 
+  stop_lon numeric  NOT NULL DEFAULT 'nan', 
+  start_lat_verb text NOT NULL,
+  start_lon_verb text NOT NULL,
+  stop_lat_verb text NOT NULL,
+  stop_lon_verb text NOT NULL,
+  start_geog geography(POINT,4326),
+  stop_geog geography(POINT,4326),
+  water_depth numeric 
+     NOT NULL DEFAULT 'nan' check ( water_depth >= 0 ),
+  local_start time (0),
+  local_end time (0),
+  water_temperature numeric 
+     NOT NULL DEFAULT 'nan' check ( water_temperature > -273),
+  salinity numeric 
+     NOT NULL DEFAULT 'nan' check ( salinity >= 0),
   -- accuracy
+  protocol text NOT NULL DEFAULT '',
   raw json
   -- submitted, modified : check naming
-
 );
 
+SELECT AddGeometryColumn(
+  'osdregistry',
+  'samples',
+  'start_geom',
+   4326,
+  'POINT',
+  2
+);
+
+SELECT AddGeometryColumn(
+  'osdregistry',
+  'samples',
+  'stop_geom',
+   4326,
+  'POINT',
+  2
+);
+
+
+ALTER TABLE osdregistry.samples 
+  ADD PRIMARY KEY (start_lat,start_lon,water_depth,local_start,protocol);
+
+\d osdregistry.samples
+
+COMMENT ON TABLE samples IS 'Collected environmental samples';
+
+-- select * from osdregistry.cleaned_submissions where sample_label ilike '%SaoMiguel%';
+
+/*
+\echo copy cleaned_submissions overview json
+\copy (SELECT * FROM cleaned_submissions) TO 'cleaned_submissions.csv' CSV HEADER DELIMITER E'\t' 
+\echo copy submission overview finished
+--*/
+
+INSERT 
+  INTO osdregistry.samples (
+       label,
+       label_verb,
+       protocol,
+       water_depth,
+       local_start,
+       local_end,
+       water_temperature,
+       start_lat,
+       start_lon,
+       start_lat_verb,
+       start_lon_verb,
+       stop_lat_verb,
+       stop_lon_verb
+       )
+SELECT 
+       sample_label,
+       sample_label,
+       sample_protocol,
+       sample_depth::numeric,
+       sample_start_time::time,
+       sample_end_time::time,
+       water_temperature::numeric,
+       start_lat,
+       start_lon,
+       stop_lat,
+       stop_lon
+
+  FROM osdregistry.cleaned_submissions; 
+
+
+
 CREATE TABLE owned_by (
-  label text REFERENCES samples(label),
+  sample_id integer REFERENCES samples(id),
   email text REFERENCES participants(email),
   seq_author_order integer check(seq_author_order > 0)
 );
 
 
 CREATE TABLE filters (
-  label text
+  label text,
+  raw json
 );
+
+\echo number osd particpanats
+
+select count(*) from web_r8.osd_participants;
+--select * from osd_participants;
+
+CREATE TABLE osdregistry.sample_curations AS 
+   SELECT * from samples;
+
+ALTER TABLE osdregistry.sample_curations 
+  ADD COLUMN remark text NOT NULL DEFAULT '';
+
+ALTER TABLE osdregistry.sample_curations 
+  ADD PRIMARY KEY (id);
+
+
+
+select id, label from osdregistry.sample_curations;
+
+CREATE TABLE osdregistry.curation_audits (
+   remark text NOT NULL,
+   changed_on timestamp with time zone NOT NULL DEFAULT now()
+); 
+
+CREATE OR REPLACE FUNCTION osdregistry.sample_curation_trigger()
+  RETURNS trigger AS
+$BODY$
+BEGIN
+  IF NEW.label <> OLD.label THEN
+    INSERT INTO curation_audits(remark)
+         VALUES(NEW.remark));
+   END IF;
+ 
+RETURN NEW;
+END;
+$BODY$
+LANGUAGE plpgsql
+;
+
+CREATE TRIGGER sample_curation_updates
+  BEFORE UPDATE
+  ON osdregistry.sample_curations
+  FOR EACH ROW
+  EXECUTE PROCEDURE osdregistry.sample_curation_trigger();
+
 
 
 
