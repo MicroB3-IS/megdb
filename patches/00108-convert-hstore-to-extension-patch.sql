@@ -8,7 +8,7 @@ SELECT _v.register_patch('00108-convert-hstore-to-extension',
 
 -- must be superuser to apply this patch
 -- first PATCH
-CREATE EXTENSION IF NOT EXISTS hstore FROM unpackaged;
+CREATE EXTENSION IF NOT EXISTS hstore SCHEMA public FROM unpackaged;
 
 -- for some test queries as user megxuser
 -- SET ROLE megxuser;
