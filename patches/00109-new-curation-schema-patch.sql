@@ -274,6 +274,6 @@ COMMENT ON FUNCTION curation.add_audit_trg(regclass) IS $body$
 Add auditing support to the given table. Row-level changes will be logged with full client query text. No cols are ignored.
 $body$;
 
-rollback;
+commit;
 
 
