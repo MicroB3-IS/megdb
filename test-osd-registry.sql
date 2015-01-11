@@ -19,17 +19,19 @@ DELETE FROM osdregistry.osd_raw_samples
  WHERE id in (6,41,57,64,98,99,100,185);
 
 
-
 CREATE OR REPLACE FUNCTION osdregistry.cleantrimtab(text) RETURNS text AS $$
    SELECT translate( trim( $1 ), E'\t', ' '  );
 $$ LANGUAGE SQL; 
+
+
+
 
 
 DROP VIEW IF EXISTS  osdregistry.submission_overview;
 
 CREATE OR REPLACE VIEW  osdregistry.submission_overview AS
    select
-        id::integer,
+        id::integer as submission_id,
         submitted,
         substring (raw_json #>> '{sampling_site, site_id}' from E'(?i)[OSD ]{3,4}(\\d{1,3})')::integer as osd_id,
         cleantrimtab( raw_json #>> '{sampling_site, site_name}' ) AS site_name,
@@ -74,6 +76,7 @@ CREATE OR REPLACE VIEW  osdregistry.submission_overview AS
         trim( raw_json #>> '{contact, last_name}' ) as last_name,
         trim( raw_json #>> '{contact, institute}' ) as institute,
         raw_json #>> '{contact, email}' as email,
+        (raw_json #>> '{investigators}')::json AS investigators,
         raw_json -> 'environment' ->> 'water_temperature' as water_temperature,
         raw_json -> 'environment' ->> 'salinity' as salinity,
         CASE WHEN 
@@ -207,8 +210,7 @@ CREATE OR REPLACE VIEW  osdregistry.submission_overview AS
         THEN
           raw_json #>> '{environment, bacterial_production_respiration, bacterial_production_respiration-measurement}'
         ELSE
-          raw_json #>> '{environment, bacterial_production_respiration, bacterial_production_respiration-choice}'
-        END as bacterial_production_respiration,
+          raw_json #>> '{environment, bacterial_production_respiration, bacterial_production_respiration-choice}'        END as bacterial_production_respiration,
         CASE WHEN 
           raw_json #>> '{environment, turbidity, turbidity-choice}' = 'measured'
         THEN
@@ -250,218 +252,13 @@ CREATE OR REPLACE VIEW  osdregistry.submission_overview AS
 -- end osdregistry.submission_overview
 
 
-\set idlist '46,48,49,50,51,52,65,70,89,106,107,223,224,225,226,227'
-
-CREATE TABLE osdregistry.curation_submissions AS
-   SELECT 
-id AS submission_id,
-submitted,
-osd_id,
-''::text AS curation_remark,
-''::text AS curator,
-site_name, site_name AS site_name_verb,
-version,
-marine_region, marine_region AS marine_region_verb,
-start_lat, start_lat AS start_lat_verb,
-start_lon, start_lon AS start_lon_verb,
-stop_lat, stop_lat AS stop_lat_verb,
-stop_lon, stop_lon AS stop_lon_verb,
-sample_start_time::time, sample_start_time AS sample_start_time_verb, 
-sample_end_time::time, sample_end_time::time AS sample_end_time_verb,
-sample_label, sample_label AS sample_label_verb,
-sample_protocol, sample_protocol AS sample_protocol_verb,
-sample_depth, sample_depth AS sample_depth_verb,
-sample_date::date, sample_date::date AS sample_date_verb,
-first_name, first_name AS first_name_verb,
-last_name, last_name AS last_name_verb,
-institute, institute AS institute_verb,
-email, email AS email_verb,
-COALESCE (water_temperature, 'nan') as water_temperature, water_temperature AS water_temperature_verb, 
-salinity::numeric, salinity::numeric AS salinity_verb,
-ph, ph AS ph_verb,
-phospahte, phospahte AS phospahte_verb,
-nitrate, nitrate AS nitrate_verb,
-carbon_organic_particulate, carbon_organic_particulate AS carbon_organic_particulate_verb,
-nitrite, nitrite AS nitrite_verb,
-carbon_organic_dissolved_doc, carbon_organic_dissolved_doc AS carbon_organic_dissolved_doc_verb,
-nano_microplankton, nano_microplankton AS nano_microplankton_verb,
-downward_par, downward_par AS downward_par_verb,
-conductivity, conductivity AS conductivity_verb,
-primary_production_isotope_uptake, primary_production_isotope_uptake AS primary_production_isotope_uptake_verb,
-primary_production_oxygen, primary_production_oxygen AS primary_production_oxygen_verb,
-dissolved_oxygen_concentration, dissolved_oxygen_concentration AS dissolved_oxygen_concentration_verb,
-nitrogen_organic_particulate_pon, nitrogen_organic_particulate_pon AS nitrogen_organic_particulate_pon_verb,
-meso_macroplankton, meso_macroplankton AS meso_macroplankton_verb,
-bacterial_production_isotope_uptake, bacterial_production_isotope_uptake AS bacterial_production_isotope_uptake_verb,
-nitrogen_organic_dissolved_don, nitrogen_organic_dissolved_don AS nitrogen_organic_dissolved_don_verb,
-ammonium, ammonium AS ammonium_verb,
-silicate, silicate AS silicate_verb,
-bacterial_production_respiration, bacterial_production_respiration AS bacterial_production_respiration_verb,
-turbidity, turbidity AS turbidity_verb,
-fluorescence, fluorescence AS fluorescence_verb,
-pigment_concentration, pigment_concentration AS pigment_concentration_verb,
-picoplankton_flow_cytometry, picoplankton_flow_cytometry AS picoplankton_flow_cytometry_verb,
-other_params,
-remarks,
-filters
-
-FROM osdregistry.submission_overview 
-   WHERE 
-     -- temporarliy filter duplicates keeping highest id
-     -- these are OSD 9,17, 21, 22, 30,49,52,55,62, 63,71, 72,74,117,120,152,155,156, 157
-     id not in (7,19,27,58,60,61,62,63,67,68,69,72,73,74,75,95,101,111,113,118,126,137,138,159,161,162,165,187,201,202,203,208,210,216);
-
-COMMENT ON TABLE curation_submissions 
-   IS 'A one time snapshot of submitted data to proxy curation edits to the model tables';
-
-REVOKE ALL ON curation_submissions FROM PUBLIC;
-
-GRANT SELECT (submission_id ,
-curation_remark,
-curator,
-site_name,
-marine_region,
-start_lat,
-start_lon,
-stop_lat,
-stop_lon,
-sample_start_time,
-sample_end_time,
-sample_label,
-sample_protocol,
-sample_depth,
-sample_date,
-first_name,
-last_name,
-institute,
-email,
-water_temperature,
-salinity,
-ph,
-phospahte,
-nitrate,
-carbon_organic_particulate,
-nitrite,
-carbon_organic_dissolved_doc,
-nano_microplankton,
-downward_par,
-conductivity,
-primary_production_isotope_uptake,
-primary_production_oxygen,
-dissolved_oxygen_concentration,
-nitrogen_organic_particulate_pon,
-meso_macroplankton,
-bacterial_production_isotope_uptake,
-nitrogen_organic_dissolved_don,
-ammonium,
-silicate,
-bacterial_production_respiration,
-turbidity,
-fluorescence,
-pigment_concentration,
-picoplankton_flow_cytometry
-) ON curation_submissions TO megdb_admin,megx_team;
-
-
-GRANT UPDATE (
-curation_remark,
-curator,
-site_name_verb,
-marine_region_verb,
-start_lat_verb,
-start_lon_verb,
-stop_lat_verb,
-stop_lon_verb,
-sample_start_time_verb,
-sample_end_time_verb,
-sample_label_verb,
-sample_protocol_verb,
-sample_depth_verb,
-sample_date_verb,
-first_name_verb,
-last_name_verb,
-institute_verb,
-email_verb,
-water_temperature_verb,
-salinity_verb,
-ph_verb,
-phospahte_verb,
-nitrate_verb,
-carbon_organic_particulate_verb,
-nitrite_verb,
-carbon_organic_dissolved_doc_verb,
-nano_microplankton_verb,
-downward_par_verb,
-conductivity_verb,
-primary_production_isotope_uptake_verb,
-primary_production_oxygen_verb,
-dissolved_oxygen_concentration_verb,
-nitrogen_organic_particulate_pon_verb,
-meso_macroplankton_verb,
-bacterial_production_isotope_uptake_verb,
-nitrogen_organic_dissolved_don_verb,
-ammonium_verb,
-silicate_verb,
-bacterial_production_respiration_verb,
-turbidity_verb,
-fluorescence_verb,
-pigment_concentration_verb,
-picoplankton_flow_cytometry_verb
-) ON curation_submissions TO megdb_admin,megx_team;
-
-
-
-CREATE TABLE osdregistry.curation_submission_audits (
-   id integer,
-   entity json NOT NULL,
-   from_value text NOT NULL,
-   to_value text NOT NULL,
-   remark text NOT NULL,
-   changed_on timestamp with time zone NOT NULL DEFAULT now(),
-   who text NOT NULL DEFAULT current_user,
-   PRIMARY KEY(id,changed_on)
-); 
-
-
-CREATE FUNCTION osdregistry.curation_site_geom_trg()
-  RETURNS trigger AS
-$BODY$
-BEGIN
-
-UPDATE osdregistry.samples AS s
-   SET (start_lat,start_lon,stop_lat,stop_lon) 
-     = (NEW.start_lat::numeric,NEW.start_lon::numeric,NEW.stop_lat::numeric,NEW.stop_lon::numeric) 
-  WHERE submission_id = NEW.submission_id;
- 
-RETURN NEW;
-END;
-$BODY$
-LANGUAGE plpgsql
-;
-
-CREATE TRIGGER curation_submissions_updates
-  BEFORE UPDATE OF start_lat,start_lon,stop_lat,stop_lon
-  ON osdregistry.curation_submissions
-  FOR EACH ROW
-  EXECUTE PROCEDURE osdregistry.curation_site_geom_trg();
-
-
-\copy (SELECT * FROM osdregistry.curation_submissions) TO '/home/renzo/src/megdb/osd_submissions_2014-12-22.csv' CSV HEADER
-
-
--- select institute from curation_submissions;
-
--- todo correct handling of version 5
-
--- select osd_id, start_lat, stop_lat, start_lon, stop_lon from
--- curation_submissions where version = 6;
-
-
 -- TODO maybe add time range here
 -- TODO add check regex
 CREATE TABLE campaigns (
   label text PRIMARY KEY 
 );
+
+select curation.add_audit_trg('campaigns');
   
 INSERT INTO campaigns 
      VALUES ('OSD-Jun-2012'),('OSD-Dec-2012'),
@@ -506,39 +303,12 @@ CREATE UNIQUE INDEX lower_unq_institution_id ON osdregistry.institutes (lower(la
 -- todo add institute geo-reference table
 
 
-INSERT 
-  INTO institutes (id, label, geom) 
-SELECT DISTINCT ON ( trim(lower(institution)) )
-       trim(lower(institution)) as l,
-       institution,  
-       ST_geomFromText( 'POINT(' || institution_long || ' ' || institution_lat || ')', 4326)
-
-  FROM web_r8.osd_participants;
-
 
 CREATE TABLE participants (
   email text PRIMARY KEY,
   first_name text NOT NULL,
   last_name text NOT NULL
 );
-
--- add particpant
-INSERT 
-  INTO participants (email, first_name, last_name) 
-SELECT DISTINCT ON (email)
-       email, first_name, last_name
-  FROM curation_submissions;
-
-\echo inserting more institutes
-
-INSERT 
-  INTO institutes (id, label) 
-SELECT DISTINCT ON ( trim(lower(institute)) ) 
-           trim(lower(o.institute)) as l, o.institute
-    FROM curation_submissions o
-   WHERE NOT EXISTS (SELECT institute 
-                       FROM institutes i 
-                      WHERE trim(lower(i.label)) = trim(lower(o.institute)));
 
 
 CREATE TABLE affiliated (
@@ -548,14 +318,7 @@ CREATE TABLE affiliated (
 );
 
 
-INSERT 
-  INTO affiliated (email, institute) 
-SELECT DISTINCT ON (email)
-       email, trim(lower(institute))
-  FROM curation_submissions;
 
--- todo add geometry
--- todo add sync between geom ang geog trigger
 -- todo add georef stuff
 -- add geog and geom idx
 
@@ -609,16 +372,6 @@ CREATE TRIGGER geom_geog_sync_trg
   EXECUTE PROCEDURE osdregistry.sites_geom_sync_trg();
  
 
--- first inserting data from osd-registry g-doc
-INSERT 
-  INTO sites 
-       (id, label_verb, geom)
-SELECT substring(osd_id from 4)::integer,
-       trim(os.site_name),
-       os.site_geom
-  FROM web_r8.osd_samplingsites os
-  --RETURNING st_x(geom), st_asText(geog)
-; 
 
 
 -- todo add date
@@ -725,13 +478,108 @@ CREATE TRIGGER stop_geom_geog_sync_trg
   EXECUTE PROCEDURE osdregistry.curation_samples_geom_trg();
 
 
--- select * from osdregistry.curation_submissions where sample_label ilike '%SaoMiguel%';
+-- TODO maybe name submission_owned by or internal_owned_by
+CREATE TABLE owned_by (
+  sample_id integer REFERENCES samples(submission_id),
+  email text REFERENCES participants(email),
+  seq_author_order integer check(seq_author_order > 0)
+);
+
+
+CREATE TABLE filters (
+  sample_id integer REFERENCES samples(submission_id),
+  label text,
+  raw json
+);
+
+/*
+SELECT submission_id, 
+       row_number() OVER (PARTITION BY submission_id),
+       o.first_name AS main_first_name,
+       o.last_name AS main_last_name,
+       o.email AS main_email,
+       o.institute AS main_institute,
+
+       t.i ->> 'first_name' as first_name,
+       t.i ->> 'last_name' as last_name,
+       t.i ->> 'email' as email,
+       t.i ->> 'institute' as institute,
+       o.investigators
+  FROM submission_overview o, json_array_elements( o.investigators ) as t(i) 
+ WHERE submission_id in (12,19,44);
+--*/
+
+select json_array_elements( investigators ) from submission_overview   WHERE submission_id in (12,19,44);
+
+select s.investigators, g, g+2 as order, s.investigators->>g as p, (s.investigators->g)->>'email' 
+ FROM submission_overview s,LATERAL generate_series(0, json_array_length(s.investigators)-1) g where submission_id in (12,44);
+;
+/*
+WITH investigators AS (
+  SELECT * from ( json_array_elements( select investigators from submission_overview ) ) as t
+) 
+Select * from investigators order by submission_id limit 10 ;
+*/
+
 
 /*
 \echo copy curation_submissions overview json
-\copy (SELECT * FROM curation_submissions) TO 'curation_submissions.csv' CSV HEADER DELIMITER E'\t' 
+\copy (SELECT * FROM curation_submissions) TO 'submission_overview.csv' CSV HEADER DELIMITER E'\t' 
 \echo copy submission overview finished
 --*/
+
+--- Osd registry data insert patch
+
+
+INSERT 
+  INTO institutes (id, label, geom) 
+SELECT DISTINCT ON ( trim(lower(institution)) )
+       trim(lower(institution)) as l,
+       institution,  
+       ST_geomFromText( 'POINT(' || institution_long || ' ' || institution_lat || ')', 4326)
+
+  FROM web_r8.osd_participants;
+
+
+ -- add particpants
+INSERT 
+  INTO participants (email, first_name, last_name) 
+SELECT DISTINCT ON (email)
+       email, first_name, last_name
+  FROM submission_overview;
+
+\echo inserting more institutes
+
+INSERT 
+  INTO institutes (id, label) 
+SELECT DISTINCT ON ( trim(lower(institute)) ) 
+           trim(lower(o.institute)) as l, o.institute
+    FROM submission_overview o
+   WHERE NOT EXISTS (SELECT institute 
+                       FROM institutes i 
+                      WHERE trim(lower(i.label)) = trim(lower(o.institute)));
+
+
+
+INSERT 
+  INTO affiliated (email, institute) 
+SELECT DISTINCT ON (email)
+       email, trim(lower(institute))
+  FROM submission_overview;
+
+
+-- first inserting data from osd-registry g-doc
+INSERT 
+  INTO sites 
+       (id, label_verb, geom)
+SELECT substring(osd_id from 4)::integer,
+       trim(os.site_name),
+       os.site_geom
+  FROM web_r8.osd_samplingsites os
+  --RETURNING st_x(geom), st_asText(geog)
+; 
+
+
 
 -- insert driectly inot domain model table
 INSERT 
@@ -758,48 +606,14 @@ SELECT submission_id::bigint,
        sample_depth::numeric,
        sample_start_time::time,
        sample_end_time::time,
-       water_temperature::numeric,
+       COALESCE (water_temperature::numeric, 'nan'::numeric),
        start_lat::text,
        start_lon::text,
        stop_lat::text,
        stop_lon::text
 
-  FROM osdregistry.curation_submissions; 
+  FROM osdregistry.submission_overview; 
 
--- better update on curation_submissions
-
-UPDATE osdregistry.curation_submissions 
-   SET (start_lat,start_lon,stop_lat,stop_lon,sample_depth) 
-     = (start_lat_verb::numeric,start_lon_verb::numeric,stop_lat_verb::numeric,stop_lon_verb::numeric, sample_depth_verb)
- WHERE start_lat_verb NOT IN ('41.1416','33.32306','43.63871944444445')
-       --AND start_lon_verb NOT IN ('24.99')
-       AND sample_start_time_verb != '07:15:00'
-       AND start_lat_verb ~ E'(^(-|\\+)?\\d+\.?\\d+$)'
-       AND start_lon_verb ~ E'(^(-|\\+)?\\d+\.?\\d+$)'
-       AND stop_lat_verb ~ E'(^(-|\\+)?\\d+\.?\\d+$)'
-       AND stop_lon_verb ~ E'(^(-|\\+)?\\d+\.?\\d+$)'
-       AND start_lat_verb::numeric BETWEEN -90 AND 90
-       AND 
-       start_lon_verb::numeric BETWEEN -180 AND 180
-       AND 
-       stop_lat_verb::numeric BETWEEN -90 AND 90
-       AND 
-       stop_lon_verb::numeric BETWEEN -180 AND 180
-;  
-
--- TODO maybe name submission_owned by or internal_owned_by
-CREATE TABLE owned_by (
-  sample_id integer REFERENCES samples(submission_id),
-  email text REFERENCES participants(email),
-  seq_author_order integer check(seq_author_order > 0)
-);
-
-
-CREATE TABLE filters (
-  sample_id integer REFERENCES samples(submission_id),
-  label text,
-  raw json
-);
 
 \echo number osd particpanats
 
@@ -826,6 +640,7 @@ SELECT trim(lower(institution)), substring(id from 4)::integer, 'OSD-Jun-2014', 
   FROM web_r8.osd_participants
 --  RETURNING * 
 ; 
+
 
 
 
