@@ -1505,4 +1505,4 @@ FROM samples sam
 
 
 
-rollback;
+commit;
