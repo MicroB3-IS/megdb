@@ -182,7 +182,7 @@ CREATE OR REPLACE FUNCTION pubmap.mergePubMedArticle(article raw_pubmap)
          WHERE id = article_id;
 
       ELSE
-         INSERT into articles 
+         INSERT into pubmap.articles 
            (pmid, pubmed_xml, raw, user_name) 
            VALUES
            (article.pmid, article.article_xml,article.megxbar,article.user_name) 
@@ -208,7 +208,7 @@ CREATE OR REPLACE FUNCTION pubmap.mergePubMedArticle(article raw_pubmap)
       IF (article_exists AND place_exists) THEN 
          RAISE DEBUG 'nothing to do';
       ELSE
-         INSERT INTO article_places (article_id, place_id) 
+         INSERT INTO pubmap.article_places (article_id, place_id) 
          VALUES (article_id, place_id);
       END IF;
    RETURN article;
