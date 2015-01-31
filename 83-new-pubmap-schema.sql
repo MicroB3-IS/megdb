@@ -24,9 +24,6 @@ CREATE TABLE pubmap.raw_pubmap
   CONSTRAINT raw_pubmap_pkey PRIMARY KEY (pmid)
 );
 
-ALTER TABLE pubmap.raw_pubmap
-  OWNER TO postgres;
-GRANT ALL ON TABLE pubmap.raw_pubmap TO postgres;
 GRANT SELECT ON TABLE pubmap.raw_pubmap TO megxuser;  
 
 commit;
