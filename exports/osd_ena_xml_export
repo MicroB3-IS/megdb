@@ -1,0 +1,3 @@
+
+
+psql_rm_dev -f  ../../megdb/test-osd-registry.sql && tidy -xml -utf8 -indent sample-dirty.xml > samples.xml && ./test_submit > submit.log
