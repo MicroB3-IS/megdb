@@ -18,73 +18,81 @@ Wir müssen präzise die sites (also dort wo gesampled wird) von den Instituten 
 --sites per ocean region
 
 --CREATE OR REPLACE VIEW esa.oceans_sampled AS 
+/*
  SELECT COALESCE(iho.label, 'on land'::character varying) AS label, 
     count(*) AS count
    FROM osdregistry.sites osd
    LEFT JOIN elayers.ocean_limits iho ON st_dwithin(osd.geom, iho.geom, 0.001)
   GROUP BY iho.label limit 2;
+*/
 
 --find the nearest ocean to each site
 --DISTINCT ON (s.gid) 
+/*
 SELECT 
         iho.label, osd.id, osd.label_verb, ST_Distance(osd.geom, iho.geom)
 	FROM osdregistry.sites as osd
 		LEFT JOIN elayers.ocean_limits as iho ON ST_DWithin(osd.geom, iho.geom, 0.01)
 	ORDER BY osd.id, ST_Distance(osd.geom, iho.geom);
+*/
 
-
+SET enable_seqscan TO off;
 
 /*
 SELECT
-  pt_id,
-  ln_id,
+  id,
+  iho_label,
   ST_AsText(
-    ST_line_interpolate_point(
-     ln_geom,
-     ST_line_locate_point(ln_geom, pt_geom?)
-    )
-  )
+    st_closestpoint(iho_geom, osd_geom)
+  ) as point_on_iho,
+   ST_Distance(iho_geom, osd_geom) as dist
 FROM
-(
- SELECT DISTINCT ON (pt.id)
-ln.the_geom AS ln_geom,
-pt.the_geom AS pt_geom,
-ln.id AS ln_id,
-pt.id AS pt_id
-FROM
-point_table pt INNER JOIN
-line_table ln
-ON
-ST_DWithin(pt.the_geom, ln.the_geom, 10.0)
-ORDER BY
-pt.id,ST_Distance(ln.the_geom, pt.the_geom)
-) AS subquery; 
-
-
-
-WITH dists AS (
-
-  SELECT
-    ln.geom AS ln_geom,
-    pt.geom AS pt_geom
+  (  SELECT DISTINCT ON (osd.id)
+    osd.id,
+    iho.geom as iho_geom,
+    osd.geom as osd_geom,
+    iho.label as iho_label
   FROM
-    (VALUES ( geomfromtext('POINT(0.3 0.2)', 4326) ),( geomfromtext('POINT(10 10)', 4326) ) ) as pt(geom) 
+     -- lines/polygones
+     elayers.ocean_limits iho
   INNER JOIN
-    (VALUES (geomfromtext('LINESTRING(0 0, 1 1, 2 2)', 4326) )) as ln(geom) 
+     -- points
+     osdregistry.sites osd
   ON
-    ST_DWithin(pt.geom, ln.geom, 10.0)
+    ST_DWithin(osd.geom,iho.geom, 0.4)
 ORDER BY
- ST_Distance(ln.geom, pt.geom)
-
-
-)
-SELECT
-  ST_AsText(
-    ST_line_interpolate_point(
-     ln_geom,
-      ST_line_locate_point(ln_geom, pt_geom)
-    )
-  ),
-   ST_Distance(ln_geom, pt_geom) as dist
- from dists; 
+ osd.id, ST_Distance(osd.geom, iho.geom)
+OFFSET 0
+) as subquery; 
 --*/
+
+
+explain analyze
+SELECT DISTINCT ON (osd.id)
+    osd.id,
+    iho.label as iho_label,
+  ST_AsText(
+    st_closestpoint(iho.geom, osd.geom)
+  ) as point_on_iho,
+   ST_Distance(iho.geom, osd.geom) as dist
+
+  FROM
+     -- lines/polygones
+     elayers.ocean_limits AS iho
+  INNER JOIN
+     -- points
+     osdregistry.sites osd
+  ON
+    (st_isvalid(iho.geom) AND ST_DWithin(osd.geom,iho.geom, 0.4))
+ORDER BY
+ osd.id, ST_Distance(osd.geom, iho.geom)
+OFFSET 0; 
+
+
+
+
+
+--dists order by id; 
+
+--*/
+SET enable_seqscan TO on;
