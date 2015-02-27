@@ -1,0 +1,1 @@
+select * from _v.patches order by applied_tsz asc;
