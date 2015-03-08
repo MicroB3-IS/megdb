@@ -3,47 +3,45 @@ begin;
 
 SET search_path to osdregistry,public;
 
--- DELETE FROM  ena_datafiles;
--- fill 
--- OSD 21 are from pilot runs
-
--- make patch
-
-insert into osdregistry.sequencing_centers 
-  VALUES ('lgc'),('ramaciotti-gc');
-
-insert into osdregistry.processing_categories
-  VALUES ('raw'),('workable');
-
-
-delete from osdregistry.dataset_categories;
-insert into osdregistry.dataset_categories
-  VALUES ('shotgun'),('16S'),('18S');
-
-
-\copy ena_datafiles(md5,file_name,full_path) FROM '/home/renzo/src/megdb/imports/test.csv' (FORMAT CSV) ;
+\echo before copy
 
 \copy ena_datafiles(md5,file_name,full_path) FROM '/home/renzo/src/megdb/imports/submission_raw_shotgun_files_report.csv' CSV;
 
---\copy ena_datafiles(md5,file_name,full_path) FROM '/home/renzo/src/megdb/imports/submission_workable_rrna_files_report.csv' CSV;
+\copy ena_datafiles(md5,file_name,full_path) FROM '/home/renzo/src/megdb/imports/submission_workable_rrna_files_report.csv' CSV;
 
+\copy ena_datafiles(md5,file_name,full_path) FROM '/home/renzo/src/megdb/imports/submission_raw_rrna_files_report.csv' CSV;
 
--- OSD100-1m-depth_18S_workable.fastq.gz
--- OSD100-1m-depth_R2_16S_raw.fastq.gz
+\echo after copy
+
+select regexp_replace(file_name, '_R[12]', ''::text )::text, full_path::text from ena_datafiles where file_name ilike '%melted';
+
+\echo before insert
+
 INSERT INTO ena_datasets (file_name_prefix, cat, processing_status, sequencing_center)
-WITH files AS (
-  SELECT split_part( file_name, '_', 1 ) as file_name_prefix,
-         split_part( file_name, '_', 2 ) as cat,
-         split_part( split_part( file_name, '_', 3), '.', 1 ) as processing_status,
-         (regexp_matches(full_path, '(lgc|ramaciotti-gc)'))[1] as sequencing_center
- 
- FROM (select regexp_replace(file_name, '_R[12]', '' ), full_path from ena_datafiles) as t(file_name)
+
+WITH before_files AS (
+
+ SELECT regexp_replace(file_name, '_R[12]', ''::text )::text as file_name, full_path::text 
+   FROM ena_datafiles
+), files as (
+  SELECT split_part( file_name, '_', 1 )::text as file_name_prefix,
+         split_part( file_name, '_', 2 )::text as cat,
+         split_part( split_part(file_name, '_', 3), '.', 1 )::text as processing_status,
+         ((regexp_matches(full_path, '(lgc|ramaciotti-gc)'))[1])::text as sequencing_center
+  from before_files
+
 )
-SELECT file_name_prefix, max(cat), max(processing_status), max(sequencing_center)
-  FROM files
+SELECT file_name_prefix::text, 
+max(cat::text)::text, max(processing_status::text)::text, max(sequencing_center::text)::text
+  FROM files 
   GROUP BY file_name_prefix
+
 ;
 
+
+\echo after insert
+
+--select * from ena_datasets where file_name_prefix ~ 'OSD\d+-[a-zA-Z]' ;
 
 /*
 select substring(file_name_prefix from 'OSD(\d+)') as match,
@@ -57,7 +55,7 @@ UPDATE ena_datasets AS ena
   FROM samples s
  WHERE 
        --first exlcuding the ones we do later
-       s.osd_id NOT IN (15,20,80,106)
+       s.osd_id NOT IN (15,20,90,80,106)
        AND
        s.osd_id =  substring(ena.file_name_prefix from 'OSD(\d+)')::integer
        AND
@@ -71,6 +69,10 @@ UPDATE ena_datasets AS ena
        END
 ;
 
+-- there is also an 
+-- what about 187 ist von 2013
+-- what about 8
+
 UPDATE ena_datasets AS ena 
    SET sample_id = s.submission_id 
   FROM samples s
@@ -80,7 +82,7 @@ UPDATE ena_datasets AS ena
        AND
          date_part('year', s.local_date) >= 2014::double precision
        AND
-        ena.file_name_prefix = 'OSD15-surf'
+        ena.file_name_prefix in ( 'OSD15-surf', 'OSD15-surface' )
 ;
 
 UPDATE ena_datasets AS ena 
@@ -104,7 +106,7 @@ UPDATE ena_datasets AS ena
        AND
          date_part('year', s.local_date) >= 2014::double precision
        AND
-       ena.file_name_prefix = 'OSD20-iceland'
+       ena.file_name_prefix in ('OSD20-iceland', 'OSD20-surface')
 ;
 
 UPDATE ena_datasets AS ena 
@@ -118,6 +120,7 @@ UPDATE ena_datasets AS ena
        AND
        ena.file_name_prefix = 'OSD20-20m-depth'
 ;
+
 
 UPDATE ena_datasets AS ena 
    SET sample_id = s.submission_id 
@@ -141,6 +144,31 @@ UPDATE ena_datasets AS ena
          date_part('year', s.local_date) >= 2014::double precision
        AND
        ena.file_name_prefix = 'OSD80-2m-depth';
+-- 90 melted
+UPDATE ena_datasets AS ena  
+   SET sample_id = s.submission_id 
+  FROM samples s
+ WHERE s.osd_id = 90 AND s.water_depth = 2
+       AND 
+         s.protocol = 'NPL022'
+       AND
+         date_part('year', s.local_date) >= 2014::double precision
+       AND
+       ena.file_name_prefix in ( 'OSD90-melted')
+;
+
+
+UPDATE ena_datasets AS ena 
+   SET sample_id = s.submission_id 
+  FROM samples s
+ WHERE s.osd_id = 90 AND s.water_depth = 2
+       AND 
+         s.protocol = 'NPL022'
+       AND
+         date_part('year', s.local_date) >= 2014::double precision
+       AND
+       ena.file_name_prefix in ('OSD90')
+;
 
 -- 106
 UPDATE ena_datasets AS ena  
@@ -152,8 +180,9 @@ UPDATE ena_datasets AS ena
        AND
          date_part('year', s.local_date) >= 2014::double precision
        AND
-       ena.file_name_prefix = 'OSD106-0m-depth'
+       ena.file_name_prefix in ( 'OSD106-0m-depth', 'OSD106-surface')
 ;
+
 
 UPDATE ena_datasets AS ena 
    SET sample_id = s.submission_id 
@@ -164,7 +193,7 @@ UPDATE ena_datasets AS ena
        AND
          date_part('year', s.local_date) >= 2014::double precision
        AND
-       ena.file_name_prefix = 'OSD106-15m-depth';
+       ena.file_name_prefix in ('OSD106-15m-depth','OSD106-sea-water-bottom');
 
 \copy ena_datasets TO '/home/renzo/src/megdb/exports/ena_datasets-2015-03-03.csv' CSV;
       
@@ -186,8 +215,10 @@ SELECT count(*) as sam_all_info
 ;
 
 
-SELECT ena.file_name_prefix, sam.* 
+SELECT '=' || ena.file_name_prefix || '='
   FROM ena_datasets ena 
+       --INNER JOIN
+       --ena_datafiles files ON ( subs)
        LEFT JOIN 
        osdregistry.samples sam 
        ON (ena.sample_id = sam.submission_id )
@@ -195,4 +226,4 @@ SELECT ena.file_name_prefix, sam.*
 
 ;
 
-rollback;
+commit;
