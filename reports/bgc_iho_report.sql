@@ -3,63 +3,80 @@
 Begin;
 \pset null null
 
+CREATE TEMP TABLE  iho_tagging  AS
+with iho_tagging AS (
+SELECT DISTINCT ON (submission_id)
+    osd.osd_id,
+    osd.start_lat,
+    osd.start_lon,
+    osd.label_verb as site_name,
+    osd.water_depth,
+    osd.start_geom as geom,
+    iho.label as iho_label,
+    iho.id as iho_id,
+    iho.gazetteer as mrgid,
+  ST_AsText(
+    st_closestpoint(iho.geom, osd.start_geom)
+  ) as point_on_iho,
+   ST_Distance(iho.geom, osd.start_geom) as dist
 
-create temp table bgc_iho_counts (
-  iho_label text PRIMARY KEY,
-  num integer
+  FROM
+    osdregistry.ena_datasets ena
+  INNER JOIN
+     -- points
+     osdregistry.samples osd
+   ON (ena.sample_id = osd.submission_id AND ena.cat = 'shotgun')
+  INNER JOIN
+     -- lines/polygones
+     marine_regions_stage.iho AS iho
+
+  ON
+    (ST_DWithin(osd.start_geom,iho.geom, 0.5))
+WHERE protocol = 'NPL022' and date_part('year', osd.local_date) >= 2014::double precision
+ORDER BY
+ submission_id, ST_Distance(osd.start_geom, iho.geom) 
+
+)
+select * from iho_tagging order by dist asc
+;
+
+
+
+-- select * from iho_tagging order by dist desc;
+
+
+drop table if exists region_tags;
+
+CREATE TEMP TABLE  region_tags  (
+    osd_id integer ,
+    start_lat double precision,
+    start_lon double precision,
+    site_name  text,
+    water_depth numeric,
+    region_name text,
+    PRIMARY KEY (osd_id, water_depth,region_name)
+
 );
 
-copy bgc_iho_counts(iho_label, num) FROM STDIN;
-Adriatic Sea	16
-Aegean Sea	5
-Alboran Sea	3
-Balearic Sea	1
-Bay of Bengal	2
-Bay of Biscay	2
-Black Sea	3
-Caribbean Sea	1
-Celtic Sea	2
-Coral Sea	2
-English Channel	2
-Great Australian Bight	1
-Greenland Sea	10
-Gulf of Aqaba	1
-Gulf of Finland	2
-Gulf of Mexico	5
-Indian Ocean	1
-Inner Seas off the West Coast of Scotland	1
-Ionian Sea	1
-Irish Sea and St. George's Channel	1
-Japan Sea	2
-Kattegat	4
-Mediterranean Sea - Eastern Basin	5
-Mediterranean Sea - Western Basin	3
-North Atlantic Ocean	50
-North Pacific Ocean	6
-North Sea	25
-Northwestern Passages	1
-Red Sea	2
-Singapore Strait	1
-Skaggerak	6
-South Atlantic Ocean	6
-South Pacific Ocean	3
-Southern Ocean	1
-Strait of Gibraltar	1
-Tasman Sea	2
-The Coastal Waters of Southeast Alaska and British Columbia	1
-Timor Sea	1
-Tyrrhenian Sea	3
-\.
---'
+
+\echo number of OSD samples:
+
+select count(*) from osdregistry.samples;
+
+
 \echo osd sites in the meditereanen
 
-select * 
-  from bgc_iho_counts bgc
-inner join
-       marine_regions_stage.iho iho 
-    ON (bgc.iho_label = iho.label)
- where iho.id 
-    in ( 
+INSERT INTO region_tags 
+ SELECT
+    osd_id,
+    start_lat,
+    start_lon,
+    site_name,
+    water_depth,
+    'Mediterranean Sea'  
+  FROM iho_tagging 
+ WHERE iho_id 
+    IN ( 
           '28A', -- med sea western basin
           '28B', -- med seaeastern  basin
           '28a', -- strait gibraltar
@@ -71,15 +88,77 @@ inner join
           '28g', -- adriat
           '28h', -- aegean
           '28f' -- ion
-       ) ;
+       ) 
+;
+
+/*
+\echo overview of sites within countries EEZ: 
+
+Select array_agg(osd_id) as osd_ids, max(iso3_code) as iso3_code, count(country), country
+  FROM
+     -- lines/polygones
+     marine_regions_stage.eez_land AS eez
+  INNER JOIN
+     -- points
+     osdregistry.samples osd
+  ON
+    (ST_intersects(osd.start_geom,eez.geom) )
+  GROUP BY country
+  ORDER BY count (country) DESC
+;
+--*/
 
 
-\echo black sea (which is not med!)
+
+
+INSERT INTO region_tags 
+ SELECT
+    osd_id,
+    start_lat,
+    start_lon,
+    site_name,
+    osd.water_depth,
+    'Belgium'  
+  FROM
+     -- lines/polygones
+     marine_regions_stage.eez_land AS eez
+  INNER JOIN
+     -- points
+     iho_tagging osd 
+  ON
+    (ST_intersects(osd.geom,eez.geom) )
+WHERE country in ('Belgium')
+;
+
+
+
+INSERT INTO region_tags 
+ SELECT
+    osd_id,
+    start_lat,
+    start_lon,
+    site_name,
+    osd.water_depth,
+    'US East Coast'  
+  FROM
+     -- lines/polygones
+     marine_regions_stage.eez_land AS eez
+  INNER JOIN
+     -- points
+     iho_tagging osd 
+  ON
+    (ST_intersects(osd.geom,eez.geom) )
+WHERE country in ('United States')
+   AND st_x(osd.geom) > -81.5
+
+;
 
 
 
 
+--select * from region_tags order by region_name;
 
+COPY region_tags TO STDOUT WITH (format csv, header, delimiter '|');
 
 
 rollback;
