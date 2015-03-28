@@ -87,9 +87,52 @@ INSERT INTO region_tags
           '28f', -- ion
           '28g', -- adriat
           '28h', -- aegean
+       ) 
+;
+
+
+
+INSERT INTO region_tags 
+ SELECT
+    osd_id,
+    start_lat,
+    start_lon,
+    site_name,
+    water_depth,
+    'West Mediterranean Sea'  
+  FROM iho_tagging 
+ WHERE iho_id 
+    IN ( 
+          '28A', -- med sea western basin
+          '28a', -- strait gibraltar
+          '28b', -- alboran sea
+          '28c', -- balearic
+          '28d', -- ligurien
+          '28e', -- thyrr
+       ) 
+;
+
+
+
+INSERT INTO region_tags 
+ SELECT
+    osd_id,
+    start_lat,
+    start_lon,
+    site_name,
+    water_depth,
+    'EAST Mediterranean Sea'  
+  FROM iho_tagging 
+ WHERE iho_id 
+    IN ( 
+          '28B', -- med seaeastern  basin
+          '28g', -- adriat
+          '28h', -- aegean
           '28f' -- ion
        ) 
 ;
+
+
 
 /*
 \echo overview of sites within countries EEZ: 
@@ -152,6 +195,29 @@ WHERE country in ('United States')
    AND st_x(osd.geom) > -81.5
 
 ;
+
+
+/*
+INSERT INTO region_tags 
+ SELECT
+    osd_id,
+    start_lat,
+    start_lon,
+    site_name,
+    water_depth,
+    'North Atlantic'  
+  FROM iho_tagging 
+ WHERE iho_id 
+    IN ( 
+          '28A', -- med sea western basin
+          '28a', -- strait gibraltar
+          '28b', -- alboran sea
+          '28c', -- balearic
+          '28d', -- ligurien
+          '28e', -- thyrr
+       ) 
+;
+--*/
 
 
 
