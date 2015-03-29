@@ -86,7 +86,7 @@ INSERT INTO region_tags
           '28e', -- thyrr
           '28f', -- ion
           '28g', -- adriat
-          '28h', -- aegean
+          '28h' -- aegean
        ) 
 ;
 
@@ -108,7 +108,7 @@ INSERT INTO region_tags
           '28b', -- alboran sea
           '28c', -- balearic
           '28d', -- ligurien
-          '28e', -- thyrr
+          '28e' -- thyrr
        ) 
 ;
 
@@ -197,7 +197,7 @@ WHERE country in ('United States')
 ;
 
 
-/*
+--/*
 INSERT INTO region_tags 
  SELECT
     osd_id,
@@ -207,14 +207,15 @@ INSERT INTO region_tags
     water_depth,
     'North Atlantic'  
   FROM iho_tagging 
- WHERE iho_id 
+ WHERE iho_label
     IN ( 
-          '28A', -- med sea western basin
-          '28a', -- strait gibraltar
-          '28b', -- alboran sea
-          '28c', -- balearic
-          '28d', -- ligurien
-          '28e', -- thyrr
+          'Greenland Sea', 
+          'Norwegian Sea', 
+          'Celtic Sea', 
+          'Bay of Biscay', 
+          'Labrador Sea', 
+          'North Atlantic Ocean', 
+          'Gulf of Guinea' 
        ) 
 ;
 --*/
@@ -224,7 +225,7 @@ INSERT INTO region_tags
 
 --select * from region_tags order by region_name;
 
-COPY region_tags TO STDOUT WITH (format csv, header, delimiter '|');
+\COPY region_tags TO '/tmp/bgc_super_cat.csv' WITH (format csv, header, delimiter '|');
 
 
 rollback;
