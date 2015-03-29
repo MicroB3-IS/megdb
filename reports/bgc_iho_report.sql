@@ -9,7 +9,12 @@ SELECT DISTINCT ON (submission_id)
     osd.osd_id,
     osd.start_lat,
     osd.start_lon,
-    osd.label_verb as site_name,
+    osdregistry.osd_sample_label(
+      osd.osd_id::text,
+      osd.local_date::text,
+      osd.water_depth::text,
+      osd.protocol::text
+    )  as site_name,
     osd.water_depth,
     osd.start_geom as geom,
     iho.label as iho_label,
