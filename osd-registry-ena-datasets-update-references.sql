@@ -2,10 +2,12 @@
 
 BEGIN;
 
+set search_path to osdregistry;
+
 -- make several path updates
 UPDATE ena_datasets AS ena 
    SET sample_id = s.submission_id ,
-       ena.osd_id = s.osd_id
+       osd_id = s.osd_id
   FROM samples s
  WHERE 
        --first exlcuding the ones we do later
@@ -26,8 +28,8 @@ UPDATE ena_datasets AS ena
 -- re-establisch problem with wrong file name in OSD155-12-8m-depth
 
 UPDATE ena_datasets AS ena 
-   SET ena.sample_id = s.submission_id, 
-       ena.osd_id = s.osd_id
+   SET sample_id = s.submission_id, 
+       osd_id = s.osd_id
   FROM samples s
  WHERE 
        ena.file_name_prefix = 'OSD155-12-8m-depth'
@@ -42,7 +44,7 @@ UPDATE ena_datasets AS ena
 
 UPDATE ena_datasets AS ena 
    SET sample_id = s.submission_id,
-       ena.osd_id = s.osd_id 
+       osd_id = s.osd_id 
   FROM samples s
  WHERE s.osd_id = 15 AND s.water_depth = 0
        AND 
@@ -54,7 +56,8 @@ UPDATE ena_datasets AS ena
 ;
 
 UPDATE ena_datasets AS ena 
-   SET sample_id = s.submission_id 
+   SET sample_id = s.submission_id, 
+       osd_id = s.osd_id
   FROM samples s
  WHERE s.osd_id = 15 AND s.water_depth = 50
        AND 
@@ -66,7 +69,8 @@ UPDATE ena_datasets AS ena
 ;
 
 UPDATE ena_datasets AS ena 
-   SET sample_id = s.submission_id 
+   SET sample_id = s.submission_id, 
+       osd_id = s.osd_id 
   FROM samples s
  WHERE s.osd_id = 20 AND s.water_depth = 0
        AND 
@@ -78,7 +82,8 @@ UPDATE ena_datasets AS ena
 ;
 
 UPDATE ena_datasets AS ena 
-   SET sample_id = s.submission_id 
+   SET sample_id = s.submission_id, 
+       osd_id = s.osd_id
   FROM samples s
  WHERE s.osd_id = 20 AND s.water_depth = 20
        AND 
@@ -91,7 +96,8 @@ UPDATE ena_datasets AS ena
 
 
 UPDATE ena_datasets AS ena 
-   SET sample_id = s.submission_id 
+   SET sample_id = s.submission_id, 
+       osd_id = s.osd_id
   FROM samples s
  WHERE s.osd_id = 80 AND s.water_depth = 0
        AND 
@@ -103,7 +109,8 @@ UPDATE ena_datasets AS ena
 ;
 
 UPDATE ena_datasets AS ena 
-   SET sample_id = s.submission_id 
+   SET sample_id = s.submission_id, 
+       osd_id = s.osd_id
   FROM samples s
  WHERE s.osd_id = 80 AND s.water_depth = 2
        AND 
@@ -114,7 +121,8 @@ UPDATE ena_datasets AS ena
        ena.file_name_prefix = 'OSD80-2m-depth';
 -- 90 melted
 UPDATE ena_datasets AS ena  
-   SET sample_id = s.submission_id 
+   SET sample_id = s.submission_id, 
+       osd_id = s.osd_id
   FROM samples s
  WHERE s.osd_id = 90 AND s.water_depth = 2
        AND 
@@ -127,7 +135,8 @@ UPDATE ena_datasets AS ena
 
 
 UPDATE ena_datasets AS ena 
-   SET sample_id = s.submission_id 
+   SET sample_id = s.submission_id, 
+       osd_id = s.osd_id
   FROM samples s
  WHERE s.osd_id = 90 AND s.water_depth = 2
        AND 
@@ -140,7 +149,8 @@ UPDATE ena_datasets AS ena
 
 -- 106
 UPDATE ena_datasets AS ena  
-   SET sample_id = s.submission_id 
+   SET sample_id = s.submission_id, 
+       osd_id = s.osd_id
   FROM samples s
  WHERE s.osd_id = 106 AND s.water_depth = 0
        AND 
@@ -153,7 +163,8 @@ UPDATE ena_datasets AS ena
 
 
 UPDATE ena_datasets AS ena 
-   SET sample_id = s.submission_id 
+   SET sample_id = s.submission_id, 
+       osd_id = s.osd_id
   FROM samples s
  WHERE s.osd_id = 106 AND s.water_depth = 15
        AND 
@@ -164,6 +175,8 @@ UPDATE ena_datasets AS ena
        ena.file_name_prefix in ('OSD106-15m-depth','OSD106-sea-water-bottom');
 
 
+
+select * from ena_datasets where osd_id in (15,20,80,90,106,155);
 
 
 ROLLBACK;
