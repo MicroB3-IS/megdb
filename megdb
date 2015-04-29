@@ -59,7 +59,7 @@ function render_template() {
 
 
 # Single function
-main() {
+function main() {
   #the optional paramters string 
   local -r OPTS=':f:'
   
@@ -110,10 +110,11 @@ main() {
   
   psql \
       -e \
+      --set ON_ERROR_STOP=true \
       --no-align \
       --tuples-only \
       -h localhost -U renzo -p 5491 -d megdb_r8 \
-      -f ${PSQL_SOURCE_FILE}
+      -f ${PSQL_SOURCE_FILE} || exit 10
 
   cleanup
 
