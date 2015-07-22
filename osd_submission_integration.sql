@@ -128,6 +128,59 @@ COMMENT ON FUNCTION osdregistry.parse_date(text,date)
      IS 'Returns a date value, in case it can not cast to date returns user suppied default value';
 
 
+CREATE OR REPLACE FUNCTION osdregistry.parse_local_time (
+      val text
+    )
+  RETURNS time(0)  AS
+  $BODY$
+    select val::time(0) without time zone;
+  $BODY$
+  LANGUAGE sql IMMUTABLE;
+  
+ALTER FUNCTION osdregistry.parse_local_time(text)
+  OWNER TO megdb_admin;
+
+REVOKE ALL ON FUNCTION osdregistry.parse_local_time(text) FROM public;
+GRANT EXECUTE ON FUNCTION osdregistry.parse_local_time(text) TO megxuser,megx_team;
+
+COMMENT ON FUNCTION osdregistry.parse_local_time(text) IS 'Returns a date value, in case it can not cast throws error';
+
+
+CREATE OR REPLACE FUNCTION osdregistry.parse_local_time (
+      val text,
+      def time(0)
+    )
+  RETURNS time  AS
+$BODY$
+   DECLARE
+      err_msg text := '';
+   BEGIN
+     BEGIN
+       
+       RETURN coalesce ( osdregistry.parse_local_time(val), def) ;	
+       EXCEPTION WHEN OTHERS THEN
+         GET STACKED DIAGNOSTICS err_msg = RETURNED_SQLSTATE;
+         RAISE LOG 'wrong date % and sqlstate=%', val, err_msg;
+         RETURN res;
+       END;
+     return res;
+   END;
+$BODY$
+  LANGUAGE plpgsql IMMUTABLE;
+  
+ALTER FUNCTION osdregistry.parse_local_time(text,time)
+  OWNER TO megdb_admin;
+
+REVOKE ALL ON FUNCTION osdregistry.parse_local_time(text,time) FROM public;
+ GRANT EXECUTE ON FUNCTION osdregistry.parse_local_time(text,time) TO megxuser,megx_team;
+
+COMMENT ON FUNCTION osdregistry.parse_local_time(text,time)
+     IS 'Returns a TIME value, in case it can not cast to date returns user suppied default value';
+
+
+
+
+
 CREATE OR REPLACE FUNCTION osdregistry.is_in_range (
       val numeric,
       min numeric,
@@ -191,7 +244,7 @@ GRANT EXECUTE ON FUNCTION osdregistry.valid_date(date) TO megxuser,megx_team;
 COMMENT ON FUNCTION osdregistry.valid_date(date) IS 'Checks wether date is in range of possible OSD dates';
 
 
-CREATE or REPLACE FUNCTION osdregistry.valid_platform(
+CREATE or REPLACE FUNCTION osdregistry.valid_platform (
   val text
 )
   RETURNS boolean  AS
@@ -268,8 +321,27 @@ REVOKE ALL ON FUNCTION osdregistry.valid_water_temperature(numeric) FROM public;
 GRANT EXECUTE ON FUNCTION osdregistry.valid_water_temperature(numeric) TO megxuser,megx_team;
 
 COMMENT ON FUNCTION osdregistry.valid_water_temperature(numeric)
-     IS 'Checks wether water temperture is in acceptable range';
+     IS 'Checks wether water TEMPERATURE is in acceptable range';
 
+CREATE OR REPLACE FUNCTION osdregistry.valid_salinity (
+      val numeric
+    )
+  RETURNS boolean  AS
+$BODY$
+     select CASE WHEN ( val >= 0::numeric ) AND ( val < 80::numeric )
+          THEN true
+	  ELSE false END;
+$BODY$
+  LANGUAGE sql IMMUTABLE
+  COST 100;
+  ALTER FUNCTION osdregistry.valid_salinity(numeric)
+  OWNER TO megdb_admin;
+
+REVOKE ALL ON FUNCTION osdregistry.valid_salinity(numeric) FROM public;
+GRANT EXECUTE ON FUNCTION osdregistry.valid_salinity(numeric) TO megxuser,megx_team;
+
+COMMENT ON FUNCTION osdregistry.valid_salinity(numeric)
+     IS 'Checks wether SALINITY is in acceptable range';
 
 
 
@@ -425,11 +497,11 @@ ALTER TABLE osdregistry.submission_overview
 
 ALTER TABLE osdregistry.samples ADD COLUMN water_depth_verb text NOT NULL DEFAULT ''::text;
 ALTER TABLE osdregistry.samples ADD COLUMN salinity_verb text NOT NULL DEFAULT ''::text;
-ALTER TABLE osdregistry.samples ADD COLUMN water_temperture_verb text NOT NULL DEFAULT ''::text;
+ALTER TABLE osdregistry.samples ADD COLUMN water_temperature_verb text NOT NULL DEFAULT ''::text;
 
 ALTER TABLE osdregistry.samples ADD COLUMN biome_verb text NOT NULL DEFAULT ''::text;
-ALTER TABLE osdregistry.samples ADD COLUMN feature_depth_verb text NOT NULL DEFAULT ''::text;
-ALTER TABLE osdregistry.samples ADD COLUMN material_depth_verb text NOT NULL DEFAULT ''::text;
+ALTER TABLE osdregistry.samples ADD COLUMN feature_verb text NOT NULL DEFAULT ''::text;
+ALTER TABLE osdregistry.samples ADD COLUMN material_verb text NOT NULL DEFAULT ''::text;
 
 
 CREATE TYPE osdregistry.sample_submission AS (
@@ -751,7 +823,8 @@ DELETE FROM osdregistry.osd_raw_samples as sam
 DELETE FROM osdregistry.osd_raw_samples as sam where sam.id in ( 275, 278 );
 
 
-SELECT count(*) as non_integrated_samples from osdregistry.submissions_new sub where sub.id < (select max(submission_id) from osdregistry.samples);
+SELECT count(*) as non_integrated_samples from osdregistry.submissions_new sub
+ WHERE sub.id < (select max(submission_id) from osdregistry.samples);
 
 
 SELECT * FROM osdregistry.osd_raw_removed_samples limit 1;
@@ -777,10 +850,15 @@ set local client_min_messages to debug;
 
 -- start geos
 
-CREATE OR REPLACE FUNCTION osdregistry.attempt_start_lat_lon() RETURNS TRIGGER AS $trg$
+CREATE OR REPLACE FUNCTION osdregistry.attempt_georef() RETURNS TRIGGER AS $trg$
        DECLARE
 	lat numeric;
 	lon numeric;
+	water_depth numeric;
+	local_date date;
+	local_start time(0);
+	local_end time(0);
+	tz text;
        BEGIN
        --
        -- Attempt to insert value into curated column from verbatim column.
@@ -791,6 +869,27 @@ CREATE OR REPLACE FUNCTION osdregistry.attempt_start_lat_lon() RETURNS TRIGGER A
        	  -- just doing nothing
            RETURN NEW;
        END IF;
+       -- now depth parsed from verbatim or simply the current unchanged defaults
+       water_depth := osdregistry.parse_numeric( NEW.water_depth_verb, NEW.water_depth );
+       -- therefore simply check if valid and just assign in any case
+       IF osdregistry.is_in_range(water_depth, 0::numeric, 12000::numeric  ) THEN
+       	  NEW.water_depth := water_depth;
+       END IF;
+
+       -- now local date parsed from verbatim or simply the current unchanged defaults
+       local_date :=  osdregistry.parse_date( NEW.local_date_verb, NEW.local_date ) ;
+       -- therefore simply check if valid and just assign in any case
+       IF osdregistry.valid_date( local_date ) THEN
+       	  NEW.local_date := local_date;
+       END IF;
+
+       RAISE NOTICE 'verb times: % and % ', NEW.local_start_verb, NEw.local_end_verb;
+       
+       local_start :=  osdregistry.parse_local_time( NEW.local_start_verb, NEW.local_start::time without time zone ) ;
+       local_end :=  osdregistry.parse_local_time( NEW.local_end_verb, NEW.local_end::time without time zone) ;
+
+
+
        -- now lat/lon are either parsed from verbatim or simply the current unchanged defaults
        lat := osdregistry.parse_numeric( NEW.start_lat_verb, NEW.start_lat );
        lon := osdregistry.parse_numeric( NEW.start_lon_verb, NEW.start_lon );
@@ -798,17 +897,30 @@ CREATE OR REPLACE FUNCTION osdregistry.attempt_start_lat_lon() RETURNS TRIGGER A
        IF osdregistry.valid_lat_lon( lat, lon ) THEN
        	  NEW.start_lat := lat;
        	  NEW.start_lon := lon;
+	  SELECT CASE WHEN time_zone = 'UTC±00:00'
+                      THEN '+00:00'
+                      ELSE substring(time_zone from 4)
+		 END
+  	    INTO STRICT tz
+	    FROM elayers.world_time_zones tz
+  	   WHERE ( ST_intersects (
+	             ST_geometryFromText('POINT(' || NEW.start_lon || ' ' || NEW.start_lat ||')', 4326 ),
+		     tz.geom)
+		 );
+           NEW.local_start := (local_start || tz)::time(0) with time zone;
+           NEW.local_end := (local_end || tz)::time(0) with time zone;
+
        END IF;
 
        RETURN NEW; 
     END;
 $trg$ LANGUAGE plpgsql;
 
-CREATE TRIGGER attemp_start_lat_lon_on_insert
+CREATE TRIGGER attemp_georef_on_insert
   BEFORE INSERT
   ON osdregistry.samples
   FOR EACH ROW
-  EXECUTE PROCEDURE osdregistry.attempt_start_lat_lon();
+  EXECUTE PROCEDURE osdregistry.attempt_georef();
 
 -- stop geo
 
@@ -838,49 +950,11 @@ CREATE OR REPLACE FUNCTION osdregistry.attempt_stop_lat_lon() RETURNS TRIGGER AS
     END;
 $trg$ LANGUAGE plpgsql;
 
-CREATE TRIGGER attemp_stop_lat_lon_on_insert
+CREATE TRIGGER attempt_stop_lat_lon_on_insert
   BEFORE INSERT
   ON osdregistry.samples
   FOR EACH ROW
   EXECUTE PROCEDURE osdregistry.attempt_stop_lat_lon();
-
-
-CREATE OR REPLACE FUNCTION osdregistry.attempt_time_depth() RETURNS TRIGGER AS $trg$
-       DECLARE
-	water_depth numeric;
-	local_date date;
-       BEGIN
-       --
-       -- Attempt to insert value into curated column from verbatim column.
-       -- Hence this trigger is only defined to work on insert
-       --
-       IF (TG_OP != 'INSERT') THEN
-       	  -- just doing nothing
-           RETURN NEW;
-       END IF;
-       -- now depth parsed from verbatim or simply the current unchanged defaults
-       water_depth := osdregistry.parse_numeric( NEW.water_depth_verb, NEW.water_depth );
-       -- therefore simply check if valid and just assign in any case
-       IF osdregistry.is_in_range(water_depth, 0::numeric, 12000::numeric  ) THEN
-       	  NEW.water_depth := water_depth;
-       END IF;
-
-       -- now local date parsed from verbatim or simply the current unchanged defaults
-       local_date :=  osdregistry.parse_date( NEW.local_date_verb, NEW.local_date ) ;
-       -- therefore simply check if valid and just assign in any case
-       IF osdregistry.valid_date( local_date ) THEN
-       	  NEW.local_date := local_date;
-       END IF;
-
-       RETURN NEW; 
-    END;
-$trg$ LANGUAGE plpgsql;
-
-CREATE TRIGGER attempt_time_depth
-  BEFORE INSERT
-  ON osdregistry.samples
-  FOR EACH ROW
-  EXECUTE PROCEDURE osdregistry.attempt_time_depth();
 
 -- attempt platform
 
@@ -916,7 +990,7 @@ CREATE TRIGGER attempt_platform_env
  
 CREATE OR REPLACE FUNCTION osdregistry.attempt_mandatory_parameters() RETURNS TRIGGER AS $trg$
        DECLARE
-	temp numeric;
+	param numeric;
        BEGIN
        --
        -- Attempt to insert value into curated column from verbatim column.
@@ -927,11 +1001,18 @@ CREATE OR REPLACE FUNCTION osdregistry.attempt_mandatory_parameters() RETURNS TR
            RETURN NEW;
        END IF;
        -- now local date parsed from verbatim or simply the current unchanged defaults
-       temp :=  osdregistry.parse_numeric( NEW.water_temperature::text); --, NEW.water_temperature_verb ) ;
+       param :=  osdregistry.parse_numeric( NEW.water_temperature_verb, NEW.water_temperature );
        -- therefore simply check if valid and just assign in any case
-       IF osdregistry.valid_water_temperature( temp ) THEN
-       	  NEW.water_temperature := temp;
+       IF osdregistry.valid_water_temperature( param ) THEN
+       	  NEW.water_temperature := param;
        END IF;
+
+       param :=  osdregistry.parse_numeric( NEW.salinity_verb, NEW.salinity );
+       -- therefore simply check if valid and just assign in any case
+       IF osdregistry.valid_salinity( param ) THEN
+       	  NEW.salinity := param;
+       END IF;
+
 
        RETURN NEW; 
     END;
@@ -1008,7 +1089,7 @@ $BODY$
 
        protocol, objective, platform, device, description,
 
-       water_temperature, salinity, biome, feature, material,
+       water_temperature_verb, salinity_verb, biome_verb, feature_verb, material_verb,
 
        ph_verb,
        phosphate_verb,
@@ -1135,9 +1216,12 @@ SELECT submission_id,
        stop_lat,stop_lat_verb,
        stop_lon,stop_lon_verb,
        local_date, local_date_verb,
+       local_start, local_start_verb,
+       local_end, local_end_verb,
        platform, platform_verb,
-       water_temperature--, water_temperature_verb
-       salinity,
+       water_temperature, water_temperature_verb,
+       salinity, salinity_verb,
+       biome, biome_verb,feature, feature_verb, material, material_verb,
        ph, ph_verb,
        phosphate, phosphate_verb
   FROM osdregistry.samples s
