@@ -10,16 +10,16 @@ SET ROLE megdb_admin;
 -- for some test queries as user megxuser
 -- SET ROLE megxuser;
 
-CREATE VIEW sample_environmental_data AS 
+CREATE VIEW osdregistry.sample_environmental_data AS 
 SELECT sam.osd_id,
        osdregistry.osd_sample_label(
            sam.osd_id::text, 
            sam.local_date::text,
            sam.water_depth::text, sam.protocol::text 
        ) as label,
-       bioarchive_code,
+       coalesce(bioarchive_code, 'na') as bioarchive_code, 
        ena_acc, 
-       biosample_acc,
+       coalesce(biosample_acc, 'na') as biosample_acc,
        start_lat, 
        start_lon, 
        stop_lat, 
@@ -62,8 +62,7 @@ SELECT sam.osd_id,
        turbidity,
        fluorescence,
        pigment_concentration,
-       picoplankton_flow_cytometry, 
-       remarks 
+       picoplankton_flow_cytometry
       
   FROM osdregistry.samples sam
   LEFT JOIN osdregistry.iho_tagging iho ON (sam.submission_id = iho.submission_id);
