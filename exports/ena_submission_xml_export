@@ -1,0 +1,21 @@
+#/bin/bash
+
+
+
+
+
+\a
+\t
+
+\copy (SELECT xmlelement(name "SAMPLE_SET", t.s::xml) FROM (select xmlagg( sample order by osd_id DESC)::xml as s from ena_m2b3_sample_xml) as t(s)) TO '/home/renzo/src/osd-submissions/2014/dirty_xml/sample_2014-04-14.xml'
+
+
+\copy (SELECT xmlelement(name "EXPERIMENT_SET", t.s::xml) FROM (select xmlagg( experiment order by osd_id DESC)::xml as s from ena_m2b3_experiment_xml) as t(s)) TO '/home/renzo/src/osd-submissions/2014/dirty_xml/experiment_2014-04-14.xml'
+
+
+
+\copy (SELECT xmlelement(name "RUN_SET", t.s::xml) FROM (select xmlagg( run order by file_name_prefix DESC)::xml as s from ena_m2b3_run_xml) as t(s)) TO '/home/renzo/src/osd-submissions/2014/dirty_xml/run_2014-04-14.xml'
+
+
+\a
+\t

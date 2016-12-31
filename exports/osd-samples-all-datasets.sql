@@ -4,9 +4,89 @@ BEGIN;
 SET search_path to osdregistry,public;
 
 
+CREATE OR REPLACE FUNCTION osdregistry.create_investigator(bigint)
+  RETURNS text AS
+$BODY$
+  SELECT string_agg ( p.last_name ||', ' || p.first_name || ', ' || aff.institute, '; ' ORDER BY own.seq_author_order)
+    FROM participants p 
+   INNER JOIN affiliated aff ON (p.email = aff.email)
+   INNER JOIN owned_by own ON (p.email = own.email) 
+   WHERE sample_id = $1 group by $1;
+$BODY$
+  LANGUAGE sql VOLATILE
+  COST 100;
+
+ALTER FUNCTION osdregistry.create_investigator(bigint)	
+  OWNER TO megdb_admin;
+
+REVOKE EXECUTE ON FUNCTION osdregistry.create_investigator(bigint) from public;
+GRANT EXECUTE ON FUNCTION osdregistry.create_investigator(bigint) TO megdb_admin;
+GRANT EXECUTE ON FUNCTION osdregistry.create_investigator(bigint) TO megx_team;
+
+CREATE OR REPLACE FUNCTION osdregistry.create_ena_shotgun_library()
+  RETURNS xml AS
+$BODY$
+   SELECT xmlelement(name "LIBRARY_DESCRIPTOR",
+                xmlelement(name "LIBRARY_STRATEGY", 'WGS'),
+                xmlelement(name "LIBRARY_SOURCE", 'METAGENOMIC'),
+                xmlelement(name "LIBRARY_SELECTION", 'RANDOM'),
+                xmlelement(name "LIBRARY_LAYOUT",
+                   xmlelement(name "PAIRED", 
+                                xmlattributes( '300'
+                                       as "NOMINAL_LENGTH")
+                              )
+                           )
+              );
+$BODY$
+  LANGUAGE sql VOLATILE
+  COST 100;
+
+ALTER FUNCTION osdregistry.create_ena_shotgun_library()	
+  OWNER TO megdb_admin;
+
+REVOKE EXECUTE ON FUNCTION osdregistry.create_ena_shotgun_library() from public;
+GRANT EXECUTE ON FUNCTION osdregistry.create_ena_shotgun_library() TO megdb_admin;
+GRANT EXECUTE ON FUNCTION osdregistry.create_ena_shotgun_library() TO megx_team;
+
+---------
+
+
+CREATE OR REPLACE FUNCTION osdregistry.create_ena_amplicon_library(locus text)
+  RETURNS xml AS
+$BODY$
+SELECT xmlelement(name "LIBRARY_DESCRIPTOR",
+                xmlelement(name "LIBRARY_STRATEGY", 'AMPLICON'),
+                xmlelement(name "LIBRARY_SOURCE", 'METAGENOMIC'),
+                xmlelement(name "LIBRARY_SELECTION", 'PCR'),
+                xmlelement(name "LIBRARY_LAYOUT",
+                   xmlelement(name "PAIRED", 
+                                xmlattributes( '300'
+                                       as "NOMINAL_LENGTH")
+                              )
+                           ),
+                xmlelement(name "TARGETED_LOCI",
+                    xmlelement(name "LOCUS",
+                      xmlattributes( locus || ' rRNA' AS "locus_name" )
+                    )
+                )
+              );
+$BODY$
+  LANGUAGE sql VOLATILE
+  COST 100;
+
+ALTER FUNCTION osdregistry.create_ena_amplicon_library(text)
+  OWNER TO megdb_admin;
+
+REVOKE EXECUTE ON FUNCTION osdregistry.create_ena_amplicon_library(text) from public;
+GRANT EXECUTE ON FUNCTION osdregistry.create_ena_amplicon_library(text) TO megdb_admin;
+GRANT EXECUTE ON FUNCTION osdregistry.create_ena_amplicon_library(text) TO megx_team;
+
+
+DROP VIEW IF EXISTS ena_m2b3_sample_xml;
 
 CREATE OR REPLACE VIEW ena_m2b3_sample_xml AS 
    SELECT 
+       sam.submission_id,
        sam.osd_id,
        xmlelement(name "SAMPLE", 
                     xmlattributes( sam.submission_id as "alias",
@@ -27,7 +107,7 @@ CREATE OR REPLACE VIEW ena_m2b3_sample_xml AS
              ena_sample_attribute('ENA-CHECKLIST', 'ERC000027' ),
              ena_sample_attribute('Sampling Campaign', 'OSD-Jun-2014' ),
              ena_sample_attribute('Sampling Site', 'OSD' || sam.osd_id || ',' || sites.label_verb ),
-        
+             ena_sample_attribute('SAMPLING_Investigators', osdregistry.create_investigator(sam.submission_id) ),
              ena_sample_attribute('Marine Region', COALESCE (iho.iho_label, 'unknown') ),
              ena_sample_attribute('mrgid'::text, COALESCE ( iho.mrgid::text, 'unknown') ),
              ena_sample_attribute('IHO', COALESCE ( iho.iho_label, 'unknown') ),
@@ -69,45 +149,52 @@ CREATE OR REPLACE VIEW ena_m2b3_sample_xml AS
       sites ON ( sam.osd_id = sites.id )
       left JOIN
       iho_tagging iho ON ( sam.submission_id = iho.submission_id)
- WHERE date_part('year', sam.local_date) = 2014::double precision
 ;
 
 
 
 CREATE OR REPLACE VIEW ena_m2b3_experiment_xml AS 
    SELECT 
-       ena.osd_id,
+       ena.*,
        
        xmlelement(name "EXPERIMENT", 
                     xmlattributes( 'osd-2014-' 
-                                     || sequencing_center || '-' 
+                                     || lower(sequencing_center) || '-' 
                                      || cat || '-'                  
                                      || submission_id  as "alias",
                                    'OSD-CONSORTIUM' as "center_name",
                                    'MPI-BREM'  as "broker_name"
                                   ),
-          xmlelement(name "TITLE", 'Metagenome Shotgun Sequencing'),
+          xmlelement(name "TITLE", 
+                       CASE WHEN cat = 'shotgun'                    
+                            THEN 'Metagenome Shotgun Sequencing'
+                            ELSE 'Illumina MiSeq sequencing of sample ' 
+                                  || osdregistry.osd_sample_label(
+                                       ena.osd_id::text, samples.local_date::text, samples.water_depth::text, samples.protocol::text  
+                                     ) 
+                                  || 'from OSD-JUN-2014'
+                        END
+                    ),
           xmlelement(name "STUDY_REF", 
                        xmlattributes( 'osd-2014'
                                        as "refname")
                      ),
          xmlelement(name "DESIGN",
-             xmlelement(name "DESIGN_DESCRIPTION",  'marine metagenome'),
+             xmlelement(name "DESIGN_DESCRIPTION",  
+                          CASE WHEN cat = 'shotgun' 
+                               THEN 'marine metagenome'
+                               ELSE 'marine ' || cat || ' rDNA amplicon sequencing'
+                           END
+                        ),
              xmlelement(name "SAMPLE_DESCRIPTOR", 
                          xmlattributes( submission_id
                                        as "refname")
                        ),
-             xmlelement(name "LIBRARY_DESCRIPTOR",
-                xmlelement(name "LIBRARY_STRATEGY", 'WGS'),
-                xmlelement(name "LIBRARY_SOURCE", 'METAGENOMIC'),
-                xmlelement(name "LIBRARY_SELECTION", 'RANDOM'),
-                xmlelement(name "LIBRARY_LAYOUT",
-                   xmlelement(name "PAIRED", 
-                                xmlattributes( '300'
-                                       as "NOMINAL_LENGTH")
-                              )
-                           )
-              )
+             CASE WHEN cat = 'shotgun'
+                  THEN osdregistry.create_ena_shotgun_library()
+                  ELSE osdregistry.create_ena_amplicon_library( cat )
+              END
+             
          ), 
          xmlelement(name "PLATFORM",
             xmlelement(name "ILLUMINA", 
@@ -119,9 +206,6 @@ CREATE OR REPLACE VIEW ena_m2b3_experiment_xml AS
    FROM samples
           INNER JOIN 
         ena_datasets ena ON (samples.submission_id = ena.sample_id)
-        
- WHERE date_part('year', samples.local_date) >= 2014::double precision
-
 ;
 
 
@@ -129,20 +213,19 @@ CREATE OR REPLACE VIEW ena_m2b3_experiment_xml AS
 
 CREATE OR REPLACE VIEW ena_m2b3_run_xml AS 
    SELECT 
-       sample_id,
-       file_name_prefix,
+       ena.*,
        xmlelement(name "RUN", 
                     xmlattributes( file_name_prefix  || '-'
-                                     || sequencing_center || '-' 
+                                     || lower(sequencing_center) || '-' 
                                      || cat || '-'                  
                                      || sample_id as "alias",
                                    'OSD-CONSORTIUM' as "center_name",
                                    'MPI-BREM'  as "broker_name",
-                                   'LGC-GENOMICS' as "run_center"
+                                   sequencing_center as "run_center"
                                   ), 
           xmlelement(name "EXPERIMENT_REF", 
                        xmlattributes( 'osd-2014-' 
-                                     || sequencing_center || '-' 
+                                     || lower(sequencing_center) || '-' 
                                      || cat || '-'                  
                                      || sample_id
                                        as "refname")
@@ -150,14 +233,14 @@ CREATE OR REPLACE VIEW ena_m2b3_run_xml AS
           xmlelement(name "DATA_BLOCK",
              xmlelement(name "FILES",
                 xmlelement(name "FILE", 
-                             xmlattributes( file_name_prefix || '_R1_shotgun_raw.fastq.gz'
+                             xmlattributes( file_name_prefix || '_R1_' || cat || '_raw.fastq.gz'
                                               as "filename",
                                             'fastq' as "filetype",
                                             'MD5' as "checksum_method"
                                            )
                           ),
                 xmlelement(name "FILE", 
-                             xmlattributes( file_name_prefix || '_R2_shotgun_raw.fastq.gz'
+                             xmlattributes( file_name_prefix || '_R2_' || cat || '_raw.fastq.gz'
                                               as "filename",
                                             'fastq' as "filetype",
                                             'MD5' as "checksum_method"
@@ -166,28 +249,10 @@ CREATE OR REPLACE VIEW ena_m2b3_run_xml AS
              )
           )
        ) as run
-   FROM ena_datasets where sample_id IS NOT NULL;
+   FROM ena_datasets ena where sample_id IS NOT NULL;
 ;
 
---SELECT xmlelement(name "SAMPLE_SET", t.s)  FROM (select xmlagg( sample order by osd_id DESC) as s  from ena_m2b3_sample_xml) as t(s);
 
-
-\a
-\t
-
-\copy (SELECT xmlelement(name "SAMPLE_SET", t.s::xml) FROM (select xmlagg( sample order by osd_id DESC)::xml as s from ena_m2b3_sample_xml) as t(s)) TO '/home/renzo/src/osd-submissions/2014/dirty_xml/sample_2014-04-14.xml'
-
-
-\copy (SELECT xmlelement(name "EXPERIMENT_SET", t.s::xml) FROM (select xmlagg( experiment order by osd_id DESC)::xml as s from ena_m2b3_experiment_xml) as t(s)) TO '/home/renzo/src/osd-submissions/2014/dirty_xml/experiment_2014-04-14.xml'
-
-
-
-\copy (SELECT xmlelement(name "RUN_SET", t.s::xml) FROM (select xmlagg( run order by file_name_prefix DESC)::xml as s from ena_m2b3_run_xml) as t(s)) TO '/home/renzo/src/osd-submissions/2014/dirty_xml/run_2014-04-14.xml'
-
-
-\a
-\t
-
-ROLLBACK;
+commit;
 
 
