@@ -1,0 +1,1633 @@
+00000000,geographic feature
+00000001,bedding-plane cave
+00000002,anthropogenic geographic feature
+00000003,mine tailing
+00000004,administrative region
+00000005,first-order administrative region
+00000006,second-order administrative region
+00000007,third-order administrative region
+00000008,fourth-order administrative region
+00000009,national geopolitical entity
+00000010,transport feature
+00000011,garden
+00000012,hydrographic feature
+00000013,cave system
+00000014,canal
+00000015,ocean
+00000016,sea
+00000017,saline hydrographic feature
+00000018,dry river
+00000019,saline lake
+00000020,lake
+00000021,freshwater lake
+00000022,river
+00000023,stream
+00000025,reservoir
+00000026,well
+00000027,spring
+00000028,sand pit quarry
+00000029,watercourse
+00000030,dead cave
+00000031,wadi
+00000032,bay
+00000033,pond
+00000034,rapids
+00000035,marsh
+00000036,irrigation canal
+00000037,ditch
+00000038,lagoon
+00000039,fjord
+00000040,waterfall
+00000041,tidal creek
+00000042,drainage canal
+00000043,wetland
+00000044,peatland
+00000045,estuary
+00000046,hedge
+00000047,canopy
+00000048,navigation canal
+00000050,geyser
+00000051,hot spring
+00000052,crater lake
+00000053,freshwater marsh
+00000054,saline marsh
+00000055,saline evaporation pond
+00000056,fishpond
+00000057,mangrove swamp
+00000058,underground lake
+00000059,underground river
+00000060,underground stream
+00000061,underground water body
+00000062,populated place
+00000063,water body
+00000064,road
+00000065,railway
+00000066,man-made tunnel
+00000067,cave
+00000068,tunnel
+00000069,distributary
+00000070,constructed feature
+00000071,fault cave
+00000072,aquaduct
+00000073,building
+00000074,dam
+00000075,bridge
+00000076,mine
+00000077,agricultural feature
+00000078,farm
+00000079,flume
+00000080,mountain range
+00000081,mountain
+00000082,hill range
+00000083,hill
+00000084,mountain pass
+00000085,alpine glacier
+00000086,plain
+00000087,cliff
+00000088,sea cliff
+00000089,inland cliff
+00000090,coastal plain
+00000091,beach
+00000092,sea beach
+00000093,lacustrine beach
+00000094,volcanic feature
+00000095,lava field
+00000096,caldera
+00000097,desert
+00000098,island
+00000099,artificial island
+00000100,valley
+00000101,delta
+00000102,cave entrance
+00000103,mangrove island
+00000104,undersea feature
+00000105,lake surface
+00000106,grassland
+00000107,heath
+00000108,meadow
+00000109,woodland
+00000110,lava tunnel
+00000111,forest
+00000112,tundra
+00000113,cultivated habitat
+00000114,field
+00000115,orchard
+00000116,vineyard
+00000117,plantation
+00000118,coconut plantation
+00000119,planted forest
+00000120,oil palm plantation
+00000121,artificial channel
+00000122,track
+00000123,political entity
+00000124,supranational geopolitical entity
+00000125,mineral spring
+00000126,sulfur spring
+00000127,badland
+00000128,dry valley
+00000129,stream valley
+00000130,reef
+00000131,glacial feature
+00000132,ice sheet
+00000133,glacier
+00000134,permafrost
+00000135,buffer zone
+00000136,demilitiarized zone
+00000137,coastal inlet
+00000138,cove
+00000139,irrigation ditch
+00000140,drainage ditch
+00000141,bank
+00000142,stream bank
+00000143,river bank
+00000145,ice cap
+00000146,snow field
+00000147,ocean current
+00000148,riffle
+00000149,artificial reef
+00000150,coral reef
+00000151,sabkha
+00000152,anabranch
+00000153,headwater
+00000154,flood meadow
+00000155,cirque
+00000156,desert oasis
+00000157,peat cut
+00000158,causeway
+00000159,sugar plantation
+00000160,sisal plantation
+00000161,banana plantation
+00000162,tea plantation
+00000163,coffee plantation
+00000164,rubber plantation
+00000165,asphalt lake
+00000166,atoll
+00000167,bar
+00000168,blowhole
+00000169,canyon
+00000170,dune
+00000171,river valley
+00000172,sandy desert
+00000173,rocky desert
+00000174,isthmus
+00000175,karst
+00000176,elevation
+00000177,moraine
+00000178,levee
+00000179,mesa
+00000180,mound
+00000181,nunatak
+00000182,plateau
+00000183,stony desert
+00000184,hanging valley
+00000185,raised mire
+00000186,string mire
+00000187,tundra mire
+00000188,paisa mire
+00000189,peat swamp
+00000190,abyssal feature
+00000191,physiographic feature
+00000192,mudflat
+00000193,olive grove
+00000194,scree
+00000195,sinkhole
+00000196,alkaline flat
+00000197,endorheic lake
+00000198,subglacial lake
+00000199,meromictic lake
+00000200,periglacial lake
+00000201,fjord lake
+00000202,oxbow lake
+00000203,rift lake
+00000204,ephemeral spring
+00000205,permanent spring
+00000206,neritic zone
+00000207,oceanic zone
+00000208,pelagic zone
+00000209,photic zone
+00000210,aphotic zone
+00000211,bathypelagic zone
+00000212,abyssalpelagic zone
+00000213,mesopelagic zone
+00000214,hadalpelagic zone
+00000215,hydrothermal vent
+00000216,fumarole
+00000217,solfatara
+00000218,black smoker
+00000219,landlocked sea
+00000220,archipelago
+00000221,continental island
+00000222,oceanic island
+00000223,continental shelf
+00000224,slightly stratified estuary
+00000225,highly stratified estuary
+00000226,saline wedge estuary
+00000227,vertically mixed estuary
+00000228,inverse estuary
+00000229,intermittent estuary
+00000230,coastal wetland
+00000231,moor
+00000232,fen
+00000233,swamp
+00000234,bayou
+00000235,carr
+00000236,dambo
+00000237,hydromorphic/phreatic dambo
+00000238,fluvial dambo
+00000239,pocasin
+00000240,saline wetland
+00000241,tidal mudflat
+00000242,lacustrine mudflat
+00000243,freshwater wetland
+00000244,abyssal plain
+00000245,maar
+00000246,volcanic crater
+00000247,volcano
+00000248,glacial valley
+00000249,lateral moraine
+00000250,medial moraine
+00000251,ground moraine
+00000252,terminal moraine
+00000253,scroll plane
+00000254,till plan
+00000255,flood plain
+00000256,floodway
+00000257,flood fringe
+00000258,alluvial plain
+00000259,lacustrine plain
+00000260,prairie
+00000261,savanna
+00000262,steppe
+00000263,fissure cave
+00000264,seamount
+00000265,guyot
+00000266,pasture
+00000267,submarine canyon
+00000268,lake bed
+00000269,land-tied island
+00000270,beaver pond
+00000271,chott
+00000272,confluence
+00000273,continental slope
+00000274,continental rise
+00000275,ocean trench
+00000276,drumlin
+00000277,dry lake
+00000278,dry stream
+00000279,saline pan
+00000280,escarpment
+00000281,fault escarpment
+00000282,esker
+00000283,ridge
+00000284,quarry
+00000285,quicksand area
+00000286,polder
+00000287,butte
+00000288,cotton plantation
+00000289,horst
+00000290,graben
+00000291,drainage basin
+00000292,watershed
+00000293,continental divide
+00000294,fish farm
+00000295,fish hatchery
+00000296,rice field
+00000297,paddy field
+00000298,iceberg
+00000299,ice field
+00000300,scrubland
+00000301,chaparral
+00000302,rift valley
+00000303,coast
+00000304,shore
+00000305,peninsula
+00000306,spit
+00000307,icefall
+00000308,dune slack
+00000309,depression
+00000310,impact crater
+00000311,kettle
+00000312,sandur
+00000313,blowout
+00000314,alluvial fan
+00000315,bajada
+00000316,intertidal zone
+00000317,tidal pool
+00000318,high tide zone
+00000319,low tide zone
+00000320,crevasse
+00000321,joint-plane cave
+00000322,lava cave
+00000323,live cave
+00000324,outflow cave
+00000325,polje
+00000326,sea cave
+00000327,speleothem
+00000328,vadoze zone
+00000329,phreatic zone
+00000330,stalagmite
+00000331,stalactite
+00000332,doline
+00000333,subjacent karst
+00000334,syngenetic karst
+00000335,polygonal karst
+00000336,doline karst
+00000337,orange juice
+00000338,vomit
+00000339,piece of rock
+00000340,grain of sand
+00000341,piece of gravel
+00000342,ice cap dome
+00000343,particle of silt
+00000344,grain of desert sand
+00000345,grain of beach sand
+00000346,grain of acid dune sand
+00000347,grain of sea sand
+00000348,grain of rocky sand
+00000349,terrarium
+00000350,somma volcano
+00000351,volcanic arc
+00000352,continental arc
+00000353,island arc
+00000354,volcanic field
+00000355,monogenetic volcanic field
+00000356,pyroclastic cone
+00000357,lock
+00000358,protected area
+00000359,natural monument
+00000360,national forest
+00000361,site of special scientific interest
+00000362,marine park
+00000363,nature reserve
+00000364,national wildlife refuge
+00000365,ramsar site
+00000366,national nature reserve
+00000367,national park
+00000368,ephemeral island
+00000369,brine pool
+00000370,tuya
+00000371,complex volcano
+00000372,pyroclastic shield volcano
+00000373,geothermal field
+00000374,wildlife management area
+00000375,world heritage site
+00000376,biosphere reserve
+00000377,artificial lake
+00000378,canal head reservoir
+00000380,ice shelf
+00000381,massif
+00000382,lake shore
+00000383,stream bed
+00000384,river bed
+00000385,stream mouth
+00000386,river mouth
+00000387,intermittent lake
+00000389,intermittent wetland
+00000390,mountain spur
+00000391,land bridge
+00000392,ice tongue
+00000393,sound
+00000394,strait
+00000395,channel
+00000396,marine channel
+00000397,lake channel
+00000398,volcanic cone
+00000399,ash cone
+00000400,cinder cone
+00000401,spatter cone
+00000402,mud volcano
+00000403,shield volcano
+00000404,stratovolcano
+00000406,mid-ocean ridge
+00000407,subglacial volcano
+00000408,volcanic fissure
+00000409,whirlpool
+00000410,kipuka
+00000411,ford
+00000412,tidal watercourse
+00000413,pingo
+00000414,natural arch
+00000415,raised beach
+00000416,coastal dune
+00000417,machair
+00000418,ria
+00000419,stack
+00000420,tombolo
+00000421,wave-cut platform
+00000422,limestone pavement
+00000423,river island
+00000424,lake island
+00000426,ocean floor
+00000427,meander
+00000428,biome
+00000429,arete
+00000430,dirt cone
+00000431,drumlin field
+00000432,monadnock
+00000433,kame terrace
+00000434,outwash fan
+00000435,proglacial lake
+00000436,tunnel valley
+00000437,Nye channel
+00000438,alas
+00000439,dell
+00000440,rock shelter
+00000441,terracette
+00000442,maelstrom
+00000443,flood control reservoir
+00000444,clearing
+00000445,transvasement
+00000446,terrestrial biome
+00000447,marine biome
+00000448,hydroelectric reservoir
+00000449,drinking water reservoir
+00000450,irrigation reservoir
+00000451,amenity lake
+00000452,ribbon lake
+00000453,liman
+00000454,turlough
+00000455,tarn
+00000456,tidewater glacier
+00000457,plateau glacier
+00000458,valley glacier
+00000459,outlet glacier
+00000460,penplain
+00000461,pseudocrater
+00000462,polygenetic volcanic field
+00000463,harbor
+00000464,artificial harbor
+00000465,natural harbor
+00000467,university campus
+00000468,hydroelectric dam
+00000469,research facility
+00000470,irrigation dam
+00000471,flood control dam
+00000472,backwater
+00000473,gravel pit
+00000474,cut
+00000475,inlet
+00000476,lake inlet
+00000477,mount
+00000478,range of mounts
+00000479,mouth
+00000480,peak
+00000481,pinnacle
+00000482,sea floor
+00000483,plunge pool
+00000484,polynya
+00000485,sea shore
+00000486,shoreline
+00000487,paternoster lake
+00000488,glacial lake
+00000489,palsa
+00000490,consequent stream
+00000491,subsequent stream
+00000492,resequent stream
+00000493,obsequent stream
+00000494,insequent stream
+00000495,tributary
+00000496,rill
+00000497,rincon
+00000498,volcanic dike
+00000499,trough
+00000500,beaver dam
+00000501,bed
+00000502,intermittent saline lake
+00000503,intermittent oxbow lake
+00000504,intermittent pond
+00000505,underground irrigation canal
+00000506,intermittent reservoir
+00000507,wadi mouth
+00000508,terrace
+00000509,marine terrace
+00000510,meander neck
+00000511,blanket bog
+00000512,pond bed
+00000513,reservoir bed
+00000514,crater
+00000515,road cut
+00000516,hammock
+00000517,lost stream
+00000518,ditch mouth
+00000519,agricultural terrace
+00000520,landslide
+00000521,rockfall
+00000522,canal tunnel
+00000523,cutoff
+00000524,abandoned watercourse
+00000525,canalized stream
+00000526,cleft
+00000527,interfluve
+00000528,ice cap ridge
+00000529,beach ridge
+00000530,apron
+00000531,ice cap depression
+00000532,intermittent saline evaporation pond
+00000533,landfill
+00000534,pothole
+00000535,weir
+00000536,moatan
+00000537,boulder field
+00000538,arrugado
+00000539,sill
+00000540,brackish lake
+00000541,brackish pond
+00000542,kame
+00000543,swale
+00000544,leat
+00000545,shingle beach
+00000546,lake sediment
+00000547,waterhole
+00000548,gravel field
+00000549,intermittent water body
+00000550,range of seamounts
+00000551,endorheic basin
+00000552,talik
+00000553,multipurpose dam
+00000554,saddle dam
+00000555,check dam
+00000556,wing dam
+00000557,dry dam
+00000558,diversionary dam
+00000559,weapons test site
+00000560,nuclear weapons test site
+00000561,military training area
+00000562,park
+00000563,pier
+00000564,archeological site
+00000565,sports facility
+00000566,winter sports facility
+00000567,calanque
+00000569,marine habitat
+00000570,brackish water habitat
+00000571,arboreal habitat
+00000572,subterrestrial habitat
+00000856,city
+00000873,freshwater biome
+00000887,Large river biome
+00000888,Large river headwater biome
+00000889,Large river delta biome
+00000890,Small river biome
+00000891,Large lake biome
+00000892,Small lake biome
+00000893,Xeric basin biome
+00001995,rock
+00001996,mine drainage
+00001997,acid mine drainage
+00001998,soil
+00001999,marine water body
+00002000,slope
+00002001,waste water
+00002002,food product
+00002003,feces
+00002004,mesoscopic physical object
+00002005,air
+00002006,water
+00002007,sediment
+00002008,dust
+00002009,terrestrial habitat
+00002010,saline water
+00002011,fresh water
+00002012,hypersaline water
+00002013,igneous rock
+00002014,plutonic rock
+00002015,volcanic rock
+00002016,sedimentary rock
+00002017,metamorphic rock
+00002018,sewage
+00002019,brackish water
+00002023,high pressure habitat
+00002024,haline habitat
+00002025,high temperature habitat
+00002026,cold temperature habitat
+00002027,extreme high temperature habitat
+00002028,high osmolarity habitat
+00002029,extraterrestial habitat
+00002030,aquatic biome
+00002032,organism-associated habitat
+00002033,carcass
+00002034,biofilm
+00002035,meteorite
+00002036,habitat
+00002040,wood
+00002041,ground water
+00002042,surface water
+00002043,wastewater treatment plant
+00002044,sludge
+00002045,anaerobic sediment
+00002046,activated sludge
+00002047,urine
+00002048,chondrite
+00002049,stony meteorite
+00002050,achondrite
+00002051,stony-iron meteorite
+00002052,iron meteorite
+00002053,limestone
+00002054,chalk
+00002055,sandstone
+00002056,shale
+00002057,raw primary sludge
+00002058,secondary sludge
+00002059,biosolids
+00002060,oil sludge
+00002061,oil spill
+00002063,oil seep
+00002112,gold mine drainage
+00002113,marine sediment
+00002114,contaminated sediment
+00002115,petroleum contaminated sediment
+00002116,contaminated soil
+00002117,creosote contaminated soil
+00002118,sea sand
+00002119,alkaline hot spring
+00002120,acid hot spring
+00002121,alkaline salt lake
+00002122,arsenic-rich mud
+00002123,bioreactor
+00002124,anaerobic bioreactor
+00002125,anaerobic dechlorinating bioreactor
+00002126,aerobic bioreactor
+00002127,stream sediment
+00002128,mesophilic sulfur spring
+00002129,anaerobic sludge
+00002130,hypolimnion
+00002131,epilimnion
+00002132,metalimnion
+00002133,anaerobic mud
+00002134,anaerobic stream sediment
+00002135,treated wood
+00002136,arsenate treated wood
+00002137,brackish estuary
+00002138,beach sand
+00002139,pebble
+00002140,cobble
+00002141,leachate
+00002142,borax leachate
+00002143,calcite hot spring
+00002144,cave wall
+00002145,chromate contaminated soil
+00002146,xylene contaminated soil
+00002147,coal mine lake sediment
+00002148,coarse beach sand
+00002149,sea water
+00002150,coastal water
+00002152,biofilter
+00002153,compost biofilter
+00002154,radioactive sediment
+00002155,high-level radioactive sediment
+00002156,Superfund site
+00002157,stromatolite mat
+00002158,ditch water
+00002159,drilling bore water
+00002160,estuarine mud
+00002161,fermented agave juice
+00002162,fermenting sugar cane juice
+00002163,fermenting Elaeis Palm sap
+00002164,fossil
+00002165,meat food product
+00002166,sausage
+00002167,platinum mine
+00002168,gold mine
+00002169,coal mine
+00002170,compost
+00002171,hay compost
+00002172,liver paste
+00002173,hospital
+00002174,hot dog
+00002175,processed meat product
+00002176,contaminated sludge
+00002177,"1
+00002178,iron-reducing zone of petroleum contaminated sediment
+00002179,intertidal sediment
+00002180,naphthalene contaminated sediment
+00002181,neutral hot spring
+00002182,nitrobenzene contaminated sediment
+00002183,oil tank
+00002184,underground physiographic feature
+00002185,oil reservoir
+00002186,contaminated water
+00002187,milk formula
+00002188,powdered milk formula
+00002189,cheese product
+00002190,yogurt
+00002191,animal litter
+00002192,poultry litter
+00002193,pulp-bleaching waste water
+00002194,oil field production water
+00002195,pyritic acid mine drainage
+00002196,aquarium
+00002197,saline water aquarium
+00002198,fresh water aquarium
+00002199,sandy beach
+00002200,sea ice
+00002201,cis-dichloroethane contaminated sediment
+00002202,organically contaminated sediment
+00002203,inorganically contaminated sediment
+00002204,anthropogenic contamination feature
+00002205,unexploded-ordnance dump
+00002206,coal mine waste
+00002207,self-heating coal mine waste
+00002209,saline lake sediment
+00002210,sulfide-oxidizing bioreactor
+00002211,thermophilic anaerobic methanogenic reactor
+00002212,thermophilic granular sludge
+00002213,anaerobic sludge blanket reactor
+00002214,power plant
+00002215,geothermal power plant
+00002216,plant food product
+00002217,cabbage product
+00002218,commercial yogurt
+00002219,cheese starter culture
+00002221,shop
+00002222,food shop
+00002223,oligotrophic water
+00002224,eutrophic water
+00002225,mesotrophic water
+00002226,borehole
+00002227,saline water habitat
+00002228,pond water
+00002229,arenosol
+00002230,anthrosol
+00002231,alisol
+00002232,andosol
+00002233,albeluvisol
+00002234,acrisol
+00002235,cambisol
+00002236,cryosol
+00002237,chernozem
+00002238,durisol
+00002239,calcisol
+00002240,kastanozem
+00002241,leptosol
+00002242,lixisol
+00002243,histosol
+00002244,gleysol
+00002245,gypsisol
+00002246,ferralsol
+00002247,nitisol
+00002248,luvisol
+00002249,phaeozem
+00002250,plinthosol
+00002251,planosol
+00002252,solonchak
+00002253,umbrisol
+00002254,vertisol
+00002255,solonetz
+00002256,regosol
+00002257,podzol
+00002258,loam
+00002259,agricultural soil
+00002260,dune soil
+00002261,forest soil
+00002262,clay soil
+00002263,garden soil
+00002264,waste
+00002265,agricultural waste
+00002266,chicken breeding waste
+00002267,industrial waste
+00002268,sphagnum bog
+00002269,thermocline
+00002270,chemocline
+00002271,nuclear power plant
+00002272,waste treatment plant
+00002273,fluvisol
+00002274,stagnosol
+00002275,technosol
+00002276,animal waste
+00002277,back-arc basin
+00002450,ocean basin
+00002869,hay
+00002870,adobe
+00002871,alluvial soil
+00002872,bagasse
+00002873,organic waste
+00002874,air conditioning unit
+00002875,oil contaminated soil
+00002926,warm seep
+00002982,clay
+00002983,fuel oil
+00002984,petroleum
+00002985,oil
+00003030,silage
+00003031,animal manure
+00003032,fresh animal manure
+00003033,mushroom compost
+00003037,wort
+00003038,beer wort
+00003039,acifified beer wort
+00003040,animal house
+00003041,cow shed
+00003042,piggery
+00003043,sewage plant
+00003044,brine
+00003045,bacon curing brine
+00003046,Bleu  de Bresse
+00003047,butter
+00003048,pickled cabbage
+00003049,Camembert
+00003050,cane sugar
+00003051,Cheddar cheese
+00003052,Brie
+00003053,Gouda
+00003054,halloumi
+00003055,Gorgonzola
+00003056,Swiss cheese
+00003057,Emmenthal
+00003058,Harzer
+00003059,New Zealand Cheddar
+00003060,Pont l'Eveque
+00003061,Vacherin Mont d'Or
+00003062,pork
+00003063,cured meat
+00003064,drinking water
+00003065,distilled water
+00003066,chicken meat product
+00003067,beef
+00003068,bovine milk
+00003069,ovine milk
+00003070,caprine milk
+00003071,grass silage
+00003072,ice cream
+00003073,seafood product
+00003074,manufactured product
+00003075,anthropogenic abiotic mesoscopic feature
+00003076,glue
+00003077,jeotgal
+00003078,Meshanger cheese
+00003079,pork chop
+00003081,metal contaminated soil
+00003082,enriched soil
+00003083,sarcosine enriched soil
+00003084,trimethylamine enriched soil
+00003085,skatole enriched soil
+00003086,ethanol enriched soil
+00003087,acetamide enriched soil
+00003088,pantothenate enriched soil
+00003089,testosterone enriched soil
+00003090,kynurenate enriched soil
+00003091,threonine enriched soil
+00003092,salicylate enriched soil
+00003093,poly-beta-hydroxybutyrate enriched soil
+00003094,L-(+)-tartrate enriched soil
+00003095,quinate enriched soil
+00003096,tap water
+00003097,bore hole water
+00003323,tannery
+00003779,tempeh
+00003859,horse manure
+00003860,pig manure
+00003861,industrial building
+00003862,dairy
+00003863,food processing factory
+00003864,bakery
+00003869,straw
+00003870,rice straw
+00003871,fermented rice beverage
+00003872,amasake
+00003873,fermented dairy product
+00003874,fermented fish product
+00003875,sea water fish product
+00003876,flour
+00003877,plant fruit food product
+00003878,fruit extract product
+00003879,apple juice
+00003880,awamori
+00003881,bacon
+00003882,fermented millet food product
+00003883,millet beer
+00003884,farmyard manure
+00003885,brewery
+00003886,bottled beer
+00003887,blue cheese
+00003888,bottled fruit product
+00003889,buttermilk
+00003890,canned fruit product
+00003891,fermented fruit product
+00003893,cosmetic product
+00003894,face cream product
+00003895,paper product
+00003896,currency note
+00003898,miso
+00003899,must
+00003900,rye grass silage
+00003903,aviation fuel
+00003904,yeast cake
+00003905,vinegar
+00003906,malt vinegar
+00003907,nonfat dry milk
+00003908,poultry deep litter
+00003911,sake brewery
+00003912,sake
+00003913,salt pork
+00003914,chalk soil
+00003915,fermented soybean product
+00003919,research station
+00003927,stable manure
+00003928,pickled food product
+00003929,tape kefan
+00003930,scum
+00003963,warehouse
+00003964,tobacco warehouse
+00003965,anaerobic digester sludge
+00003966,Bondon cheese
+00003967,creamery
+00003968,air filter
+00003969,bitter cheese
+00003970,sugar
+00003971,brown sugar
+00003972,evaporated milk product
+00003973,kefir
+00003975,vegetable oil
+00003976,linseed oil
+00003977,maize flour
+00003978,potato silage
+00003979,sour milk
+00003980,dried milk product
+00003982,travertine
+00004638,sawmill
+00004683,karst field
+00005738,foam
+00005739,sea foam
+00005740,paddy field soil
+00005741,alpine soil
+00005742,arable soil
+00005743,roadside soil
+00005744,allotment garden soil
+00005745,allotment garden
+00005746,savanna soil
+00005747,compost soil
+00005748,dry soil
+00005749,farm soil
+00005750,grassland soil
+00005751,jungle soil
+00005752,sawah soil
+00005753,urea enriched soil
+00005754,fertilized soil
+00005755,field soil
+00005756,lawn soil
+00005757,bacteria enriched soil
+00005758,alluvial swamp soil
+00005759,alluvial paddy field soil
+00005760,burned soil
+00005761,meadow soil
+00005762,chloropicrin enriched soil
+00005763,humus-rich acidic ash soil
+00005764,pond soil
+00005765,frozen compost soil
+00005766,limed soil
+00005767,manured soil
+00005768,orchid soil
+00005769,mountain forest soil
+00005770,beech forest soil
+00005771,muddy soil
+00005772,orchard soil
+00005773,pasture soil
+00005774,peat soil
+00005775,salt contaminated soil
+00005776,peaty paddy field soil
+00005777,steppe soil
+00005778,tropical soil
+00005779,vegetable garden soil
+00005780,greenhouse soil
+00005781,heat stressed soil
+00005782,ornithogenic soil
+00005783,leafy wood soil
+00005784,spruce forest soil
+00005785,volcanic soil
+00005786,upland soil
+00005787,eucalyptus forest soil
+00005788,rubber plantation soil
+00005789,blue-grass field soil
+00005790,red soil
+00005791,sterile water
+00005792,underground water
+00005793,muddy water
+00005794,water scum
+00005795,marine mud
+00005796,marine sludge
+00005797,lake bottom mud
+00005798,acid dune sand
+00005799,rocky sand
+00005800,desert sand
+00005801,rhizosphere
+00005802,bulk soil
+00005803,animal habitation
+00005804,nest of ant
+00005805,nest of bird
+00006776,animal-associated habitat
+00009001,plant-associated habitat
+00009002,mammalia-associated habitat
+00009003,human-associated habitat
+00009004,insecta-associated habitat
+00009686,ice rise
+00009725,ice piedmont
+00009726,strand crack
+00010358,fomite
+00010442,midden
+00010504,surface layer
+00010505,aerosol
+00010506,emulsion
+00010621,medical instrument
+00010622,vivarium
+00010623,dolomite
+00010624,botanical garden
+00010625,zoological garden
+00011764,ocean time series station
+00012408,aquifer
+00012411,karst cave
+0010000,animal food product
+0010001,anthropogenic environmental material
+0010002,cereal food product
+0010003,agricultural environmental material
+0010005,fermented beverage
+0010006,fermented grape beverage
+0010007,fermented Elaeis Palm beverage
+0010008,fermented sugar cane beverage
+0010009,fermented apple beverage
+0010010,apple beverage
+0010011,orange fruit beverage
+0010012,grape beverage
+0010013,fermented cereal beverage
+0010014,fermented agave beverage
+0010016,sea water fish egg product
+0010017,avian egg product
+0010018,camelid dairy product
+0010019,bovine dairy product
+0010020,buffalo dairy product
+0010021,caprine dairy product
+0010022,donkey dairy product
+0010023,equine dairy product
+0010024,ovine dairy product
+0010025,yak dairy product
+0010026,zebra dairy product
+0010027,reindeer dairy product
+0010028,water buffalo dairy product
+0010029,horse dairy product
+0010030,domestic cattle dairy product
+0010031,cervid dairy product
+0010032,camelid milk
+0010033,equine milk
+0010034,cervid milk
+0010035,cow's milk
+0010036,caprine cheese product
+0010037,ovine cheese product
+0010038,bovine cheese product
+0010039,cow's milk cheese
+0010040,Limburger
+0010041,goat's milk cheese
+0010042,sheep's milk cheese
+0010043,poultry meat product
+0010044,porcine meat product
+0010045,condiment
+0010046,bovine meat product
+0010047,distilled fermented grain beverage
+0010048,distilled fermented beverage
+0010049,soya food product
+0010050,tea-based beverage
+0010051,coffee-based beverage
+0010052,fruit juice beverage
+0010053,wheat product
+0010054,maize product
+0010055,fungal product
+0010056,yeast product
+0010057,microbial food product
+0010058,solanaceous root product
+0010059,plant root food product
+0010060,potato product
+0010061,confectionery product
+0010062,cucurbit fruit product
+0010063,citrus fruit product
+0010064,melon fruit product
+0010065,Cucumis melo fruit
+0010066,Citrullus lanatus fruit
+0010067,watermelon
+0010068,citrus fruit beverage
+0010069,pomaceous fruit beverage
+0010070,pomaceous fruit product
+0010071,fermented pomaceous fruit beverage
+0010072,pomaceous fruit extract
+0010073,citrus fruit extract
+0010074,grape extract
+0010075,solanaceous fruit product
+0010076,tomato product
+0010077,solanaceous food product
+0010078,plant inflorescence food product
+0010079,amaranthaceous food product
+0010080,leguminous food product
+0010081,cruciferous food product
+0010082,grape fruit product
+0010083,cruciferous inflorescence food product
+0010084,nut food product
+0010085,plant seed food product
+0010086,plant lipid food product
+0010087,plant stem food product
+0010088,invertebrate food product
+0010089,insect food product
+0010090,honey product
+0010091,amaranthaceous inflorescence food product
+0010092,processed food product
+0010093,cooked food product
+0010094,pickled cruciferous food product
+0010095,bread
+0010096,algal food product
+0010097,rice product
+0010098,buckewheat product
+0010099,sorghum product
+0010100,milet product
+0010101,oats product
+0010102,rye product
+0010103,barley product
+0010104,quinoa product
+0010105,fonio product
+0010106,dry peas product
+0010107,lentil product
+0010108,pigeon pea product
+0010109,bambara groundnut product
+0010110,dry broad beans product
+0010111,chickpea product
+0010112,cowpea product
+0010113,dry beans product
+0010114,winged bean product
+0010115,vetch seed product
+0010116,yam bean product
+0010117,velvet bean product
+0010118,lupin seed product
+0010119,jack bean product
+0010120,hyacinth bean product
+0010121,pulses
+0010122,wheat flour
+0010123,pasta
+0010124,pastry
+0010125,baked food product
+0010126,candy
+0010127,cacao food product
+0010128,cream
+0010129,milk
+0010130,bee food product
+0010131,cooked smoked sausage
+0010132,smoked sausage
+0010133,fresh smoked sausage
+0010134,fresh sausage
+0010135,dry sausage
+0010136,cooked sausage
+0010137,smoked meat
+0010138,fruit preserve
+0010139,jam
+0010140,rennet product
+0010141,processed cheese product
+0010142,mustard
+0010143,creamy salad dressing
+0010144,vinaigrette
+0010146,nut oil
+0010147,mayonnaise
+0010148,soy sauce
+0010149,fresh  sea water fish
+0010150,natural rennet
+0010151,microbial rennet
+0010152,vegetable rennet
+0010153,genetically engineered rennet
+0010154,processed pork
+0010155,spice product
+0010156,animal lipid food product
+0010157,coffee
+0010158,tea
+0010159,hot chocolate
+0010160,mate
+0010162,dry stream valley
+0010163,dry river valley
+0010164,fish food product
+0010165,freshwater fish product
+0010166,fish egg product
+0010167,avian food product
+0010168,animal derived beverage
+0010169,plant derived beverage
+0010170,fermented plant derived beverage
+0010171,non-fermented plant derived beverage
+01000000,humus
+01000001,mud
+01000002,water well
+01000003,oil well
+01000004,concentration basin mediterranean sea biome
+01000005,upwelling
+01000006,coastal upwelling
+01000007,microbial feature
+01000008,microbial mat
+01000009,biotic mesoscopic physical object
+01000010,abiotic mesoscopic physical object
+01000011,dairy product
+01000012,milk product
+01000013,fermented food product
+01000014,wine
+01000015,beer
+01000016,silt
+01000017,sand
+01000018,gravel
+01000019,cave floor
+01000020,estuarine biome
+01000022,marine salt marsh biome
+01000023,marine pelagic biome
+01000024,marine benthic biome
+01000025,marine neritic benthic zone biome
+01000026,marine bathyal zone biome
+01000027,marine abyssal zone biome
+01000028,marine hadal zone biome
+01000029,marine reef biome
+01000030,marine hydrothermal vent biome
+01000032,neritic pelagic zone biome
+01000033,oceanic pelagic zone biome
+01000034,oceanic sea surface microlayer biome
+01000035,oceanic epipelagic zone biome
+01000036,oceanic mesopelagic zone biome
+01000037,oceanic bathypelagic zone biome
+01000038,oceanic abyssopelagic zone biome
+01000039,oceanic hadal pelagic zone biome
+01000040,oceanic benthopelagic zone biome
+01000041,neritic sea surface microlayer biome
+01000042,neritic epipelagic zone biome
+01000043,neritic mesopelagic zone biome
+01000044,marine pelagic feature
+01000045,epeiric sea biome
+01000046,marginal sea biome
+01000047,mediterranean sea biome
+01000048,ocean biome
+01000049,marine coral reef biome
+01000050,marine subtidal rocky reef biome
+01000051,marine black smoker biome
+01000052,marine white smoker biome
+01000053,marine ultramafic hydrothermal vent biome
+01000054,marine basaltic hydrothermal vent biome
+01000057,marine algal bloom
+01000058,kelp forest
+01000059,sea grass bed
+01000061,marine wind mixed layer
+01000062,marine benthic storm
+01000064,marine downwelling
+01000065,marine oxygen minimum zone
+01000066,marine anoxic zone
+01000067,marine current
+01000068,marine streamer
+01000069,mesoscale marine eddy
+01000070,terrigenous sediment
+01000071,oceanic front
+01000072,marine Taylor column
+01000073,marine oligotrophic desert
+01000074,oceanic gyre
+01000075,marine thermocline
+01000076,marine chemocline
+01000077,marine pycnocline
+01000078,marine nutricline
+01000079,marine lysocline
+01000080,pelagic isothermal surface
+01000081,pelagic isohaline surface
+01000082,biogenous sediment
+01000083,pelagic isopycnal surface
+01000084,estuarine front
+01000085,plume front
+01000086,coastal buoyancy current front
+01000087,tidal mixing front
+01000088,mid-shelf fronts
+01000089,shelf-slope/shelf-break front
+01000090,coastal upwelling front
+01000091,topographic upwelling front
+01000092,equatorial upwelling front
+01000093,boundary current front
+01000094,subtropical convergence front
+01000095,marginal ice zone front
+01000096,water mass front
+01000097,surface convergence
+01000098,deep ocean current
+01000099,marine surface current
+01000100,along-front current
+01000101,warm surface current
+01000102,cold surface current
+01000103,western boundary current
+01000104,eastern boundary current
+01000105,marine benthic feature
+01000106,permanent marine thermocline
+01000107,seasonal marine thermocline
+01000108,marine cold-water sphere
+01000109,marine warm-water sphere
+01000110,hydrogenous sediment
+01000111,cosmogenous sediment
+01000112,polymetallic nodule
+01000113,suspended sediment
+01000114,boulder sediment
+01000115,cobble sediment
+01000116,pebble sediment
+01000117,granular sediment
+01000118,sandy sediment
+01000119,silty sediment
+01000120,clay sediment
+01000121,colloidal sediment
+01000122,marine hydrothermal vent
+01000123,marine sponge reef biome
+01000124,neritic supra-littoral zone
+01000125,nertic littoral zone
+01000126,neritic sub-littoral zone
+01000127,marine cold seep biome
+01000128,dilution basin mediterranean sea biome
+01000129,marine hydrothermal vent chimney
+01000130,marine hydrothermal plume
+01000131,mesophilic sediment
+01000132,thermophilic sediment
+01000133,hyperthermophilic sediment
+01000134,hydrothermal fluid
+01000135,nitrate-reducing sediment
+01000136,drop stone
+01000137,organic matter fall
+01000138,plant matter fall
+01000139,animal matter fall
+01000140,whale fall
+01000141,seal fall
+01000142,wood fall
+01000143,marine reef
+01000144,marine coral reef flat zone
+01000145,marine coral reef back reef
+01000146,marine coral reef crest
+01000147,marine coral reef fore reef
+01000148,marine coral reef buttress zone
+01000149,marine coral reef deep fore reef
+01000150,marine subtidal rocky reef
+01000151,manganese-reducing sediment
+01000152,iron-reducing sediment
+01000153,sulphate-reducing sediment
+01000154,carbon dioxide-reducing sediment
+01000155,organic material
+01000156,biofilm material
+01000157,microbial mat material
+01000158,marine snow
+01000159,organic feature
+01000160,marine pockmark
+01000161,marine sponge reef
+01000162,organ
+01000163,photophore
+01000164,root nodule
+01000165,trophosome
+01000166,mycetome
+01000167,determinate root nodule
+01000168,indeterminate root nodule
+01000169,indeterminate root nodule active meristem
+01000170,indeterminate root nodule infection zone
+01000171,indeterminate root nodule nitrogen fixation zone
+01000172,indeterminate root nodule senescent zone
+01000173,anoxic water
+01000174,forest biome
+01000175,woodland biome
+01000176,shrubland biome
+01000177,grassland biome
+01000178,savanna biome
+01000179,desert biome
+01000180,tundra biome
+01000181,mangrove biome
+01000182,temperate desert biome
+01000183,tropical desert biome
+01000184,subtropical desert biome
+01000185,montane desert biome
+01000186,polar desert biome
+01000187,subtropical savanna biome
+01000188,tropical savanna biome
+01000189,temperate savanna biome
+01000190,flooded savanna biome
+01000191,subtropical grassland biome
+01000192,tropical grassland biome
+01000193,temperate grassland biome
+01000194,montane grassland biome
+01000195,flooded grassland biome
+01000196,coniferous forest biome
+01000197,broadleaf forest biome
+01000198,mixed forest biome
+01000199,mediterranean forest biome
+01000200,tropical broadleaf forest biome
+01000201,subtropical broadleaf forest biome
+01000202,temperate broadleaf forest biome
+01000204,tropical
+01000205,subtropical
+01000206,temperate
+01000207,mediterranean
+01000208,mediterranean woodland biome
+01000209,subtropical coniferous forest biome
+01000210,tropical coniferous forest biome
+01000211,temperate coniferous forest biome
+01000212,temperate mixed forest biome
+01000213,subtropical shrubland biome
+01000214,tropical shrubland biome
+01000215,temperate shrubland biome
+01000216,montane shrubland biome
+01000217,mediterranean shrubland biome
+01000218,xeric shrubland biome
+01000219,anthropogenic terrestrial biome
+01000220,tropical woodland biome
+01000221,temperate woodland biome
+01000222,subtropical woodland biome
+01000223,montane savanna biome
+01000224,mediterranean grassland biome
+01000225,subtropical dry broadleaf forest biome
+01000226,subtropical moist broadleaf forest biome
+01000227,tropical dry broadleaf forest biome
+01000228,tropical moist broadleaf forest biome
+01000229,mediterranean savanna biome
+01000230,arid
+01000231,lava
+01000232,felsic lava
+01000233,intermediate lava
+01000234,mafic lava
+01000235,ultramafic lava
+01000236,basalt
+01000237,coastal scrubland
+01000238,polar
+01000239,oak woodland
+01000240,conifer woodland
+01000241,juniper woodland
+01000242,desert scrubland
+01000243,boulder
+01000244,pinyon juniper woodland
+01000245,cropland biome
+01000246,village biome
+01000247,rangeland biome
+01000248,dense settlement biome
+01000249,urban biome
+01000250,subpolar coniferous forest biome
+01000251,subpolar
+01000252,freshwater lake biome
+01000253,freshwater river biome
+01000255,mineral deposit
+01000256,mineral
+01000257,white smoker
+01000258,cline
+01000259,pycnocline
+01000260,nutricline
+01000261,lysocline
+01000262,seep
+01000263,cold seep
+01000264,vapour
+01000265,hydrothermal seep
+01000266,water vapour
+01000267,atmosphere
+01000268,atmospheric water vapour
+01000269,siltstone
+01000270,claystone
+01000271,clastic sedimentary rock
+01000272,mudstone
+01000273,lime mudstone
+01000274,slate
+01000275,structural basin
+01000277,ice
+01000278,pingo scar
+01000279,ice lens
+01000281,layer
+01000282,stratum
+01000283,lake layer
+01000284,amictic lake
+01000285,holomictic lake
+01000286,dimictic lake
+01000287,polymictic lake
+01000288,monomictic lake
+01000289,cold monomictic lake
+01000290,warm monomictic lake
+01000291,cold polymictic lake
+01000292,warm polymictic lake
+01000293,ice mass
+01000294,crevice
+01000295,marine layer
+01000296,dry lake bed
+01000297,freshwater river
+01000298,continental margin
+01000299,Taylor column
+01000300,atmospheric Taylor column
+01000301,estuarine water
+01000302,outcrop
+01000303,endolithic environment
+01000304,high pressure environment
+01000305,high temperature environment
+01000306,freshwater environment
+01000307,saline water environment
+01000308,extraterrestrial enviroment
+01000309,cold environment
+01000310,haline environment
+01000311,cultivated environment
+01000312,culturing environment
+01000313,anthropogenic environment
+01000314,high osmolarity environment
+01000315,acidic environment
+01000316,alkaline environment
+01000317,aquatic environment
+01000318,extreme high temperature environment
+01000319,rocky slope
+01000320,marine environment
+01000321,sea water environment
+01000322,brackish water environment
+01000323,atmospheric boundary layer
+01000324,planetary surface
+01000325,aquatic layer
+01000326,deep chlorophyll maximum layer
+01000327,strand swamp
+01000328,dome swamp
+01000329,cypress dome
+01000330,cypress strand swamp
+01000331,cypress swamp
+01000332,gravelly slope
+01000333,hillside
+01000334,talus slope
+01001304,oasis
+01001305,vegetated area
+01001306,bone element environment
+01001308,hydroform
+02000000,hypodermic needle
+02000001,textile
+02000002,bedclothing
+02000003,pockmark field
+02000004,nesting material
+02000005,livestock-associated habitat
+02000006,cultured habitat
+02000007,tissue culture
+02000008,cell culture
+02000009,plant tissue culture
+02000010,organ culture
+02000011,buffalo milk
+02000012,camel milk
+02000013,donkey milk
+02000014,horse milk
+02000015,reindeer milk
+02000016,water buffalo milk
+02000017,yak milk
+02000018,zebra milk
+02000019,bodily fluid
+02000020,blood
+02000021,amniotic fluid
+02000022,excreta
+02000023,bile
+02000024,aqueous humour
+02000025,sweat
+02000026,chyme
+02000027,blood plasma
+02000028,ear wax
+02000029,cerebrospinal fluid
+02000030,chyle
+02000031,breast milk
+02000032,vitreous humor
+02000033,pleural effusion
+02000034,tears
+02000035,oronasal secretion
+02000036,saliva
+02000037,sebum
+02000038,pus
+02000039,synovial fluid
+02000040,mucus
+02000041,lymph
+02000042,interstitial fluid
+02000043,biological product
+02000044,siliceous ooze
+02000045,red clay
+02000046,calcareous ooze
+02000047,animal feed
+02000048,contaminated animal feed
+02000049,coastal water body
+02000050,spinach
+02000052,umbrella
+02000053,hide
+02000054,bone meal
+02000055,plant feed
+02000056,egg product
+02000057,hen's egg product
+02000058,cloth
+02000059,surface soil
+02000060,apple cider
+02000061,unpasteurized orange juice
+02000063,cake
+02000064,cake icing
+02000065,chocolate
+02000066,custard
+02000067,ground beef
+02000068,poultry product
+02000069,duck meat product
+02000070,goose meat product
+02000071,turkey meat product
+02000072,mushroom
+02000074,cantaloupe
+02000076,potato salad
+02000077,salad dressing
+02000078,clam product
+02000079,oyster product
+02000080,shellfish product
+02000081,letter
+02000082,unpasteurized goat milk cheese
+02000083,Pecorino cheese
+02000084,goat manure
+02000085,unpasteurized sheep milk cheese
+02000086,unpasteruized cow milk cheese
+02000087,unpasteurized camel milk
+02000088,unpasteurized caprine milk
+02000089,unpasteurized ovine milk
+2000000,chemical product
+2000001,creosote
+2000002,industrial wastewate treatment plant
+2000003,agricultural wastewater treatment plant
+2000004,algal bloom
+2000005,freshwater algal bloom
+2000006,nest of termite
+2100000,anatomical entity environment
+2100002,intestine environment
+2100003,skin environment
+2100004,integumental system environment
+2100005,face skin environment
+2100006,feather environment
