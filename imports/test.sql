@@ -3,56 +3,44 @@ begin;
 
 SET search_path to osdregistry,public;
 
-\echo before copy
+\copy ena_datafiles(md5,file_name,full_path) FROM 'submission_workable_rrna_files_report_2015-06-06.csv' CSV;
 
-\copy ena_datafiles(md5,file_name,full_path) FROM '/home/renzo/src/megdb/imports/submission_raw_shotgun_files_report.csv' CSV;
 
-\copy ena_datafiles(md5,file_name,full_path) FROM '/home/renzo/src/megdb/imports/submission_workable_rrna_files_report.csv' CSV;
-
-\copy ena_datafiles(md5,file_name,full_path) FROM '/home/renzo/src/megdb/imports/submission_raw_rrna_files_report.csv' CSV;
-
-\echo after copy
-
-select regexp_replace(file_name, '_R[12]', ''::text )::text, full_path::text from ena_datafiles where file_name ilike '%melted';
-
-\echo before insert
-
-INSERT INTO ena_datasets (file_name_prefix, cat, processing_status, sequencing_center)
+--INSERT INTO ena_datasets (file_name_prefix, cat, processing_status, sequencing_center)
 
 WITH before_files AS (
 
- SELECT regexp_replace(file_name, '_R[12]', ''::text )::text as file_name, full_path::text 
+ SELECT regexp_replace(
+           regexp_replace(file_name, '_R[12]', ''::text )::text,
+           '_v[49]',
+           ''::text
+        )::text as file_name, 
+        full_path::text 
    FROM osdregistry.ena_datafiles
 ), files as (
   SELECT split_part( file_name, '_', 1 )::text as file_name_prefix,
          split_part( file_name, '_', 2 )::text as cat,
-         split_part( split_part(file_name, '_', 3), '.', 1 )::text as processing_status,
-         ((regexp_matches(full_path, '(lgc|ramaciotti-gc)'))[1])::text as sequencing_center
+         split_part( file_name, '_', 3 )::text as sequencing_center,
+         split_part( split_part(file_name, '_', 4), '.', 1 )::text as processing_status
   from before_files
 
 )
 SELECT file_name_prefix::text, 
        cat::text,
        processing_status::text,
-       CASE WHEN sequencing_center::text = 'lgc' 
-            THEN 'LGC-GENOMICS'
-            ELSE 'RAMACIOTTI-GC'
+       CASE WHEN sequencing_center::text = 'lgc' THEN 'LGC-GENOMICS'
+            WHEN sequencing_center::text = 'lw'  THEN 'LIFEWATCH-ITALY'
+            WHEN sequencing_center::text = 'ramaciotti-gc'  THEN 'RAMACIOTTI-GC'
+            ELSE ''
        END
   FROM files 
-  GROUP BY file_name_prefix
+  WHERE cat != 'shotgun' 
+     AND processing_status = 'workable'
+  GROUP BY file_name_prefix,cat,processing_status,sequencing_center
 ;
 
 
-\echo after insert
-
---select * from ena_datasets where file_name_prefix ~ 'OSD\d+-[a-zA-Z]' ;
-
-/*
-select substring(file_name_prefix from 'OSD(\d+)') as match,
-       substring(file_name_prefix from 'OSD\d+-(\d*)m')::numeric as depth
-  from ena_mg_datasets;
---*/
-
+/* first all prokaryote protocols NPL022 */
 -- make several path updates
 UPDATE ena_datasets AS ena 
    SET sample_id = s.submission_id 
@@ -199,8 +187,29 @@ UPDATE ena_datasets AS ena
        AND
        ena.file_name_prefix in ('OSD106-15m-depth','OSD106-sea-water-bottom');
 
-\copy ena_datasets TO '/home/renzo/src/megdb/exports/ena_datasets-2015-04-14.csv' CSV;
-      
+/* all eukaryotic NE08 */
+
+-- make several path updates
+UPDATE ena_datasets AS ena 
+   SET sample_id = s.submission_id 
+  FROM samples s
+ WHERE 
+       --first exlcuding the ones we do later
+       --s.osd_id NOT IN (15,20,90,80,106)
+       --AND
+       s.osd_id =  substring(ena.file_name_prefix from 'OSD(\d+)')::integer
+       AND
+       s.protocol = 'NE08'
+       AND
+       date_part('year', local_date) = 2014::double precision
+       AND
+       CASE WHEN substring(ena.file_name_prefix from 'OSD\d+-(\d*)m')::numeric IS NOT NULL 
+            THEN s.water_depth = substring(ena.file_name_prefix from 'OSD\d+-(\d*)m')::numeric
+            ELSE true
+       END
+;
+
+ 
 \echo should no give any row
 
 \echo how many samples with all infos?
@@ -230,4 +239,9 @@ SELECT '=' || ena.file_name_prefix || '='
 
 ;
 
-commit;
+
+
+\copy ena_datasets TO '/home/renzo/src/megdb/exports/ena_datasets-2015-06-08' CSV;
+
+
+rollback;

@@ -3,19 +3,8 @@ begin;
 
 SET search_path to osdregistry,public;
 
-\echo before copy
 
-\copy ena_datafiles(md5,file_name,full_path) FROM '/home/renzo/src/megdb/imports/submission_raw_shotgun_files_report.csv' CSV;
-
-\copy ena_datafiles(md5,file_name,full_path) FROM '/home/renzo/src/megdb/imports/submission_workable_rrna_files_report.csv' CSV;
-
-\copy ena_datafiles(md5,file_name,full_path) FROM '/home/renzo/src/megdb/imports/submission_raw_rrna_files_report.csv' CSV;
-
-\echo after copy
-
-select regexp_replace(file_name, '_R[12]', ''::text )::text, full_path::text from ena_datafiles where file_name ilike '%melted';
-
-\echo before insert
+/* creating ena_dataset entries from ena_files */
 
 INSERT INTO ena_datasets (file_name_prefix, cat, processing_status, sequencing_center)
 
@@ -38,8 +27,8 @@ SELECT file_name_prefix::text,
             THEN 'LGC-GENOMICS'
             ELSE 'RAMACIOTTI-GC'
        END
-  FROM files 
-  GROUP BY file_name_prefix
+  FROM files where cat != 'shotgun'
+  GROUP BY file_name_prefix,cat,processing_status,sequencing_center
 ;
 
 
@@ -230,4 +219,5 @@ SELECT '=' || ena.file_name_prefix || '='
 
 ;
 
-commit;
+rollback;
+--commit;

@@ -1,0 +1,167 @@
+#!/bin/bash
+
+# Treat unset variables as an error when substituting.
+set -o nounset
+
+# 1. section: global constants (all words upper case separated by underscore)
+# declare -r CONSTANT_VARIABLE='value'
+declare -r TMP_FILE_PREFIX=${TMPDIR:-/tmp}/prog.$$
+declare CURRENT_DATE=$(date --rfc-3339=date)
+# 2. section: functions
+
+
+
+function cleanup() {
+    rm -f ${TMP_FILE_PREFIX}.*
+    
+    echo "Cleaned up files  ${TMP_FILE_PREFIX}.*"
+}
+
+
+function usage() {
+  cat <<EOF
+
+Usage: $0
+
+ TODO
+EOF
+}
+
+
+# Single function
+function main() {
+
+  #the optional paramters string starting with ':' for silent errors
+  local -r OPTS=':h'
+
+  while builtin getopts ${OPTS} opt "${@}"; do
+ 
+      case $opt in
+	  h) usage ; exit 0
+	     ;;
+
+	\?)
+	    echo ${opt} ${OPTIND} 'is an invalid option'; usage; exit ${INVALID_OPTION}
+	    ;;
+
+        :)
+	   echo 'required argument not found for option -'${OPTARG}; usage; exit ${INVALID_OPTION}
+	    ;;
+        *) echo "Too many options. Can not happen actually :)"
+           ;;
+
+    esac
+  done
+
+  ## must be absolut file path
+  echo "input is " ${1}
+
+  local SQL_FILE="${TMP_FILE_PREFIX}.import.sql"
+  
+  cat > ${SQL_FILE} <<EOF 
+
+begin;
+
+SET search_path to osdregistry,public;
+
+\copy ena_datafiles(md5,file_name,full_path) FROM '${1}' CSV;
+
+
+INSERT INTO ena_datasets (file_name_prefix, cat, processing_status, sequencing_center)
+
+WITH before_files AS (
+
+ SELECT regexp_replace(
+           regexp_replace(file_name, '_R[12]', ''::text )::text,
+           '_v[49]',
+           ''::text
+        )::text as file_name, 
+        full_path::text 
+   FROM osdregistry.ena_datafiles
+), files as (
+  SELECT split_part( file_name, '_', 1 )::text as file_name_prefix,
+         split_part( file_name, '_', 2 )::text as cat,
+         split_part( file_name, '_', 3 )::text as sequencing_center,
+         split_part( split_part(file_name, '_', 4), '.', 1 )::text as processing_status
+  from before_files
+
+)
+SELECT file_name_prefix::text, 
+       cat::text,
+       processing_status::text,
+       CASE WHEN sequencing_center::text = 'lgc' THEN 'LGC-GENOMICS'
+            WHEN sequencing_center::text = 'lw'  THEN 'LIFEWATCH-ITALY'
+            WHEN sequencing_center::text = 'ramaciotti-gc'  THEN 'RAMACIOTTI-GC'
+            ELSE ''
+       END
+  FROM files 
+  WHERE cat != 'shotgun' 
+     AND processing_status = 'workable'
+  GROUP BY file_name_prefix,cat,processing_status,sequencing_center
+;
+
+EOF
+
+cat osd-ena-post-rrna-workable-submission-files-import.sql >> ${SQL_FILE} 
+
+cat >> ${SQL_FILE} <<EOF
+
+ 
+\echo should no give any row
+
+\echo how many samples with all infos?
+
+SELECT count(*) as sam_all_info
+ FROM osdregistry.samples sam
+      JOIN
+      institute_sites i  ON (i.osd_id = sam.osd_id) 
+      JOIN
+      ena_center_names c ON (c.label =  i.label)
+      JOIN
+      sites ON ( sam.osd_id = sites.id )
+      LEFT JOIN
+      iho_tagging iho ON ( sam.submission_id = iho.submission_id)
+ WHERE date_part('year', sam.local_date) = 2014::double precision
+;
+
+
+SELECT '=' || ena.file_name_prefix || '='
+  FROM ena_datasets ena 
+       --INNER JOIN
+       --ena_datafiles files ON ( subs)
+       LEFT JOIN 
+       osdregistry.samples sam 
+       ON (ena.sample_id = sam.submission_id )
+ WHERE sam.osd_id is Null
+
+;
+
+
+
+EOF
+
+  
+
+  cat >> ${SQL_FILE} <<EOF
+\copy ena_datasets TO '/home/renzo/src/megdb/exports/ena_datasets-${CURRENT_DATE}' CSV;
+
+
+rollback;
+EOF
+
+
+  cat ${SQL_FILE} | tee test.sql
+  
+  cleanup
+
+  exit 0
+}
+
+
+# Always check return values and give informative return values. 
+# see https://google-styleguide.googlecode.com/svn/trunk/shell.xml?showone=Checking_Return_Values#Checking_Return_Values
+
+# set a trap for (calling) cleanup all stuff before process termination by SIGHUBs
+trap "cleanup; exit 1" 1 2 3 13 15
+# this is the main executable function at end of script
+main "$@"
