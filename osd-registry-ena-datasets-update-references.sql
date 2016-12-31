@@ -1,4 +1,7 @@
 
+/* 
+ * This script updates osdregistr.ena_datasets so that it establishes the relation between the samples and the data sets
+ */
 
 BEGIN;
 
@@ -174,9 +177,4 @@ UPDATE ena_datasets AS ena
        AND
        ena.file_name_prefix in ('OSD106-15m-depth','OSD106-sea-water-bottom');
 
-
-
-select * from ena_datasets where osd_id in (15,20,80,90,106,155);
-
-
-ROLLBACK;
+rollback;

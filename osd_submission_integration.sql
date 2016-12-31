@@ -6,6 +6,9 @@ begin;
 set role megdb_admin;
 
 
+
+
+
 \echo later need water_depth_verb
 
 
@@ -181,6 +184,62 @@ COMMENT ON FUNCTION osdregistry.parse_local_time(text,time)
 
 
 
+CREATE OR REPLACE FUNCTION osdregistry.parse_envo_term (
+      val text
+    )
+  RETURNS text  AS
+  $BODY$
+    -- default just what we have later select either on id or name from lookup
+    select val;
+  $BODY$
+  LANGUAGE sql IMMUTABLE;
+  
+ALTER FUNCTION osdregistry.parse_envo_term(text)
+  OWNER TO megdb_admin;
+
+REVOKE ALL ON FUNCTION osdregistry.parse_envo_term(text) FROM public;
+GRANT EXECUTE ON FUNCTION osdregistry.parse_envo_term(text) TO megxuser,megx_team;
+
+COMMENT ON FUNCTION osdregistry.parse_envo_term(text) IS 'Returns a date value, in case it can not cast throws error';
+
+
+CREATE OR REPLACE FUNCTION osdregistry.parse_envo_term (
+      val text,
+      def text
+    )
+  RETURNS text  AS
+$BODY$
+   DECLARE
+      err_msg text := '';
+   BEGIN
+     BEGIN
+       
+       RETURN coalesce ( osdregistry.parse_envo_term(val), def) ;	
+       EXCEPTION WHEN OTHERS THEN
+         GET STACKED DIAGNOSTICS err_msg = RETURNED_SQLSTATE;
+         RAISE LOG 'wrong date % and sqlstate=%', val, err_msg;
+         RETURN res;
+       END;
+     return res;
+   END;
+$BODY$
+  LANGUAGE plpgsql IMMUTABLE;
+  
+ALTER FUNCTION osdregistry.parse_envo_term(text,text)
+  OWNER TO megdb_admin;
+
+REVOKE ALL ON FUNCTION osdregistry.parse_envo_term(text,text) FROM public;
+ GRANT EXECUTE ON FUNCTION osdregistry.parse_envo_term(text,text) TO megxuser,megx_team;
+
+COMMENT ON FUNCTION osdregistry.parse_envo_term(text,text)
+     IS 'Returns a TIME value, in case it can not cast to date returns user suppied default value';
+
+
+
+
+
+
+
 CREATE OR REPLACE FUNCTION osdregistry.is_in_range (
       val numeric,
       min numeric,
@@ -343,7 +402,24 @@ GRANT EXECUTE ON FUNCTION osdregistry.valid_salinity(numeric) TO megxuser,megx_t
 COMMENT ON FUNCTION osdregistry.valid_salinity(numeric)
      IS 'Checks wether SALINITY is in acceptable range';
 
+-- osdregistry.valid_envo_term( term )
+CREATE or REPLACE FUNCTION osdregistry.valid_envo_term (
+  val text
+)
+  RETURNS boolean  AS
+$BODY$
+     -- currently allows all kind of text
+     select true;
+$BODY$
+  LANGUAGE sql volatile
+  COST 100;
+  ALTER FUNCTION osdregistry.valid_envo_term(text)
+  OWNER TO megdb_admin;
 
+REVOKE ALL ON FUNCTION osdregistry.valid_envo_term(text) FROM public;
+GRANT EXECUTE ON FUNCTION osdregistry.valid_envo_term(text) TO megxuser,megx_team;
+
+COMMENT ON FUNCTION osdregistry.valid_envo_term(text) IS 'Checks wether is in list of valid ENVO term';
 
 
 -- DROP VIEW osdregistry.submission_overview;
@@ -496,13 +572,22 @@ ALTER TABLE osdregistry.submission_overview
   
 
 ALTER TABLE osdregistry.samples ADD COLUMN water_depth_verb text NOT NULL DEFAULT ''::text;
+UPDATE osdregistry.samples SET water_depth_verb = water_depth;
+
 ALTER TABLE osdregistry.samples ADD COLUMN salinity_verb text NOT NULL DEFAULT ''::text;
+UPDATE osdregistry.samples SET salinity_verb = salinity;
+
 ALTER TABLE osdregistry.samples ADD COLUMN water_temperature_verb text NOT NULL DEFAULT ''::text;
+UPDATE osdregistry.samples SET water_temperature_verb = water_temperature;
 
 ALTER TABLE osdregistry.samples ADD COLUMN biome_verb text NOT NULL DEFAULT ''::text;
-ALTER TABLE osdregistry.samples ADD COLUMN feature_verb text NOT NULL DEFAULT ''::text;
-ALTER TABLE osdregistry.samples ADD COLUMN material_verb text NOT NULL DEFAULT ''::text;
+UPDATE osdregistry.samples SET biome_verb = biome;
 
+ALTER TABLE osdregistry.samples ADD COLUMN feature_verb text NOT NULL DEFAULT ''::text;
+UPDATE osdregistry.samples SET feature_verb = feature;
+
+ALTER TABLE osdregistry.samples ADD COLUMN material_verb text NOT NULL DEFAULT ''::text;
+UPDATE osdregistry.samples SET material_verb = material;
 
 CREATE TYPE osdregistry.sample_submission AS (
 
@@ -820,7 +905,7 @@ DELETE FROM osdregistry.osd_raw_samples as sam
  USING osdregistry.submissions_new as sub
  WHERE sam.id = sub.id and sub.id < (select max(submission_id) from osdregistry.samples);
 
-DELETE FROM osdregistry.osd_raw_samples as sam where sam.id in ( 275, 278 );
+DELETE FROM osdregistry.osd_raw_samples as sam where sam.id in ( 270, 271, 275, 278 );
 
 
 SELECT count(*) as non_integrated_samples from osdregistry.submissions_new sub
@@ -916,7 +1001,7 @@ CREATE OR REPLACE FUNCTION osdregistry.attempt_georef() RETURNS TRIGGER AS $trg$
     END;
 $trg$ LANGUAGE plpgsql;
 
-CREATE TRIGGER attemp_georef_on_insert
+CREATE TRIGGER attempt_georef_on_insert
   BEFORE INSERT
   ON osdregistry.samples
   FOR EACH ROW
@@ -959,7 +1044,7 @@ CREATE TRIGGER attempt_stop_lat_lon_on_insert
 -- attempt platform
 
 
-CREATE OR REPLACE FUNCTION osdregistry.attempt_platform_env() RETURNS TRIGGER AS $trg$
+CREATE OR REPLACE FUNCTION osdregistry.attempt_platform() RETURNS TRIGGER AS $trg$
        DECLARE
 	platform text;
        BEGIN
@@ -982,15 +1067,16 @@ CREATE OR REPLACE FUNCTION osdregistry.attempt_platform_env() RETURNS TRIGGER AS
     END;
 $trg$ LANGUAGE plpgsql;
 
-CREATE TRIGGER attempt_platform_env
+CREATE TRIGGER attempt_platform
   BEFORE INSERT
   ON osdregistry.samples
   FOR EACH ROW
-  EXECUTE PROCEDURE osdregistry.attempt_platform_env();
+  EXECUTE PROCEDURE osdregistry.attempt_platform();
  
 CREATE OR REPLACE FUNCTION osdregistry.attempt_mandatory_parameters() RETURNS TRIGGER AS $trg$
        DECLARE
 	param numeric;
+	term text;
        BEGIN
        --
        -- Attempt to insert value into curated column from verbatim column.
@@ -1000,17 +1086,33 @@ CREATE OR REPLACE FUNCTION osdregistry.attempt_mandatory_parameters() RETURNS TR
        	  -- just doing nothing
            RETURN NEW;
        END IF;
-       -- now local date parsed from verbatim or simply the current unchanged defaults
+       -- WATER TEMPERATURE date parsed from verbatim or simply the current unchanged defaults
        param :=  osdregistry.parse_numeric( NEW.water_temperature_verb, NEW.water_temperature );
-       -- therefore simply check if valid and just assign in any case
+
        IF osdregistry.valid_water_temperature( param ) THEN
        	  NEW.water_temperature := param;
        END IF;
-
+       -- SALINITY
        param :=  osdregistry.parse_numeric( NEW.salinity_verb, NEW.salinity );
-       -- therefore simply check if valid and just assign in any case
        IF osdregistry.valid_salinity( param ) THEN
        	  NEW.salinity := param;
+       END IF;
+
+       -- BIOME
+       term :=  osdregistry.parse_envo_term( NEW.biome_verb, NEW.biome );
+       IF osdregistry.valid_envo_term( term ) THEN
+       	  NEW.biome := term;
+       END IF;
+
+       -- FEATURE
+       term :=  osdregistry.parse_envo_term( NEW.feature_verb, NEW.feature );
+       IF osdregistry.valid_envo_term( term ) THEN
+       	  NEW.feature := term;
+       END IF;
+       -- MATERIAL
+       term :=  osdregistry.parse_envo_term( NEW.material_verb, NEW.material );
+       IF osdregistry.valid_envo_term( term ) THEN
+       	  NEW.material := term;
        END IF;
 
 
@@ -1074,6 +1176,7 @@ $BODY$
   DECLARE   
     f_curation_remark text := 'integration update';
     f_curator text := 'rkottman';
+    i record;
   BEGIN
    INSERT INTO osdregistry.samples (
        submission_id,
@@ -1161,9 +1264,41 @@ $BODY$
      sample.other_params, 
      sample.json
    );
-
-
-
+   
+   INSERT INTO osdregistry.filters (
+          sample_id,
+          num,
+	  filtration_time, filtration_time_verb,
+	  quantity,quantity_verb,
+	  container, container_verb,
+	  content, content_verb,
+	  size_fraction_lower_threshold, size_fraction_lower_threshold_verb,
+	  size_fraction_upper_threshold, size_fraction_upper_threshold_verb,
+	  treatment_chemicals, treatment_chemicals_verb,
+	  treatment_storage, treatment_storage_verb,
+	  curator, curation_remark, "raw")
+   SELECT sample.submission_id,
+          row_number() OVER()  AS num,
+	  (s.filter ->> 'filtration_time')::interval minute AS filtration_time,
+	  s.filter ->> 'filtration_time' AS filtration_time_verb,
+	  (s.filter ->> 'quantity')::numeric AS quantity,
+          s.filter ->> 'quantity' AS quantity_verb,
+	  s.filter ->> 'container' AS container,
+  	  s.filter ->> 'container' AS container_verb,
+	  s.filter ->> 'content' AS content,
+  	  s.filter ->> 'content' AS content_verb,
+	  (s.filter ->> 'size-fraction_lower-threshold')::numeric AS s_frac_low_thres,
+  	  s.filter ->> 'size-fraction_lower-threshold' AS s_frac_low_thres_verb,
+	  (s.filter ->> 'size-fraction_upper-threshold')::numeric AS s_frac_up_thres,
+          s.filter ->> 'size-fraction_upper-threshold' AS s_frac_up_thres_verb,
+	  s.filter ->> 'treatment_chemicals' AS treatment_chemicals,
+  	  s.filter ->> 'treatment_chemicals' AS treatment_chemicals_verb,
+	  s.filter ->> 'treatment_storage' AS treatment_storage,
+  	  s.filter ->> 'treatment_storage' AS treatment_storage_verb,
+          f_curator,
+          f_curation_remark, 
+	  s.filter AS raw
+     FROM json_array_elements( sample.json #> '{sample,filters}' ) as  s(filter);
    
     return sample.submission_id;
   END;
@@ -1176,6 +1311,10 @@ REVOKE EXECUTE ON FUNCTION osdregistry.integrate_sample_submission(sample osdreg
 GRANT EXECUTE ON FUNCTION osdregistry.integrate_sample_submission(sample osdregistry.sample_submission) TO megdb_admin;
 
 \echo testing integrate submission func
+
+
+set local client_min_messages to notice;
+
 
 select (osdregistry.parse_sample_submission(
                   sub.raw_json, 
@@ -1207,7 +1346,8 @@ update osdregistry.samples
        curation_remark = 'inferred from log sheet and comments'
  where submission_id in (292,276,288,289);
 
-SELECT submission_id,
+SELECT s.osd_id, submission_id
+/*,
        water_depth, water_depth_verb,
        osdregistry.osd_sample_label ( osd_id::text, local_date::text, water_depth::text, protocol ) as label,
        start_lat, start_lat_verb,
@@ -1224,11 +1364,20 @@ SELECT submission_id,
        biome, biome_verb,feature, feature_verb, material, material_verb,
        ph, ph_verb,
        phosphate, phosphate_verb
+--*/
   FROM osdregistry.samples s
        inner join
        osdregistry.osd_raw_samples n
        on (s.submission_id = n.id AND n.submitted > '2015-06-04')
  WHERE protocol = 'NE08' and local_date > '2014-06-01' order by osd_id;
+
+SELECT s.osd_id,f.sample_id 
+  FROM osdregistry.samples s
+       inner join
+       osdregistry.filters f
+       ON (s.submission_id = f.sample_id)
+ WHERE protocol = 'NE08' and local_date > '2014-06-01' order by osd_id;
+
 
 
 --\copy (SELECT * FROM osdregistry.samples WHERE protocol = 'NE08' and local_date > '2014-06-01' and submission_id in (270,271,273,274)  order by osd_id) TO '/home/renzo/lifewatch_stupid_stuff_2015-07-07.csv' (format csv, header true, delimiter E'\t');
