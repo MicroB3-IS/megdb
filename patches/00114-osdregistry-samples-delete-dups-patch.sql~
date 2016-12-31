@@ -1,0 +1,16 @@
+
+BEGIN;
+SELECT _v.register_patch('00114-osdregistry-samples-delete-dups',
+                          array['00113-osdregistry-filter-curation-trg'] );
+
+-- section of creation best as user role megdb_admin
+SET ROLE megdb_admin;
+
+
+-- for some test queries as user megxuser
+-- SET ROLE megxuser;
+
+
+rollback;
+
+

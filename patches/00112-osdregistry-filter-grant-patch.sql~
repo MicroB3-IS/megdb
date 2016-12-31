@@ -1,0 +1,16 @@
+
+BEGIN;
+SELECT _v.register_patch('00112-osdregistry-filter-grant',
+                          array['00111-osdregistru-delete-func'] );
+
+-- section of creation best as user role megdb_admin
+SET ROLE megdb_admin;
+
+
+-- for some test queries as user megxuser
+-- SET ROLE megxuser;
+
+
+rollback;
+
+
