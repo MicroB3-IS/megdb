@@ -148,6 +148,7 @@ Select array_agg(osd.id) as osd_ids, max(iso3_code) as iso3_code, count(country)
 
 
 \echo european site within countries EEZ
+
 Select osd.id, osd.label_verb, iso3_code, country, changes, shape_length, shape_area
   FROM
      -- lines/polygones
@@ -157,6 +158,7 @@ Select osd.id, osd.label_verb, iso3_code, country, changes, shape_length, shape_
      osdregistry.sites osd
   ON
     (ST_intersects(osd.geom,eez.geom) )
+-- WHERE country in ('Portugal');
 WHERE country in ('Bulgaria', 'Croatia',  'Finnland', 'France', 'Germany', 'Greece', 'Iceland','Italy','Norway', 'Portugal', 'Ukraine', 'United Kingdom', 'Slovenia', 'Spain');
 
 ;

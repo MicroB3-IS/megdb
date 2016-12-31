@@ -1,3 +1,4 @@
+osd_label|site_name|latitude|longtitude|provcode|provdescr|distance_degrees
 OSD9_2014-06-18_0m_NPL022|SPOTS|33.55|-118.4|CCAL|Coastal - California Upwelling Coastal Province|0
 OSD118_2014-06-24_0.2m_NPL022|Lough Hyne|51.7423|-8.3112|NECS|Coastal - NE Atlantic Shelves Province|0.000686768023770114
 OSD147_2014-06-21_0m_NPL022|Rajarata|8.5216|81.0521|MONS|Trades - Indian Monsoon Gyres Province|0.0804895408204488
@@ -25,9 +26,11 @@ OSD136_2014-06-21_0.1m_NPL022|Jyllinge Harbour|55.7449|12.0974|NECS|Coastal - NE
 OSD2_2014-06-20_0m_NPL022|Roscoff - SOMLIT|48.7778|-3.9375|NECS|Coastal - NE Atlantic Shelves Province|0
 OSD97_2014-06-21_0.5m_NPL022|Faial Azores|38.52970|-28.601778|NASE|Westerlies - N. Atlantic Subtropical Gyral Province (East) (STGE)|0
 OSD58_2014-06-21_1m_NPL022|PICO (Pivers Island)|34.7181|-76.6707|NWCS|Coastal - NW Atlantic Shelves Province|0
+OSD39_2014-06-19_0.1m_NPL022|South Carolina 1 - Charleston Harbor|32.75240|79.89954|||
 OSD6_2014-06-21_0m_NPL022|Blanes|41.6666|2.8|MEDI|Westerlies - Mediterranean Sea, Black Sea Province|0.00438168821536961
 OSD42_2014-06-21_3m_NPL022|Faro Lake|38.26861|15.63708|MEDI|Westerlies - Mediterranean Sea, Black Sea Province|0
 OSD60_2014-06-19_0.1m_NPL022|South Carolina 2 - North Inlet|33.32306|-79.16763|NWCS|Coastal - NW Atlantic Shelves Province|0.00513784952939319
+OSD10_2014-06-21_1m_NPL022|Lake Erie W4|41.839834|-83.18995|||
 OSD24_2014-06-21_0m_NPL022|Marchica|35.1927|-2.88005|MEDI|Westerlies - Mediterranean Sea, Black Sea Province|0
 OSD26_2014-06-21_0m_NPL022|Tangier|35.82|-5.75|CNRY|Coastal - Canary Coastal Province (EACB)|0
 OSD25_2014-06-21_0m_NPL022|Saidia Rocher|35.086353|-2.214658|MEDI|Westerlies - Mediterranean Sea, Black Sea Province|0
@@ -83,6 +86,7 @@ OSD51_2013-12-21_2m_NPL022|Bocas del Toro (Panama)|9.3485|-82.2660|GUIA|Coastal 
 OSD51_2013-12-21_2m_NPL022|Bocas del Toro (Panama)|9.3485|-82.2660|GUIA|Coastal - Guianas Coastal Province|0
 OSD153_2014-06-21_0m_NPL022|Faro Island|36.997655|-7.973119|CNRY|Coastal - Canary Coastal Province (EACB)|0
 OSD81_2014-06-21_0m_NPL022|Ria Formosa lagoon|37.005053|-7.973119|CNRY|Coastal - Canary Coastal Province (EACB)|0
+OSD135_2014-06-21_1m_NPL022|Guaymas Bay|27.9011|110.8717|||
 OSD55_2014-06-21_1m_NPL022|Maine Damariscotta River|43.8604|-69.5781|NWCS|Coastal - NW Atlantic Shelves Province|0
 OSD54_2014-06-21_1m_NE08|Maine Booth Bay|43.8444|-69.6409|NWCS|Coastal - NW Atlantic Shelves Province|0
 OSD55_2014-06-21_1m_NE08|Maine Damariscotta River|43.8604|-69.5781|NWCS|Coastal - NW Atlantic Shelves Province|0
@@ -101,6 +105,7 @@ OSD70_2014-06-21_0m_NPL022|Venice - Lido|45.4142|12.4378|MEDI|Westerlies - Medit
 OSD162_2014-06-23_1m_NPL022|Stonehaven|56.9631|-2.1031|NECS|Coastal - NE Atlantic Shelves Province|0
 OSD14_2014-06-23_2m_NPL022|Banyuls - SOMLIT|42.49|3.15|MEDI|Westerlies - Mediterranean Sea, Black Sea Province|0.00406472586303443
 OSD163_2014-06-20_2m_NPL022|Scapa|58.957|-2.9726|NECS|Coastal - NE Atlantic Shelves Province|0.0175251059937738
+OSD166_2014-06-21_0.5m_NPL022|Armintza|43.43255|2.89966|||
 OSD165_2014-06-23_2m_NPL022|Loch Ewe|57.8498|-5.6495|NECS|Coastal - NE Atlantic Shelves Province|0
 OSD168_2014-06-21_2m_NPL022|IMST_izmir|38.41333|27.03421|MEDI|Westerlies - Mediterranean Sea, Black Sea Province|0
 OSD63_2014-06-20_0m_NPL022|Venice Acqua Alta|45.314350|12.508317|MEDI|Westerlies - Mediterranean Sea, Black Sea Province|0
