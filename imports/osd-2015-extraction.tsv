@@ -1,0 +1,166 @@
+osd_id	site_name	country	site_coordinator	confirmed participation OSD2015	number of filters	received - date	OSD data policy	OSD Logsheet	remarks/comments	RNAlater brand	filter used (filter number)	DNA conc ng/µl (approximate value)	volume  (approximate value)	depth	depth in log sheet	associated blank	remarks/comments	Sample_name for LGC	SI Barcode	metadata submission
+1	L4	UK	Declan Schroeder	yes	5	14.07.2015	no	no	samples will come a little later	Ambion	1,2	21,1	200	2	2	201 Blank		OSD1_2m_L4	AB0KO33	submitted by Marianna
+2	Roscoff - SOMLIT	France	Christian Jeanthon and Cariou Thierry	yes	8	07.07.2015	yes	yes	additional depth expected  - 4 filters at surface, 4 filters at depth of 60m; they sent MTA. When sent to Smithsonian: RNAlater leaked. Blu-Tack renewed.	Ambion	1,2	71,4	200	1		202 Lando		OSD2_1m_Roscoff	AB0KN71	ok
+2	Roscoff - SOMLIT	France	Christian Jeanthon and Cariou Thierry								1,2	57,6	200	60		202 Lando		OSD2_60m_Roscoff	AB0KN69	ok
+3	Helgoland	Germany	Antje Wichels, Anna Klindworth	yes		21.06.2015			already at Helgoland		1,2	20,8	200	0		203 Padme		OSD3_0m_Helgoland	AB0KN89	ok
+4	LTER-MC, Naples	Italy	Adriana Zingone	yes	5	09.07.2015	no	yes		Ambion	1,2	13,7	250	0		202 Lando		OSD4_0m_Naples	AB0KN44	ok
+5	Crete	Greece	Georgios Kotoulas, Paraskevi Polymenakou	yes							1,2	48,3	200	1		203 Padme		OSD5_1m_Crete	AB0KO60	submitted by Marianna
+5	Crete	Greece	Georgios Kotoulas, Paraskevi Polymenakou	yes	6	15.07.2015	yes	yes	different depths/ 3x surface and 3x 75m	Sigma	1,2	31,7	2002	75		203 Padme		OSD5_75m_Crete	AB0KN52	submitted by Marianna
+6	Blanes	Spain	Josep M Gasol	yes	4	02.07.2015	yes	yes	no RNA later	SIGMA	1,4	19,1	200	0		202 Lando		OSD6_0m_Blanes	AB0KO06	ok
+7	Moorea - Tiahura	French Polynesia	Veronique Berteaux-Lecelliier, Patricia Wecker	yes					MyOSD 212 will be treated as OSD7		1,2	27,9	200	0		201 Blank	MyOSD 212 will be treated as OSD7	OSD7_0m_Moorea		ok
+9	SPOTS	USA	Jed Fuhrman	yes	4	01.07.2015	yes	yes		Life Technologies/Ambion	1,3	66,8	200	0		202 Lando		OSD9_0m_SPOTS	AB0KN77	submitted by Marianna
+10	Lake Erie W4	USA	Timothy Davies	yes	5	01.07.2015	no	yes	one filter missing (supposed to be 6 filters, 5 arrived)	Life Technologies	1,2	16,5	200	1		202 Lando		OSD10_1m_Lake Erie	AB0KN92	submitted by Marianna
+13	Varna Bay	Bulgaria	Prof. Snejana Moncheva, Nina Dzhembekova	yes	5	30.06.2015	yes	yes			1,2	21,9	200	0		201 Blank		OSD13_0m_Varna Bay	AB0KO39	ok
+14	Banyuls - SOMLIT	France	Ian Salter, Hugo Lebredonchel	yes	4	01.07.2015	no	yes	additional depth expected, will also send samples for Virus (Virus sample stored at 4°C), no RNAlater aliquote	sigma aldrich	3,4	82,6	200	3		203 Padme	additional depth????	OSD14_3m_Banyuls	AB0KN51	submitted by Marianna
+15	Villefranche - SOMLIT	France	Gaby Gorsky & Maria Pedrotti and Laure Mousseau	yes	10	01.07.2015	yes	yes	2 depths (5 filters each); MTA received	Ambion	1,4	21,3	200	0	1	202 Lando	Filter 2 discared (fell on the floor)	OSD15_1m_Villefranche	AB0KO09	ok
+15	Villefranche - SOMLIT	France	Gaby Gorsky & Maria Pedrotti and Laure Mousseau	yes							1,2	34,8	200	50		203 Padme		OSD15_50m_Villefranche	AB0KO59	submitted by Marianna
+16	Kristineberg	Sweden	Matthias Obst ?	yes	2	23.06.2015	yes	yes	MTA received/ used MyOSD Log sheets instead of the OSD ones	Sigma	1,2	40,8	200	0		201 Blank	Was originally MyOSD 62	OSD16_0m_Kristineberg		submitted by Marianna
+17	VLIZ	Belgium	Simon Claus	yes	4	30.06.2015	no	no		Quiagen	1,2	45,6	200	3		202 Lando		OSD17_3m_VLIZ	AB0KN84	ok
+18	Kyrenia (North Cyprus)	Turkish Republic of Northern Cyprus	Ilkay Salihoglu, Terin Adali, Mesude Bicak	will send DNA	1	15.07.2015	yes	yes	will send DNA - please store at -20°C			7	100	50		n/a	will send DNA - please store at -20°C	OSD18_50m_Kyrenia		ok
+20	Iceland (Faxafloi)	Iceland	Viggó Þór Marteinsson	yes	3	15.07.2015	yes	yes	samples arrived in dry ice - still frozen	Tiagen	1,2	12,1	200	0		201 Blank		OSD20_0m_Iceland	AB0KO32	submitted by Marianna
+22	Marseille Solemio SOMLIT	France	Dominique Lefevre and Patrick Raimbault	yes	5	24.06.2015	yes	yes	When sent to Smithsonian: RNAlater fully leaked. Blu-Tack renewed.	Ambion	2,5	22,1	200	2		203 Padme		OSD22_2m_Marseille	AB0KN46	submitted by Marianna
+24	Marchica	Morocco	Hassan Ghazal	yes	4	13.07.2015	yes	yes		sigma	1,2	88,9	200	0		203 Padme		OSD24_0m_Marchica	AB0KO27	ok
+25	Saidia Rocher	Morocco	Boukhatem Noureddine	yes	3	13.07.2015	yes	yes	When sent to Smithsonian: RNAlater leaked. Blu-Tack renewed.	sigma	1,2	17,9	200	0		202 Lando		OSD25_0m_Saidia Rocher	AB0KO23	ok
+26	Tangier	Morocco	Rajaa Chahboune	yes	5	13.07.2015	yes	yes		sigma	1,2	11,7	200	0		201 Blank		OSD26_0m_Tangier	AB0KO61	ok
+27	Bizerte	Tunisia	Monia Elbour	yes	4	08.07.2015	no	no	pdf of data policy and notes about the samples but not the logsheet, no RNAlater aliquote	Sigma/RO901	2,4	25,5	200	0		203 Padme		OSD27_0m_Bizerte	AB0KN49	submitted by Marianna
+28	Belize	Belize	Scott Jones	yes	5	02.07.2015	yes	yes	logsheet filled in for 6 filters - check with Scott	Ambion	1,2	23,1	200	0		201 Blank		OSD28_0m_Belize	AB0KO47	ok
+29	Florida	USA	Scott Jones	yes	5	02.07.2015	yes	yes	logsheet filled in for 6 filters - check with Scott	Ambion	3,2	18,9		0		202 Lando		OSD29_0m_Florida	AB0KN97	ok
+30	Finland/Tvärminne	Finland	Anke Kremp	yes	5	23.06.2015	yes	yes		contact Hermanni	1,2	121,6	200	0		202 Lando		OSD30_0m_Finland	AB0KN64	ok
+34	Alexandria	Egypt	Mahrous Kandil	yes					will also send RSD sample		1,2	7,8	200	0		201 Blank		OSD34_0m_Alexandria	AB0KO56	ok
+35	Cheasapeake Bay	USA	John Jacobs, Bob Wood, Nathalie Valette-Silver (NOAA)	yes	6	23.07.2015	no	yes	sent with Dry Ice/ good condition	/	1,2	71,7	200	1		206 Count Dooku		OSD35_1m_Cheasapeake Bay	AB0KN75	several mandatory data missing in the logsheet - requested to the coordinator (John Jacobs -NOAA)
+36	Delaware	USA	John Jacobs, Bob Wood, Nathalie Valette-Silver (NOAA)	yes	5	23.07.2015	no	yes	sent with Dry Ice/ good condition	/	1,2	152,4	200	1		206 Count Dooku		OSD36_1m_Delaware	AB0KN63	ok
+37	Florida Coral 1 - Port Everglades	USA	Chris Sinigalliano, Nathalie Valette-Silver	yes	5	15.07.2015	no	yes		Sigma	1,2	64,5	200	0		201 Blank		OSD37_0m_Port Everglades	AB0KO67	submitted by Marianna
+38	Florida Coral 2 - Long Key	USA	Chris Sinigalliano, Nathalie Valette-Silver	yes	5	15.07.2015	no	yes		Sigma	1,2	57,6	200	0		202 Lando		OSD38_0m_Long Key	AB0KN62	submitted by Marianna
+39	South Carolina 1 - Charleston Harbor	USA	Nathalie Valette-Silver	yes	5	08.07.2015	no	yes		Life Technologies	1,3	35,5	200	0		202 Lando		OSD39_0m_Charleston Harbor	AB0KN98	ok
+41	Washington - Sequim Bay Park	USA	Rohinee Paranjpye, Nathalie Valette-Silver, Gladys Yanagida	yes	4	09.07.2015	no	yes		Ambion	1,2	18,5	200	1		203 Padme		OSD41_1m_Sequim Bay Park	AB0KN47	ok
+42	Faro Lake	Italy	Michail Yakimov	yes	4	05.08.2015	yes	yes			1,2	2023,12	300	0	not clear in log sheet	n/a		OSD42_0m_Faro Lake		ok
+43	California Scripps - SIO Pier	USA	Kelly Goodwin, Nathalie Valette-Silver	yes	5	29.06.2015	yes	yes	additional depth expected		1,2	37,1	200	0		201 Blank	additional depth?	OSD43_0m_SIO Pier	AB0KO08	ok
+45	Gulf of Mexico Florida - Tampa Bay	USA	Chris Sinigalliano	yes	5	15.07.2015	no	yes		Sigma	1,2	15,8	200	0		201 Blank		OSD45_0m_Tampa Bay	AB0KO68	submitted by Marianna
+46	Gulf of Mexico MS (Horn Island)	USA	Dr. Shiao Wang, Nathalie Valette-Silver	yes	5	15.07.2015	no	yes		Sigma	1,2	17,3	200	0		201 Blank		OSD46_0m_Gulf of Mexico MS	AB0KO66	ok
+47	Venice Lagoon	Italy	Alessandro Vezzi	yes	5	23.06.2015	yes	yes		Ambion	1,2	43	200	0		202 Lando		OSD47_0m_Venice Lagoon	AB0KO40	ok
+48	Venice Gulf	Italy	Alessandro Vezzi	yes	5	23.06.2015	yes	will come later		Ambion	1,2	17,2	200	0		202 Lando		OSD48_0m_Venice Gulf	AB0KN93	ok
+49	Slovenia (Vida)	Slovenia	Valentina Turk, Tinkara Tinta	yes	2	16.07.2015	yes	yes	They sent also MTA	Ambion	5,6	31,2	200	0		202 Lando		OSD49_0m_Slovenia		submitted by Marianna
+50	Pasaia (Spain)	Spain	Naiara Rodriguez-Ezpeleta	yes	4	14.07.2015	no	yes		Ambion	1,2	31,2	200	0		201 Blank		OSD50_0m_Pasaia	AB0KO15	submitted by Marianna
+51	Bocas del Toro (Panama)	USA	Rachel Collin, Plinio Gondola	yes	8	09.07.2015	yes	yes	4 filters for each depth (0m, 20m); no RNAlater aliquote	Ambion	1,2	19,3	200	0		202 Lando		OSD51_0m_Panama_surface	AB0KN85	ok
+51	Bocas del Toro (Panama)	USA	Rachel Collin, Plinio Gondola								1,2	15,1	200	20		203 Padme		OSD51_20m_Panama_20m	AB0KO49	20 m filters data are missing from the logsheet
+54	Maine Booth Bay	USA	Nicole Poulton	yes	4	24.06.2015	yes	yes		Ambion	1,2	24,3	200	1		201 Blank		OSD54_1m_Maine Booth Bay	AB0KO46	ok
+55	Maine Damariscotta River	USA	Nicole Poulton	yes	4	24.06.2015	yes	yes		Ambion	1,2	23,5	200	1		201 Blank		OSD55_1m_Maine Damariscotta River	AB0KO65	ok
+58	PICO (Pivers Island)	USA	Zackary Johnson, Dana Hunt	yes	4	09.07.2015	yes	yes		Ambion	1,2	14,3	200	1		201 Blank		OSD58_1m_PICO	AB0KO04	ok
+59	Bodega (California)	USA	Carol Vines	yes	5	09.07.2015	yes	yes		Qiagen	1,2	13,9	200	0		201 Blank		OSD59_0m_Bodega	AB0KO48	ok
+60	South Carolina 2 - North Inlet	USA	Marie Delorenzo, Nathalie Valette-Silver	yes	4	08.07.2015	no	yes		Life Technologies	1,2	51,6	200	0		201 Blank		OSD60_0m_North Inlet	AB0KO45	ok
+61	Vineyard Sound	USA	Linda Amaral-Zettler, Lesly Murphy	yes	5	08.07.2015	yes	yes		recipe from Julie Huber 	1,2	24,6	200	0		202 Lando		OSD61_0m_Vineyard Sound	AB0KN72	ok
+62	Menai Straits (Bangor)	UK	Peter Golyshin	yes	3	07.07.2015	yes	yes	MTA received	Ambion	1,2	60,6	200	0		203 Padme		OSD62_0m_Bangor	AB0KO64	submitted by Marianna
+63	Venice Acqua Alta	Italy	Gian Marco Luna	yes	5	08.07.2015	yes	yes	When sent to Smithsonian: RNAlater fully leaked. Blu-Tack renewed.	Ambion-Life Technologies (cod. AM7021)	1,2	12,2	200	0		202 Lando	Filter 3 + 4 discarded (RNAlater leaked)	OSD63_0m_Venice Acqua Alta	AB0KN45	ok
+64	Odessa (Ukraine)	Ukraine	Oleksandra Bobrova	yes	5	13.07.2015	yes	yes	MTA received		2,3	14,2	200	1		203 Padme	Filter 1 had to be discarded	OSD64_1m_Odessa	AB0KN73	ok
+69	Venice - Marghera	Italy	Alessandro Vezzi	yes	5	23.06.2015	yes	will come later		Ambion	1,2	49,7	200	0		201 Blank		OSD69_0m_Venice - Marghera	AB0KO34	ok
+70	Venice - Lido	Italy	Alessandro Vezzi	yes	5	23.06.2015	yes	will come later		Ambion	1,2	26		0		202 Lando		OSD70_0m_Venice - Lido	AB0KN78	ok
+71	Otago	New Zealand	Federico Baltar	yes	4	26.06.2015	yes	yes		Ambion	1,2	14,1	200	0		203 Padme		OSD71_0m_Otago	AB0KN67	submitted by Marianna
+72	Boknis Eck, Baltic Sea	Germany	Carolin Löscher, Hermann Bange	yes	8	08.07.2015	yes	yes	different depths, did also sent MTA	Qiagen	1,2	20,2	200	0	no log sheets	203 Padme	can't find logsheet	OSD72_0m_Boknis Eck	AB0KO69	submitted by Marianna
+72	Boknis Eck, Baltic Sea	Germany	Carolin Löscher, Hermann Bange								1,2	16,3	200	75	27	203 Padme		OSD72_27m_Boknis Eck	AB0KO26	submitted by Marianna
+73	Lima Estuary, NE Atlantic	Portugal	Sandra Ramos, Catarina Magalhães	yes	5	07.07.2015	yes	yes	When sent to Smithsonian: RNAlater leaked. Blu-Tack renewed.		2,3	25,6	200	0		203 Padme	Filter 4 had to be discarded	OSD73_0m_Lima Estuary	AB0KN41	ok
+74	Douro Estuary, NE Atlantic	Portugal	Sandra Ramos, Catarina Magalhães	yes	5	07.07.2015	yes	yes			2,3	22,8	200		0	203 Padme		OSD74_0m_Douro Estuary	AB0KN42	ok
+76	Italy - Foglia	Italy	Antonella Penna	yes	4	02.07.2015	yes	yes		Life Technologies	1,2	83,8	200	0	surface_water	202 Lando	depth was recorded on filter but not on logsheet	OSD76_0m_Foglia	AB0KO22	ok
+77	Italy - Metauro	Italy	Antonella Penna	yes	4	02.07.2015	yes	yes	When sent to Smithsonian: RNAlater leaked. Blu-Tack renewed.	Life Technologies	1,2	19,6	200	0	surface_water	203 Padme	depth was recorded on filter but not on logsheet	OSD77_0m_Metauro	AB0KN60	ok
+78	Italy - CONISMA	Italy	Danovaro Roberto	yes	4	01.07.2015	yes	yes		SIGMA	1,2	15,8	200	0	0.5	201 Blank		OSD78_0.5m_CONISMA	AB0KO36	submitted by Marianna
+81	Ria Formosa lagoon	Portugal	Rodrigo Costa	yes	5	14.07.2015	yes	yes		Ambion	1,2	15,8	200	0		201 Blank		OSD81_0m_Ria Formosa lagoon	AB0KO57	submitted by Marianna
+87	UK Shelf - North Sea	UK	Sophie Pitois	yes	5	10.07.2015	yes	yes	did not send RNAlater aliquot	Sigma	2,3	33	200	4		203 Padme		OSD87_4m_UK Shelf	AB0KN55	submitted by Marianna
+88	La Rochelle-SOMLIT	France	Pierre-guy sauriau	yes	5	30.06.2015	yes	yes	sent also MTA!	SigmaAldrich	1,2	25,8	200	0		202 Lando	depth was recorded on filter but not on logsheet	OSD88_0m_La Rochelle	AB0KN99	ok
+91	Oualidiya (El oualidia)	Morocco	Mohammed Timinouni	yes	5	13.07.2045	yes	yes		sigma	2,3	19,9	200	0		202 Lando		OSD91_0m_Oualidiya	AB0KO25	ok
+92	Casablanca	Morocco	Mohammed Timinouni	yes	5	13.07.2015	yes	yes		sigma	2,3	19,6	200	0		202 Lando		OSD92_0m_Casablanca	AB0KO05	ok
+93	Eljadida	Morocco	Mohammed Timinouni	yes	5	13.07.2015	yes	yes		sigma	2,4	16	250	0		202 Lando		OSD93_0m_Eljadida	AB0KO00	ok
+94	Saidia Marina	Morocco	Boukhatem Noureddine	yes	5	13.07.2015	yes	yes		sigma	1,2	32,3	200	0		202 Lando		OSD94_0m_Saidia Marina	AB0KO21	ok
+95	Singapore Indigo_V	Singapore	Federico Lauro	yes	4	01.07.2015	no	yes		Qiagen	1,2	34,3	200	0		202 Lando		OSD95_0m_Indigo_V	AB0KO17	submitted by Marianna
+99	C1 North Adriatic Italy	Italy	Paola Del Negro, Bruno Cataletto, Mauro Celussi, Francesca Malfatti, Jana Vojvoda	yes	4	08.07.2015	yes	yes		Qiagen	1,2	22,2	200	1		201 Blank		OSD99_1m_C1 North Adriatic	AB0KO38	ok
+100	Crete - GOS	Greece	Paraskevi Polymenakou, Georgios Kotoulas, Costas Dounas	yes	8	15.07.2015	yes	yes	different depths 4xsurface and 4x 20m	Sigma	1,2	92,7	200	0	1	201 Blank		OSD100_0m_GOS	AB0KO51	submitted by Marianna
+100	Crete - GOS	Greece	Paraskevi Polymenakou, Georgios Kotoulas, Costas Dounas								1,2	18,7	200	20		201 Blank		OSD100_20m_GOS	AB0KO14	submitted by Marianna
+101	Quinta do Lorde (Costa Sul)	Portugal	Bernardo Duarte	yes	5	14.07.2015	no	yes	samples were closed with parafilm/no blue tack/bad labelling/ most of the RNAlater leaked/relabelled all filters and fixed them with blue tack		1,2	13,4	200	1	surface_water	201 Blank		OSD101_0m_Quinta do Lorde	AB0KO03	submitted by Marianna
+102	Marina do Funchal (Costa Sul)	Portugal	Bernardo Duarte	yes	5	14.07.2015	no	yes	samples were closed with parafilm/no blue tack/bad labelling/ most of the RNAlater leaked/relabelled all filters and fixed them with blue tack		1,2	27	200	0		201 Blank		OSD102_0m_Marina do Funchal	AB0KO50	submitted by Marianna
+103	Porto da Cruz (Costa Norte)	Portugal	Bernardo Duarte	yes	5	14.07.2015	no	yes	samples were closed with parafilm/no blue tack/bad labelling/ most of the RNAlater leaked/relabelled all filters and fixed them with blue tack		2,3	13,7	200	0		201 Blank	Filter 1 and 5 had to be discarded	OSD103_0m_Porto da Cruz	AB0KO52	submitted by Marianna
+106	REYKIS	Iceland	Viggó Þór Marteinsson	yes	3	15.07.2015	yes	yes	samples arrived in dry ice - still frozen	Tiagen	1,2	21,6	200	0		201 Blank		OSD106_0m_REYKIS	AB0KO37	submitted by Marianna
+107	Lisboa	Portugal	Bernardo Duarte	yes	5	14.07.2015	no	yes	samples were closed with parafilm/no blue tack/bad labelling/ most of the RNAlater leaked/relabelled all filters and fixed them with blue tack		2,1	44	200	0		203 Padme	Filter 3 and 4 had to be discarded	OSD107_0m_Lisboa	AB0KN74	submitted by Marianna
+108	Alcochete	Portugal	Bernardo Duarte	yes	5	14.07.2015	no	yes	samples were closed with parafilm/no blue tack/bad labelling/ most of the RNAlater leaked/relabelled all filters and fixed them with blue tack		1,3	27,4	200	0		201 Blank		OSD108_0m_Alcochete	AB0KN91	submitted by Marianna
+109	Rosário	Portugal	Bernardo Duarte	yes	5	14.07.2015	no	yes	samples were closed with parafilm/no blue tack/bad labelling/ most of the RNAlater leaked/relabelled all filters and fixed them with blue tack		1,2	17,5	200	0		201 Blank		OSD109_0m_Rosario	AB0KO63	submitted by Marianna
+110	Figueira da Foz	Portugal	Bernardo Duarte	yes	5	14.07.2015	no	yes	samples were closed with parafilm/no blue tack/bad labelling/ most of the RNAlater leaked/relabelled all filters and fixed them with blue tack		1,2	80,1	200	0		202 Lando	Filter 5 discarded (RNAlater leaked)	OSD110_0m_Figueira da Foz	AB0KO29	submitted by Marianna
+111	Ria de Aveiro_1	Portugal	Bernardo Duarte	yes	5	14.07.2015	no	yes	samples were closed with parafilm/no blue tack/bad labelling/ most of the RNAlater leaked/relabelled all filters and fixed them with blue tack		1,3	20,8	200	0		201 Blank	Filter 1 had to be discarded	OSD111_0m_Ria de Aveiro_1	AB0KO16	submitted by Marianna
+113	NE Iberian Atlantic - CascaisWatch	Portugal	Antonina dos Santos	yes	4	09.07.2015	yes	yes	some RNAlater leaked out from one of the samples. RNA later cristallized		1,2	18,1	200	0		203 Padme	Filter 4 had to be discarded	OSD113_0m_CascaisWatch	AB0KN88	ok
+114	NE Iberian Atlantic - BerlengasWatch	Portugal	Antonina dos Santos and Sérgio Leandro	yes	4	09.07.2015	no	yes	requested an amendment of the data policy; some RNAlater leaked out from one of the samples and from the eppendorf of the aliquote. RNA later cristallized		1,2	17,7	200	0		201 Blank	remaining filter had to be discarded	OSD114_0m_BerlengasWatch		several mandatory data missing in the logsheet - requested to the Coordinator Antonina Dos Santos
+115	Santa Cruz	Portugal	Bernardo Duarte	yes	5	14.07.2015	no	no	samples were closed with parafilm/no blue tack/bad labelling/ most of the RNAlater leaked/relabelled all filters and fixed them with blue tack		1,2	50,2	200	0		201 Blank	missing log sheet	OSD115_0m_Santa Cruz	AB0KN65	submitted by Marianna
+116	Lagoa de Óbidos	Portugal	Bernardo Duarte	yes	5	14.07.2015	no	yes	samples were closed with parafilm/no blue tack/bad labelling/ most of the RNAlater leaked/relabelled all filters and fixed them with blue tack		1,2	100,9	200	0		201 Blank		OSD116_0m_Lagoa de Obidos	AB0KO12	submitted by Marianna
+119	Progreso	Mexico	Ma. Leopoldina Aguirre-Macedo	yes	6	13.07.2015	no	yes		Qiagen	1,2	34,2	200	0		203 Padme	missing log sheet	OSD119_0m_Progreso	AB0KN48	ok
+120	Dzilam	Mexico	Ma. Leopoldina Aguirre-Macedo	yes	6	13.07.2015	no	yes		Qiagen	1,2	19,8	200	0		203 Padme		OSD120_0m_Dzilam	AB0KN94	ok
+121	Celestun	Mexico	Ma. Leopoldina Aguirre-Macedo	yes	6	13.07.2015	no	yes		Qiagen	1,2	69,4	200	0		202 Lando		OSD121_0m_Celestun	AB0KN61	ok
+122	Station A Gulf Of Eilat	Israel	Noga Stambler	yes	5	01.07.2015	yes	yes	RNAlater fell off from 2 filters, the other 3 have been put in faclon tubes	Biological Industries	1,3	25,4	200	0	surface_water	203 Padme	Filter 2 and 4 had to be discarded - severe RNAlater leak	OSD122_0m_Gulf Of Eilat	AB0KO20	submitted by Marianna
+123	Shikmona	Israel	Eyal Rahav	yes	4	01.07.2015	no	yes		Biological Industries	1,2	13,7	200	0	2	203 Padme	severe RNAlater leak, remaining filter discarded	OSD123_2m_Shikmona		submitted by Marianna
+124	Osaka Bay	Japan	Takashi Yoshida, Hiroyuki Ogata	yes	5	08.07.2015	yes	yes	did not send RNA Later aliquot 	Quiagen	1,2	18,4	200	5		203 Padme		OSD124_5m_Osaka Bay	AB0KN43	submitted by Marianna
+125	Dove Marine Laboratory Cullercoats Beach	UK	Susan Gebbels, Annie Russell	yes	5	13.07.2015	no	no			1,2	17,1	200	0		201 Blank	missing log sheet	OSD125_0m_Cullercoats Beach	AB0KO58	  requested to susan.gebbels@newcastle.ac.uk , annie.russell@newcastle.ac.uk
+131	Zlatna ribka	Bulgaria	Nadezhda Todorova, Dimitar Berov, Ventzislav Karamfilov	yes	2	30.06.2015	yes	yes			1,2	25,3	200	0		203 Padme		OSD131_0m_Zlatna ribka		ok
+132	Sdot YAM	Israel	Noga Stambler, Eduard Fadeev	yes	5	01.07.2015	yes	yes		Biological Industries	1,2	2,6	200	0	2	203 Padme		OSD132_2m_Sdot YAM	AB0KN59	submitted by Marianna
+133	Robben Island	South Africa	Kate Munnik	yes	5	08.07.2015	yes	yes		Mo Bio - solution called LifeGuard Preservation Solution	1,2	13,7	200	0		203 Padme		OSD133_0m_Robben Island	AB0KN50	submitted by Marianna
+140	Bizerte lagoon STL	Tunisia	Monia Elbour	yes	4	08.07.2015	no	no	pdf of data policy and notes about the samples but not the logsheet, no RNAlater aliquote	Sigma/RO901	1,2	12,7	200	0		203 Padme	missing logsheet	OSD140_0m_Bizerte lagoon STL	AB0KN68	submitted by Marianna
+141	Raunefjorden	Norway	Lise Øvreås	yes	4	30.06.2015	yes	yes		SigmaAldrich	1,2	24,2	200	0	5	202 Lando		OSD141_5m_Raunefjorden	AB0KN70	submitted by Marianna
+142	Gray’s Reef National Marine Sanctuary	USA	Sarah Fangman & Marc Frischer	yes	4	17.07.2015	yes	yes	they sent a filter only with RNA later	Ambion	1,2	11,9	200	0	1	201 Blank	they sent a filter only with RNA later	OSD142_1m_Grays Reef	AB0KO02	submitted by Marianna
+143	Skidaway Institute of Oceanography	USA	Marc Frischer	yes	4	17.07.2015	yes	yes	they sent a filter only with RNA later	Ambion	1,2	20,2	200	0	1	201 Blank	they sent a filter only with RNA later	OSD143_1m_Skidaway Institute	AB0KO62	submitted by Marianna
+147	Rajarata	Sri Lanka	Ranjith Eedirisinghe	yes	5	06.07.2015		yes	the OSD Data Policy has been shipped on 4.07.2015, expected to arrive by 10.07. no RNA later aliquote	Ambion (same as in the shipping protocol)	1,2	39,1	200	0		202 Lando		OSD147_0m_Rajarata	AB0KN76	submitted by Marianna
+148	Wadden Sea	Germany	Julia Busch	yes	5	24.06.2015	yes	yes	Samples without RNA later	none	1,2	15,9	200		0	202 Lando		OSD148_0m_Wadden Sea	AB0KO42	ok
+152	Compass Buoy Station - Bedford Basin	Canada	Jennifer Tolman	yes							1,2	28,4	200	5		201 Blank		OSD152_5m_CBS	AB0KO35	ok
+152	Compass Buoy Station - Bedford Basin	Canada	Jennifer Tolman	yes							1,2	18,6	200	10		201 Blank		OSD152_10m_CBS	AB0KO43	ok
+152	Compass Buoy Station - Bedford Basin	Canada	Jennifer Tolman	yes	15	09.07.2015	yes	yes	5 filters per depth (1m, 5m, 10m). Two filters leaked out a bit of RNAlater	Ambion	1,2	18	200	1		201 Blank		OSD152_1m_CBS	AB0KO53	ok
+153	Faro Island	Portugal	Rodrigo Costa	yes	5	14.07.2015	yes	yes		Ambion	2,3	37,7	200	0		202 Lando	Filter 1 had to be discarded	OSD153_0m_Faro Island	AB0KO31	submitted by Marianna
+157	Oslofjorden	Norway	Pål Anders Fronth Nyhus, Bente Edvardsen	yes	5	03.07.2015	yes	yes	samples travelled for 19 days		3,4	73,7	200	0		203 Padme	Filter 1 had to be discarded	OSD157_0m_Oslofjord	AB0KO24	submitted by Marianna
+159	Brest-SOMLIT	France	Stéphane L'Haridon	yes	4	14.07.2015	yes	yes	RNAlater was leaking I closed the filter with blue tack	Qiagen	1,2	11,5	200	0	not in log sheet	201 Blank		OSD159_0m_Brest-SOMLIT	AB0KO54	ok
+162	Stonehaven	UK	Eileen Bresnan	yes	5	08.07.2015	no	yes		Sigma	1,2	24,2	200	2		201 Blank		OSD162_2m_Stonehaven	AB0KN58	submitted by Marianna
+163	Scapa	UK	Eileen Bresnan	yes	4	08.07.2015	no	yes			2,3	23,4	200	1		203 Padme	Filter 1 had to be discarded	OSD163_1m_Scapa	AB0KN57	submitted by Marianna
+164	Scalloway	UK	Eileen Bresnan	yes	6	08.07.2015	no	yes			1,2	36,6	200	2	2m, 5-6 meter at hightide	201 Blank	keep meter of filter	OSD164_2m_Scalloway	AB0KO55	submitted by Marianna
+165	Loch Ewe	UK	Eileen Bresnan	yes	5	08.07.2015	no	yes 			1,2	42,8	200	0		202 Lando		OSD165_0m_Loch Ewe	AB0KO41	submitted by Marianna
+166	Armintza	Spain	Ibon Cancio	yes	5	07.07.2015	yes	yes	MTA received	Ambion	3,4	42,8	250	0		202 Lando		OSD166_0m_Armintza	AB0KN90	ok
+168	IMST_izmir	Turkey	Asst Prof Kemal Can Bizsel	yes	5	07.07.2015	yes	yes	no RNA later aliquote	Quiagen	1,2	73,5	200	0	0.5  (auf dem Filter steht 0m)	203 Padme		OSD168_0.5m_IMST_izmir	AB0KN79	ok
+169	Brightlingsea Creek, Essex	UK	Lucy White	yes	4	09.07.2015	no	yes		Life Technologies	1,2	16,4	200	0		201 Blank		OSD169_0m_Essex	AB0KO28	submitted by Marianna
+170	130	Belgium	Simon Claus	yes	4	30.06.2015	no	no		Quiagen	1,2	35,4	200	3		202 Lando	Filter 3 had to be discarded	OSD170_3m_130	AB0KO18	to be submitted
+171	230	Belgium	Simon Claus	yes	4	30.06.2015	no	no	When sent to Smithsonian: RNAlater fully leaked. Blu-Tack renewed.	Quiagen	1,2	29,6	200	3		203 Padme		OSD171_3m_230	AB0KN82	ok
+172	700	Belgium	Simon Claus	yes	4	30.06.2015	no	no		Quiagen	1,2	34,1	200	3		202 Lando		OSD172_3m_700	AB0KN87	ok
+173	710	Belgium	Simon Claus	yes	4	30.06.2015	no	no		Quiagen	1,2	32,6	200	3		201 Blank		OSD173_3m_710	AB0KO13	ok
+174	780	Belgium	Simon Claus	yes	4	30.06.2015	no	no		Quiagen	1,2	38,4	200	3		202 Lando		OSD174_3m_780	AB0KO11	ok
+175	ZG02	Belgium	Simon Claus	yes	4	30.06.2015	no	no	When sent to Smithsonian: RNAlater fully leaked. Blu-Tack renewed.	Quiagen	1,4	34	200	3		202 Lando	Filter 2 had to be discarded	OSD175_3m_ZG02	AB0KO07	ok
+176	215	Belgium	Simon Claus	yes	4	30.06.2015	no	no	Was assigned to AB0KN81 in this list, but phyically not found when sending samples to Smithsonian.	Quiagen	1,2	32,2	200	3		202 Lando	Filter 1 had to be discarded	OSD176_3m_215		ok
+177	120	Belgium	Simon Claus	yes	4	30.06.2015	no	no		Quiagen	1,2	30,5	200	3		201 Blank		OSD177_3m_120	AB0KO44	ok
+178	435	Belgium	Simon Claus	yes	4	30.06.2015	no	no		Quiagen	1,2	96,4	200	3		202 Lando		OSD178_3m_435	AB0KO01	ok
+179	LW01	Belgium	Simon Claus	yes	4	30.06.2015	no	no		Quiagen	1,2	20,2	200	3		201 Blank		OSD179_3m_LW01	AB0KN95	ok
+180	LW02	Belgium	Simon Claus	yes	4	30.06.2015	no	no	When sent to Smithsonian: RNAlater fully leaked. Blu-Tack renewed.	Quiagen	3,4	16,8	200	3		202 Lando		OSD180_3m_LW02	AB0KN80	ok
+181	W07	Belgium	Simon Claus	yes	4	30.06.2015	no	no		Quiagen	1,3	13,8	250	3		202 Lando		OSD181_3m_W07	AB0KN54	ok
+182	W08	Belgium	Simon Claus	yes	4	30.06.2015	no	no	When sent to Smithsonian: RNAlater fully leaked. Blu-Tack renewed.	Quiagen	2,4	102	200	3		203 Padme		OSD182_3m_W08	AB0KO10	ok
+183	W09	Belgium	Simon Claus	yes	4	30.06.2015	no	no		Quiagen	1,4	18,3	200	3		202 Lando	Filter 1 had to be discarded	OSD183_3m_W09	AB0KN56	ok
+184	W10	Belgium	Simon Claus	yes	4	30.06.2015	no	no		Quiagen	1,3	30,7	200	3		202 Lando	RNAlater was almost gone from all filter	OSD184_3m_W10	AB0KN83	ok
+185	421	Belgium	Simon Claus	yes	4	30.06.2015	no	no		Quiagen	1,4	31,7	200	3		203 Padme		OSD185_3m_421	AB0KO19	ok
+192	Tjärno	Sweden	Matthias Obst 	yes	2	23.06.2015	yes	yes	MTA received / used MyOSD Log sheets instead of the OSD ones	Sigma	2	30,2	200	0		202 Lando		OSD192_0m_Tjärno		submitted by Marianna
+195	Saline di Margherita di Savoia	Italy	Luigi Ruggiero Ceci	yes	4	07.07.2015	yes	yes	MTA received	Ambion	1,2	37,2	200	0	0.1	203 Padme	Was originally MyOSD 68	OSD195_0.1m_Saline di Margherita	AB0KN53	ok
+196	Shark Bay	Australia	Dr Brendan Burns	yes	4	08.07.2015	yes	yes	did send MTA	Life Technologies	1,4	4,5	200	0	0 m depth on filter reported	203 Padme	Filter 1 had to be discarded - very low RNAlater level	OSD196_0m_Shark Bay	AB0KN86	ok
+197	Anjafa Beach (Kuwait)	Kuwait	Brian Harkey	yes	5	10.07.2015	yes	yes	did sent MTA, wrong label, I marked the as OSD197 now	Qiagen	1,2	27,9	200	0		201 Blank		OSD197_0m_Anjafa Beach	AB0KN96	submitted by Marianna
+199	Monterey Bay NMS	USA	Bridget Hoover	yes					maybe Bridget will only send MyOSD samples		1,2	37,6	200	0		202 Lando	MyOSD230 Filter 1 + 2 were used for extraction	OSD199_0m_Monterey Bay	AB0KN66	ok
+200	Arctic Ocean N-ICE 2015	Norway	Harald Steen, Mar Fernandez Mendez	yes	1	08.07.2015	yes	yes	RNA later has leaked as filter wasn't closed properly	Qiagen	1	17,5	100	0	2	202 Lando		OSD200_2m_Arctic Ocean		not enough data (only one filter)
+201	Blank		Blank						Blank		1	5,3	100	0		201 Blank	Blank	OSD201_0m_Blank		
+202	Lando		Blank						Blank		1	1,3	100	0		202 Lando	Blank	OSD202_0m_Lando		
+203	Padme		Blank						Blank		1	9,8	100	0		203 Padme	Blank	OSD203_0m_Padme		
+204	R2D2		Blank						Blank		1	2,5	100	0		204 R2D2	Blank	OSD204_0m_R2D2		
+205	C3P0		Blank						Blank		1	1,7	100	0		205 C3P0	Blank	OSD205_0m_C3P0		
+206	Count Dooku		Blank						Blank		1	0	100	0		206 Count Dooku	Blank	OSD206_0m_Count Dooku		
+207	Skywalker		Blank						Blank		1	2,2	100	0		207 Skywalker	Blank	OSD207_0m_Skywalker		
+209	Obi Wan		Blank						Blank		2	50,24	200	0		209 Obi Wan	Blank	OSD209_0m_Obi Wan		
+11	Rothera	Antartica	Melody Clark								1,2	119,16	200	0		209 Obi Wan	OSD June 2014	OSD11_0m_Rothera June 2014	AB0KO70	
+210	OSD210_0m_15 HE-430		NOT PART OF OSD								n/a	4,8	150	0			not part of OSD	OSD210_0m_15 HE-430		
+211	OSD211_0m_18 HE-430		NOT PART OF OSD								n/a	3,5	150	0			not part of OSD	OSD211_0m_18 HE-430		
+212	OSD212_0m_20 HE-430		NOT PART OF OSD								n/a	2,6	150	0			not part of OSD	OSD212_0m_20 HE-430		
+213	OSD213_0m_24 HE-430		NOT PART OF OSD								n/a	0,9	150	0			not part of OSD	OSD213_0m_24 HE-430		
+11	Rothera	Antartica	Melody Clark								no DNA 	no DNA		0m				OSD11_0m_Rothera December 2014	AB0KO71	
+																				
+																				
+																				
+																				
+																				
+																				
+31	Port Hacking - New South Wales	Australia	Lev Bodrossy	in house processing					will not send sample. Will do DNA extraction and sequencing in Australia											
+32	North Stradbroke - Queensland	Australia	Lev Bodrossy	in house processing					will not send sample. Will do DNA extraction and sequencing in Australia											
+33	Maria Island - Tasmania	Australia	Lev Bodrossy	in house processing					will not send sample. Will do DNA extraction and sequencing in Australia											
+188	Rottnest Island	Australia	Lev Bodrossy, Ryan Crossing	in house processing					will not send sample. Will do DNA extraction and sequencing in Australia											
+189	Yongala	Australia	Lev Bodrossy, Michele Skuza, Craig Steinberg	in house processing					will not send sample. Will do DNA extraction and sequencing in Australia											
+190	Kangaroo Island	Australia	Lev Bodrossy, Paul Van Ruth, Paul Malthouse	in house processing					will not send sample. Will do DNA extraction and sequencing in Australia											
+191	Darwin	Australia	Lev Bodrossy, Kirsty McAllister, Jonathan Windsor	in house processing					will not send sample. Will do DNA extraction and sequencing in Australia										
